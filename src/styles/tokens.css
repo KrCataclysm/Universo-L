@@ -1,0 +1,15 @@
+:root {
+  --paper: #F7F5F2;
+  --ink: #28272B;
+  --lilac: #A38A9E;
+  --void: #0B0A0D;
+  --glow-a: #C9A7E8;
+  --glow-b: #F2A7C8;
+  --glow-c: #9FB8FF;
+  --thread: #D9B98A;
+  --font-display: 'Cormorant Garamond', 'Times New Roman', serif;
+  --font-ui: 'Manrope', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --gutter: clamp(16px, 4vw, 56px);
+  --radius: 18px;
+  --ease: cubic-bezier(.2, .8, .2, 1);
+}
