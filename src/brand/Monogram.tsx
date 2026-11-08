@@ -1,10 +1,10 @@
 export interface MonogramProps {
-  variant?: 'ink' | 'lilac' | 'bare'
+  variant?: 'ink' | 'lilac' | 'bare' | 'light'
   size?: number
   className?: string
 }
 
-const FILL = { ink: ['#28272B', '#F7F5F2'], lilac: ['#A38A9E', '#28272B'], bare: [null, '#28272B'] } as const
+const FILL = { ink: ['#28272B', '#F7F5F2'], lilac: ['#A38A9E', '#28272B'], bare: [null, '#28272B'], light: [null, '#F7F5F2'] } as const
 
 export default function Monogram({ variant = 'ink', size = 64, className }: MonogramProps) {
   const [disc, letters] = FILL[variant]
