@@ -38,6 +38,8 @@ const save = (items: CartItem[]) => {
 interface CartState {
   items: CartItem[]
   open: boolean
+  notice: string | null
+  setNotice(n: string | null): void
   add(item: CartItem): void
   setQty(key: string, qty: number): void
   remove(key: string): void
@@ -53,6 +55,8 @@ export const useCart = create<CartState>((set, get) => {
   return {
     items: loadCart(),
     open: false,
+    notice: null,
+    setNotice: (notice) => set({ notice }),
     add: (item) => {
       const key = itemKey(item)
       const items = get().items

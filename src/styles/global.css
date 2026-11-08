@@ -1,4 +1,7 @@
 @import './tokens.css';
+@import './layout.css';
+@import './pages.css';
+@import './shop.css';
 *, *::before, *::after { box-sizing: border-box; }
 html { -webkit-text-size-adjust: 100%; scroll-behavior: auto; }
 html.lenis, html.lenis body { height: auto; }
