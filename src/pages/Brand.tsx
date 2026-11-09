@@ -6,11 +6,13 @@ import { useAsync, useProducts } from '../data/CatalogProvider'
 import NeonFrames from '../fx/NeonFrames'
 import Ribbon from '../fx/Ribbon'
 import SplitWords from '../fx/SplitWords'
+import { useDocumentTitle } from '../lib/useDocumentTitle'
 import NotFound from './NotFound'
 
 export default function BrandPage() {
   const { brand: slug = '' } = useParams()
   const brand = getBrand(slug)
+  useDocumentTitle(brand ? `${brand.name} — ${brand.category}` : 'Página não encontrada')
   const [cat, setCat] = useState<string | undefined>()
   const cats = useAsync((c) => c.listCategories(slug), [slug])
   const products = useProducts({ brandSlug: slug, categorySlug: cat })

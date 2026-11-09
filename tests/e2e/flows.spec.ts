@@ -45,3 +45,13 @@ test('rota inexistente mostra 404 temático', async ({ page }) => {
   await page.goto('/lay-store/produto-que-nao-existe')
   await expect(page.getByText('Essa estrela saiu da órbita')).toBeVisible()
 })
+
+test('painel: visitante cai na tela de login e não vê dados', async ({ page }) => {
+  await page.goto('/admin')
+  await expect(page.getByRole('heading', { name: 'Painel Universo Lay' })).toBeVisible()
+  await expect(page.getByLabel('E-mail')).toBeVisible()
+  await page.getByLabel('E-mail').fill('ninguem@exemplo.invalid')
+  await page.getByLabel('Senha').fill('senha-errada-123')
+  await page.getByRole('button', { name: 'Entrar' }).click()
+  await expect(page.getByText('E-mail ou senha incorretos.')).toBeVisible()
+})

@@ -17,6 +17,8 @@ export interface Product {
   customizationFields: CustomField[]
   /** true = item de exemplo (pode ser removido pelo painel) */
   isExample?: boolean
+  /** só difere de 'published' quando o admin liga "ver rascunhos" */
+  status?: string
 }
 
 export interface ProductQuery { brandSlug?: string; categorySlug?: string; featured?: boolean }

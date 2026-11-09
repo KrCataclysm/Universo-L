@@ -18,11 +18,11 @@ export default function Footer() {
           <p className="ftr__big">{SLOGAN}</p>
         </div>
         <div>
-          <h4>Marcas</h4>
+          <h2 className="ftr__h">Marcas</h2>
           <ul>{BRANDS.map((b) => <li key={b.slug}><Link to={`/${b.slug}`}>{b.name}</Link></li>)}</ul>
         </div>
         <div>
-          <h4>Universo</h4>
+          <h2 className="ftr__h">Universo</h2>
           <ul>
             <li><Link to="/sobre">Sobre</Link></li>
             <li><Link to="/contato">Contato</Link></li>

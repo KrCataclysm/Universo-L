@@ -1,7 +1,9 @@
 import { lazy, Suspense, useEffect, useState } from 'react'
+import { useLocation } from 'react-router-dom'
 import { useCart } from './cart/cartStore'
 import Footer from './components/Footer'
 import Header from './components/Header'
+import { appCatalog } from './data/appCatalog'
 import { CatalogProvider, useCatalog } from './data/CatalogProvider'
 import Cursor from './fx/Cursor'
 import Intro from './fx/Intro'
@@ -29,15 +31,16 @@ function LazyDrawer() {
   return ever ? <Suspense fallback={null}><CartDrawer /></Suspense> : null
 }
 
-export default function App() {
+function Site() {
   const [intro, setIntro] = useState<'on' | 'leaving' | 'off'>('on')
   const done = () => { setIntro('leaving'); setTimeout(() => setIntro('off'), 750) }
   return (
-    <CatalogProvider>
+    <CatalogProvider catalog={appCatalog}>
       <SmoothScroll>
         {intro !== 'off' && <div className={`intro-wrap ${intro === 'leaving' ? 'out' : ''}`}><Intro onDone={done} /></div>}
+        <a className="skip" href="#main">Pular para o conteúdo</a>
         <Header />
-        <PageTransition><AppRoutes /></PageTransition>
+        <PageTransition><div id="main" tabIndex={-1} className="main-anchor"><AppRoutes /></div></PageTransition>
         <Footer />
         <LazyDrawer />
         <PruneCart />
@@ -45,4 +48,10 @@ export default function App() {
       </SmoothScroll>
     </CatalogProvider>
   )
+}
+
+export default function App() {
+  const { pathname } = useLocation()
+  const admin = pathname === '/admin' || pathname.startsWith('/admin/')
+  return admin ? <CatalogProvider catalog={appCatalog}><AppRoutes /></CatalogProvider> : <Site />
 }

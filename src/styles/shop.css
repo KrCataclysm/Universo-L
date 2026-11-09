@@ -43,7 +43,7 @@
 .variants button:hover:not(:disabled) { border-color: var(--ink); } .variants button.on { background: var(--ink); color: var(--paper); border-color: var(--ink); } .variants button:disabled { opacity: .35; text-decoration: line-through; }
 .variants em, .field em { color: #b3364f; font-size: 12px; font-style: normal; }
 .custom { border: 1px solid rgba(40,39,43,.12); border-radius: 20px; padding: 18px 20px; display: grid; gap: 14px; margin: 0; }
-.custom legend { padding: 0 8px; font-size: 11px; letter-spacing: .22em; text-transform: uppercase; color: var(--lilac); font-weight: 600; }
+.custom legend { padding: 0 8px; font-size: 11px; letter-spacing: .22em; text-transform: uppercase; color: var(--lilac-text); font-weight: 600; }
 .field { display: grid; gap: 6px; font-size: 13px; } .field span { opacity: .75; } .field b { color: #b3364f; }
 .field input, .field select { padding: 13px 14px; border-radius: 12px; border: 1px solid rgba(40,39,43,.2); background: #fff; font: inherit; }
 .field input:focus, .field select:focus { outline: 2px solid var(--glow-a); border-color: transparent; }

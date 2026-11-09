@@ -14,7 +14,7 @@ export default function Wordmark({ stacked = false, className }: { stacked?: boo
       }}
     >
       <span style={{ color: 'var(--ink)' }}>Universo</span>
-      <span style={{ color: 'var(--lilac)' }}>Lay</span>
+      <span style={{ color: 'var(--wm-accent, var(--lilac))' }}>Lay</span>
     </span>
   )
 }

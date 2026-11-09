@@ -1,6 +1,7 @@
 import { createContext, useCallback, useContext, useEffect, useState } from 'react'
 import type { Catalog, Product, ProductQuery } from './catalog'
 import { exampleCatalog } from './exampleCatalog'
+import { usePreview } from './previewStore'
 
 const Ctx = createContext<Catalog>(exampleCatalog)
 
@@ -14,6 +15,7 @@ export interface Async<T> { data?: T; loading: boolean; error: string | null; re
 
 export function useAsync<T>(fn: (c: Catalog) => Promise<T>, deps: unknown[]): Async<T> {
   const catalog = useCatalog()
+  const preview = usePreview((s) => s.enabled)
   const [state, setState] = useState<{ data?: T; loading: boolean; error: string | null }>({ loading: true, error: null })
   const [tick, setTick] = useState(0)
   useEffect(() => {
@@ -25,7 +27,7 @@ export function useAsync<T>(fn: (c: Catalog) => Promise<T>, deps: unknown[]): As
     )
     return () => { live = false }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [catalog, tick, ...deps])
+  }, [catalog, tick, preview, ...deps])
   const reload = useCallback(() => setTick((t) => t + 1), [])
   return { ...state, reload }
 }
