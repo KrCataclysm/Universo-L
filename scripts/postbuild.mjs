@@ -47,13 +47,13 @@ try {
 
 const defaultImage = SITE ? `${SITE}/og.png` : null
 for (const pg of pages) {
-  const url = `${SITE}${pg.path}`
+  const url = `${SITE}${pg.path}/` // o Pages serve cada rota como pasta (com barra final)
   write(join('dist', pg.path, 'index.html'), injectSeo(template, seoBlock({ title: pg.title, description: pg.description, url, image: pg.image ?? defaultImage })))
 }
 
 // 3) robots e sitemap
 if (SITE) {
   write('dist/robots.txt', `User-agent: *\nAllow: /\nDisallow: /admin\n\nSitemap: ${SITE}/sitemap.xml\n`)
-  write('dist/sitemap.xml', buildSitemap(SITE, ['/', ...pages.map((p) => p.path)]))
+  write('dist/sitemap.xml', buildSitemap(SITE, ['/', ...pages.map((p) => `${p.path}/`)]))
 }
 console.log(`postbuild: 404.html + ${pages.length} páginas de compartilhamento (base ${BASE}) + robots/sitemap`)
