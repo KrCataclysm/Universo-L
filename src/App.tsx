@@ -1,4 +1,5 @@
 import { lazy, Suspense, useEffect, useState } from 'react'
+import { useLocation } from 'react-router-dom'
 import { useCart } from './cart/cartStore'
 import Footer from './components/Footer'
 import Header from './components/Header'
@@ -30,7 +31,7 @@ function LazyDrawer() {
   return ever ? <Suspense fallback={null}><CartDrawer /></Suspense> : null
 }
 
-export default function App() {
+function Site() {
   const [intro, setIntro] = useState<'on' | 'leaving' | 'off'>('on')
   const done = () => { setIntro('leaving'); setTimeout(() => setIntro('off'), 750) }
   return (
@@ -46,4 +47,10 @@ export default function App() {
       </SmoothScroll>
     </CatalogProvider>
   )
+}
+
+export default function App() {
+  const { pathname } = useLocation()
+  const admin = pathname === '/admin' || pathname.startsWith('/admin/')
+  return admin ? <CatalogProvider catalog={appCatalog}><AppRoutes /></CatalogProvider> : <Site />
 }

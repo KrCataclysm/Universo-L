@@ -12,7 +12,7 @@ export default function ProductCard({ p }: { p: Product }) {
         {a && <img src={a.url} alt={a.alt} loading="lazy" decoding="async" className="pcard__img" />}
         {b && <img src={b.url} alt="" aria-hidden loading="lazy" decoding="async" className="pcard__img pcard__img--alt" />}
         <span className="pcard__shine" aria-hidden />
-        {p.isExample && <span className="tag">Exemplo</span>}
+        {p.status && p.status !== 'published' ? <span className="tag">{p.status === 'draft' ? 'Rascunho' : 'Oculto'}</span> : p.isExample && <span className="tag">Exemplo</span>}
         {p.customizable && <span className="tag tag--r">Personalizável</span>}
       </div>
       <div className="pcard__info">

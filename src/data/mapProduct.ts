@@ -49,5 +49,6 @@ export function mapProduct(r: ProductRow, publicUrl: (path: string) => string): 
     customizable: r.customizable,
     customizationFields: Array.isArray(r.customization_schema) ? r.customization_schema.map(toField).filter((f): f is CustomField => !!f) : [],
     isExample: r.is_example,
+    status: r.status,
   }
 }
