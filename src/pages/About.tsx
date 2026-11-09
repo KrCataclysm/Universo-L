@@ -1,8 +1,10 @@
 import { Link } from 'react-router-dom'
 import { BRANDS, CONCEPT, SLOGAN } from '../brand/brands'
 import Reveal from '../fx/Reveal'
+import { useDocumentTitle } from '../lib/useDocumentTitle'
 
 export default function About() {
+  useDocumentTitle('Sobre')
   return (
     <main className="page about">
       <div className="container">

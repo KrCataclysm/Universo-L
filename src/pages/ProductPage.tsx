@@ -8,6 +8,7 @@ import CustomizationForm from '../components/CustomizationForm'
 import Gallery from '../components/Gallery'
 import { useAsync } from '../data/CatalogProvider'
 import Reveal from '../fx/Reveal'
+import { useDocumentTitle } from '../lib/useDocumentTitle'
 import NotFound from './NotFound'
 
 export default function ProductPage() {
@@ -21,6 +22,7 @@ export default function ProductPage() {
   const [qty, setQty] = useState(1)
   useEffect(() => { void import('../components/CartDrawer') }, [])
   const p = state.data
+  useDocumentTitle(p ? `${p.name} — ${brand?.name ?? ''}` : undefined)
   const variant = p?.variants.find((v) => v.id === variantId)
 
   const ask = useMemo(() => p ? buildWhatsAppUrl({

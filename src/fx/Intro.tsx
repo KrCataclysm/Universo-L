@@ -33,10 +33,13 @@ export default function Intro({ onDone }: { onDone: () => void }) {
       <div className="intro__stage">
         <NeonFrames from="#9FB8FF" to="#F2A7C8" layers={6} />
         <div className="intro__mark"><Monogram variant="light" size={150} /></div>
-        <p className="intro__slogan" aria-label={SLOGAN}>
-          {SLOGAN.split('').map((ch, n) => (
-            <span key={n} style={{ ['--n' as string]: n }} aria-hidden>{ch === ' ' ? ' ' : ch}</span>
-          ))}
+        <p className="intro__slogan">
+          <span className="sr-only">{SLOGAN}</span>
+          <span aria-hidden="true">
+            {SLOGAN.split('').map((ch, n) => (
+              <span key={n} style={{ ['--n' as string]: n }}>{ch === ' ' ? '\u00A0' : ch}</span>
+            ))}
+          </span>
         </p>
       </div>
       <button className="intro__skip" onClick={finish}>Pular</button>

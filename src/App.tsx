@@ -38,8 +38,9 @@ function Site() {
     <CatalogProvider catalog={appCatalog}>
       <SmoothScroll>
         {intro !== 'off' && <div className={`intro-wrap ${intro === 'leaving' ? 'out' : ''}`}><Intro onDone={done} /></div>}
+        <a className="skip" href="#main">Pular para o conteúdo</a>
         <Header />
-        <PageTransition><AppRoutes /></PageTransition>
+        <PageTransition><div id="main" tabIndex={-1} className="main-anchor"><AppRoutes /></div></PageTransition>
         <Footer />
         <LazyDrawer />
         <PruneCart />

@@ -36,6 +36,7 @@ function Shell() {
           <input type="checkbox" checked={preview.enabled} onChange={(e) => preview.setEnabled(e.target.checked)} />
           <span>Ver rascunhos no site<small>Só você enxerga. Desligado = como a cliente vê.</small></span>
         </label>
+        <a className="adm-link" href="https://github.com/KrCataclysm/Universo-L/actions/workflows/pages.yml" target="_blank" rel="noreferrer">↻ Publicar alterações (compartilhamento)</a>
         <Link to="/" className="adm-link">← Ver o site</Link>
         <button className="adm-link" onClick={signOut}>Sair</button>
       </aside>

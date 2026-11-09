@@ -9,6 +9,7 @@ import Ribbon from '../fx/Ribbon'
 import SplitWords from '../fx/SplitWords'
 import { prefersReducedMotion } from '../fx/motion'
 import { useMagnetic } from '../fx/useMagnetic'
+import { useDocumentTitle } from '../lib/useDocumentTitle'
 
 const STEPS = [
   ['01', 'Escolha', 'Navegue pelas três marcas e escolha as peças que combinam com você.'],
@@ -17,6 +18,7 @@ const STEPS = [
 ]
 
 export default function Home() {
+  useDocumentTitle()
   const hero = useRef<HTMLElement>(null)
   const cta = useMagnetic<HTMLAnchorElement>()
   const featured = useFeatured()

@@ -46,7 +46,7 @@
 /* ---------- footer ---------- */
 .ftr { background: var(--void); color: var(--paper); padding: clamp(56px, 9vw, 120px) 0 32px; position: relative; overflow: hidden; }
 .ftr__grid { display: grid; grid-template-columns: 1.4fr 1fr 1fr; gap: 40px; max-width: 1280px; margin: 0 auto; padding-inline: var(--gutter); }
-.ftr h4 { font-family: var(--font-ui); font-size: 11px; letter-spacing: .22em; text-transform: uppercase; color: var(--lilac); margin-bottom: 16px; font-weight: 600; }
+.ftr .ftr__h { font-family: var(--font-ui); font-size: 11px; line-height: 1.4; letter-spacing: .22em; text-transform: uppercase; color: var(--lilac); margin-bottom: 16px; font-weight: 600; }
 .ftr li { list-style: none; margin: 8px 0; } .ftr ul { margin: 0; padding: 0; }
 .ftr a:hover { color: var(--glow-b); }
 .ftr__big { font-family: var(--font-display); font-size: clamp(28px, 4vw, 44px); line-height: 1.1; margin-top: 18px; max-width: 14ch; }
@@ -64,7 +64,11 @@
 /* ---------- misc ---------- */
 .page { min-height: 100svh; }
 .container { max-width: 1280px; margin: 0 auto; padding-inline: var(--gutter); }
-.eyebrow { font-size: 11px; letter-spacing: .28em; text-transform: uppercase; font-weight: 600; color: var(--lilac); }
+.eyebrow { font-size: 11px; letter-spacing: .28em; text-transform: uppercase; font-weight: 600; color: var(--lilac-text); }
+.hdr:not(.hdr--dark), .hdr.is-scrolled { --wm-accent: var(--lilac-text); }
+.tone-dark .hdr:not(.is-scrolled) { --wm-accent: var(--lilac); }
+.hdr--dark:not(.is-scrolled) { --wm-accent: var(--lilac); }
+.brands .eyebrow, .ftr .eyebrow, .nf404 .eyebrow { color: var(--lilac); }
 .grain::after { content: ''; position: absolute; inset: 0; pointer-events: none; opacity: .07; mix-blend-mode: overlay; background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/></filter><rect width='160' height='160' filter='url(%23n)'/></svg>"); }
 .hdr--dark:not(.is-scrolled) .wm span:first-child, .tone-dark .hdr:not(.is-scrolled) .wm span:first-child { color: var(--paper) !important; }
 .hdr .wm span:first-child { transition: color .4s; }

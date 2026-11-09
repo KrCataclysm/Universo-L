@@ -1,7 +1,9 @@
 import { useAsync } from '../data/CatalogProvider'
 import Reveal from '../fx/Reveal'
+import { useDocumentTitle } from '../lib/useDocumentTitle'
 
 export default function Contact() {
+  useDocumentTitle('Contato')
   const { data: s } = useAsync((c) => c.getSettings(), [])
   const digits = (s?.whatsapp_number ?? '').replace(/\D/g, '')
   const wa = digits ? `https://wa.me/${digits}` : null

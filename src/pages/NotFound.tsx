@@ -1,8 +1,10 @@
 import { useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import NeonFrames from '../fx/NeonFrames'
+import { useDocumentTitle } from '../lib/useDocumentTitle'
 
 export default function NotFound() {
+  useDocumentTitle('Página não encontrada')
   useEffect(() => {
     document.documentElement.classList.add('tone-dark')
     return () => document.documentElement.classList.remove('tone-dark')

@@ -3,6 +3,8 @@ on:
   push:
     branches: [main]
   workflow_dispatch:
+  schedule:
+    - cron: '17 * * * *'   # republica a cada hora (páginas de compartilhamento dos produtos novos)
 permissions:
   contents: read
   pages: write
@@ -24,6 +26,7 @@ jobs:
       - run: npm run build
         env:
           BASE_PATH: ${{ vars.BASE_PATH || '/Universo-L/' }}
+          VITE_SITE_URL: ${{ vars.SITE_URL || 'https://krcataclysm.github.io/Universo-L' }}
           VITE_SUPABASE_URL: ${{ vars.VITE_SUPABASE_URL }}
           VITE_SUPABASE_ANON_KEY: ${{ vars.VITE_SUPABASE_ANON_KEY }}
       - uses: actions/upload-pages-artifact@v3

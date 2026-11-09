@@ -22,3 +22,18 @@ img { max-width: 100%; display: block; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: .001ms !important; animation-iteration-count: 1 !important; transition-duration: .001ms !important; }
 }
+
+/* ---------- tipografia ---------- */
+body { font-size: 16px; font-optical-sizing: auto; text-rendering: optimizeLegibility; font-kerning: normal; font-synthesis: none; font-variant-ligatures: common-ligatures; }
+h1, h2, h3, h4 { text-wrap: balance; font-variant-numeric: lining-nums; font-feature-settings: 'kern', 'liga', 'lnum'; }
+p, li, figcaption { text-wrap: pretty; }
+.pcard__price, .pdp__price, .drawer__total strong, .citem > span, .qty span { font-variant-numeric: tabular-nums lining-nums; }
+.pcard__info h3, .step h3, .abrand h3, .drawer__head h2, .empty h3 { font-weight: 500; letter-spacing: 0; }
+.wm span { font-weight: 500; }
+.step__n, .portal__n { font-variant-numeric: lining-nums; font-feature-settings: 'lnum'; }
+.hero h1 { font-size: clamp(44px, 8.4vw, 124px); letter-spacing: -.018em; }
+.bhero h1 { letter-spacing: -.015em; }
+.hero__lead, .about__lead { font-weight: 400; max-width: 56ch; }
+.skip { position: fixed; left: 12px; top: -60px; z-index: 12000; padding: 12px 18px; border-radius: 99px; background: var(--ink); color: var(--paper); font-size: 13px; letter-spacing: .08em; transition: top .25s var(--ease); }
+.skip:focus { top: 12px; }
+.main-anchor:focus { outline: none; }

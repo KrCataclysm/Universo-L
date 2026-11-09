@@ -1,16 +1,7 @@
-import { hasSupabase } from '../lib/env'
+import { SUPABASE_KEY, SUPABASE_URL, hasSupabase } from '../lib/env'
 import type { Catalog } from './catalog'
 import { exampleCatalog } from './exampleCatalog'
+import { createRestCatalog } from './restCatalog'
 
-/** Carrega o cliente Supabase sob demanda (fora do JS inicial). */
-let loaded: Promise<Catalog> | undefined
-const load = () => (loaded ??= import('./supabaseCatalog').then((m) => m.createSupabaseCatalog()))
-
-const lazy: Catalog = {
-  listProducts: async (q) => (await load()).listProducts(q),
-  getProduct: async (b, s) => (await load()).getProduct(b, s),
-  listCategories: async (b) => (await load()).listCategories(b),
-  getSettings: async () => (await load()).getSettings(),
-}
-
-export const appCatalog: Catalog = hasSupabase ? lazy : exampleCatalog
+/** Banco configurado → catálogo real (REST leve); senão, exemplos locais. */
+export const appCatalog: Catalog = hasSupabase ? createRestCatalog(SUPABASE_URL!, SUPABASE_KEY!) : exampleCatalog

@@ -33,9 +33,10 @@ export default function Header() {
   return (
     <>
       <header className={`hdr ${dark || menu ? 'hdr--dark' : ''} ${scrolled && !menu ? 'is-scrolled' : ''}`} style={menu ? { color: 'var(--paper)' } : undefined}>
-        <Link to="/" className="hdr__logo" aria-label="Universo Lay — início">
-          <Monogram variant={(dark && !scrolled) || menu ? 'light' : 'bare'} size={40} />
+        <Link to="/" className="hdr__logo">
+          <Monogram variant={(dark && !scrolled) || menu ? 'light' : 'bare'} size={40} decorative />
           <Wordmark className="wm" />
+          <span className="sr-only"> — início</span>
         </Link>
         <nav className="hdr__nav" aria-label="Principal">
           {BRANDS.map((b) => <NavLink key={b.slug} to={`/${b.slug}`} className={({ isActive }) => (isActive ? 'active' : '')}>{b.name}</NavLink>)}
