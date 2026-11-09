@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { getBrand } from '../brand/brands'
 import { useCart } from '../cart/cartStore'
@@ -19,6 +19,7 @@ export default function ProductPage() {
   const [custom, setCustom] = useState<Record<string, string>>({})
   const [errors, setErrors] = useState<Record<string, string>>({})
   const [qty, setQty] = useState(1)
+  useEffect(() => { void import('../components/CartDrawer') }, [])
   const p = state.data
   const variant = p?.variants.find((v) => v.id === variantId)
 

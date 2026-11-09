@@ -18,18 +18,16 @@ export default function NeonFrames({ from = '#9FB8FF', to = '#F2A7C8', layers = 
           <stop offset="0" stopColor={from} />
           <stop offset="1" stopColor={to} />
         </linearGradient>
-        <filter id={`${id}-g`} x="-20%" y="-20%" width="140%" height="140%">
-          <feGaussianBlur stdDeviation="3" result="b" />
-          <feMerge><feMergeNode in="b" /><feMergeNode in="SourceGraphic" /></feMerge>
-        </filter>
       </defs>
-      <g filter={`url(#${id}-g)`}>
+      <g>
         {Array.from({ length: layers }, (_, i) => {
           const o = i * 11
+          const d = `M ${120 + o} ${360 - o} L ${250 + o} ${90 + o} L ${720 - o} ${70 + o * 0.6} L ${600 - o} ${360 - o} Z`
           return (
-            <path key={i} className="nf-path" pathLength={1} style={{ ['--i' as string]: i }}
-              stroke={`url(#${id})`} strokeWidth={1.6 - i * 0.18} opacity={1 - i * 0.14}
-              d={`M ${120 + o} ${360 - o} L ${250 + o} ${90 + o} L ${720 - o} ${70 + o * 0.6} L ${600 - o} ${360 - o} Z`} />
+            <g key={i}>
+              <path className="nf-path" pathLength={1} style={{ ['--i' as string]: i }} stroke={`url(#${id})`} strokeWidth={7} opacity={0.1 * (1 - i * 0.14)} d={d} />
+              <path className="nf-path" pathLength={1} style={{ ['--i' as string]: i }} stroke={`url(#${id})`} strokeWidth={1.6 - i * 0.18} opacity={1 - i * 0.14} d={d} />
+            </g>
           )
         })}
       </g>

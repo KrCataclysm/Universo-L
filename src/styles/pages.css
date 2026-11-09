@@ -66,3 +66,6 @@ section h2 { font-size: clamp(36px, 6vw, 84px); font-weight: 300; margin: 10px 0
 .abrand:hover { transform: translateY(-6px); } .abrand h3 { font-size: 38px; } .abrand .eyebrow { color: var(--ink); opacity: .65; }
 .contact__links { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 32px; }
 @media (max-width: 900px) { .about__brands { grid-template-columns: 1fr; } }
+
+/* só renderiza o que está perto da tela */
+.featured, .how, .catalog, .ftr { content-visibility: auto; contain-intrinsic-size: auto 720px; }

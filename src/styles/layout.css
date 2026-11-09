@@ -19,7 +19,7 @@
 /* ---------- header ---------- */
 .hdr { position: fixed; inset: 0 0 auto 0; z-index: 800; display: flex; align-items: center; justify-content: space-between; gap: 24px; padding: 18px var(--gutter); color: var(--ink); transition: background .4s, color .4s, padding .4s, box-shadow .4s; }
 .hdr--dark, .tone-dark .hdr { color: var(--paper); }
-.hdr.is-scrolled { padding-block: 10px; color: var(--ink); background: rgba(247,245,242,.94); backdrop-filter: blur(16px) saturate(1.4); box-shadow: 0 1px 0 rgba(40,39,43,.08); }
+.hdr.is-scrolled { padding-block: 10px; color: var(--ink); background: rgba(247,245,242,.97); box-shadow: 0 1px 0 rgba(40,39,43,.08); }
 .hdr__logo { display: flex; align-items: center; gap: 12px; font-size: 22px; }
 .hdr__logo .wm { font-size: 22px; }
 .hdr__nav { display: flex; gap: clamp(14px, 2.2vw, 34px); font-size: 12px; letter-spacing: .16em; text-transform: uppercase; font-weight: 500; }
@@ -68,3 +68,7 @@
 .grain::after { content: ''; position: absolute; inset: 0; pointer-events: none; opacity: .07; mix-blend-mode: overlay; background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/></filter><rect width='160' height='160' filter='url(%23n)'/></svg>"); }
 .hdr--dark:not(.is-scrolled) .wm span:first-child, .tone-dark .hdr:not(.is-scrolled) .wm span:first-child { color: var(--paper) !important; }
 .hdr .wm span:first-child { transition: color .4s; }
+
+.intro-wrap { position: fixed; inset: 0; z-index: 10000; transition: opacity .7s var(--ease); }
+.intro-wrap.out { opacity: 0; pointer-events: none; }
+.hero__ribbon, .bhero__bg { will-change: transform; }

@@ -13,7 +13,7 @@
 .pcard__info h3 { font-size: 22px; line-height: 1.1; } .pcard__price { font-weight: 600; font-size: 14px; white-space: nowrap; }
 .pcard--skel { aspect-ratio: 4/5; border-radius: 22px; background: linear-gradient(100deg, #e9e3e0 30%, #f4efec 50%, #e9e3e0 70%); background-size: 200% 100%; animation: shimmer 1.4s linear infinite; }
 @keyframes shimmer { to { background-position: -200% 0; } }
-.tag { position: absolute; top: 12px; left: 12px; padding: 5px 10px; border-radius: 99px; background: rgba(40,39,43,.78); color: var(--paper); font-size: 10px; letter-spacing: .14em; text-transform: uppercase; backdrop-filter: blur(6px); }
+.tag { position: absolute; top: 12px; left: 12px; padding: 5px 10px; border-radius: 99px; background: rgba(40,39,43,.78); color: var(--paper); font-size: 10px; letter-spacing: .14em; text-transform: uppercase; }
 .tag--r { left: auto; right: 12px; background: rgba(163,138,158,.9); }
 .tag--inline { position: static; justify-self: start; width: fit-content; }
 
@@ -54,7 +54,7 @@
 @media (max-width: 900px) { .pdp__grid { grid-template-columns: 1fr; } .pdp__info { position: static; } .pdp { padding-top: 100px; } }
 
 /* ---------- cart drawer ---------- */
-.drawer__veil { position: fixed; inset: 0; z-index: 8800; background: rgba(11,10,13,.55); backdrop-filter: blur(4px); }
+.drawer__veil { position: fixed; inset: 0; z-index: 8800; background: rgba(11,10,13,.6); }
 .drawer { position: fixed; top: 0; right: 0; bottom: 0; z-index: 8900; width: min(460px, 100%); background: var(--paper); display: flex; flex-direction: column; box-shadow: -30px 0 80px -20px rgba(0,0,0,.45); }
 .drawer__head { display: flex; justify-content: space-between; align-items: center; padding: 22px 24px; border-bottom: 1px solid rgba(40,39,43,.1); }
 .drawer__head h2 { font-size: 34px; } .drawer__head button { width: 40px; height: 40px; border-radius: 50%; border: 1px solid rgba(40,39,43,.2); }
