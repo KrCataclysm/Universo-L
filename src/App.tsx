@@ -2,6 +2,7 @@ import { lazy, Suspense, useEffect, useState } from 'react'
 import { useCart } from './cart/cartStore'
 import Footer from './components/Footer'
 import Header from './components/Header'
+import { appCatalog } from './data/appCatalog'
 import { CatalogProvider, useCatalog } from './data/CatalogProvider'
 import Cursor from './fx/Cursor'
 import Intro from './fx/Intro'
@@ -33,7 +34,7 @@ export default function App() {
   const [intro, setIntro] = useState<'on' | 'leaving' | 'off'>('on')
   const done = () => { setIntro('leaving'); setTimeout(() => setIntro('off'), 750) }
   return (
-    <CatalogProvider>
+    <CatalogProvider catalog={appCatalog}>
       <SmoothScroll>
         {intro !== 'off' && <div className={`intro-wrap ${intro === 'leaving' ? 'out' : ''}`}><Intro onDone={done} /></div>}
         <Header />
