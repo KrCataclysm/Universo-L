@@ -4,7 +4,7 @@ import type { Catalog, Category, CustomField, Product, ProductQuery, Variant } f
 /** Imagem de exemplo gerada (degradê + legenda). Sem foto real até a loja cadastrar. */
 function art(brandSlug: string, label: string): string {
   const b = getBrand(brandSlug)!
-  const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 1000"><defs><linearGradient id="g" x1="0" y1="1" x2="1" y2="0"><stop offset="0" stop-color="${b.accentFrom}"/><stop offset="1" stop-color="${b.accentTo}"/></linearGradient></defs><rect width="800" height="1000" fill="#F7F5F2"/><rect x="60" y="60" width="680" height="880" rx="28" fill="url(#g)" opacity=".55"/><g fill="none" stroke="#28272B" stroke-opacity=".35">${Array.from({ length: 22 }, (_, i) => `<path d="M60 ${320 + i * 14} C 280 ${120 + i * 10}, 520 ${700 - i * 6}, 740 ${360 + i * 8}"/>`).join('')}</g><text x="400" y="880" text-anchor="middle" font-family="Georgia,serif" font-size="40" fill="#28272B" fill-opacity=".8">${label}</text></svg>`
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 1000"><defs><linearGradient id="g" x1="0" y1="1" x2="1" y2="0"><stop offset="0" stop-color="${b.accentFrom}"/><stop offset="1" stop-color="${b.accentTo}"/></linearGradient></defs><rect width="800" height="1000" fill="#F7F5F2"/><rect x="60" y="60" width="680" height="880" rx="28" fill="url(#g)" opacity=".55"/><g fill="none" stroke="#28272B" stroke-opacity=".35">${Array.from({ length: 14 }, (_, i) => `<path d="M60 ${320 + i * 22} C 280 ${120 + i * 10}, 520 ${700 - i * 6}, 740 ${360 + i * 8}"/>`).join('')}</g><text x="400" y="880" text-anchor="middle" font-family="Georgia,serif" font-size="40" fill="#28272B" fill-opacity=".8">${label}</text></svg>`
   return `data:image/svg+xml;utf8,${encodeURIComponent(svg)}`
 }
 
@@ -27,7 +27,7 @@ function mk(brandSlug: string, categorySlug: string, slug: string, title: string
   }
 }
 
-const PRODUCTS: Product[] = [
+const build = (): Product[] => [
   mk('lay-store', 'leggings', 'legging-cintura-alta', 'Legging cintura alta', 11990, { variants: sizes(), featured: true }),
   mk('lay-store', 'leggings', 'legging-sem-costura', 'Legging sem costura', 13990, { variants: sizes() }),
   mk('lay-store', 'tops', 'top-sustentacao', 'Top de sustentação', 7990, { variants: sizes(), featured: true }),
@@ -40,6 +40,9 @@ const PRODUCTS: Product[] = [
   mk('falou-bordei', 'toalhas', 'necessaire-bordada', 'Necessaire personalizada', 5490, { customizable: true, customizationFields: bordado }),
 ]
 
+let cache: Product[] | undefined
+const products = (): Product[] => (cache ??= build())
+
 const CATEGORIES: Record<string, Category[]> = {
   'lay-store': [{ slug: 'leggings', name: 'Leggings' }, { slug: 'tops', name: 'Tops' }, { slug: 'conjuntos', name: 'Conjuntos' }],
   'ousada-delicada': [{ slug: 'conjuntos', name: 'Conjuntos' }, { slug: 'camisolas', name: 'Camisolas' }],
@@ -48,13 +51,13 @@ const CATEGORIES: Record<string, Category[]> = {
 
 export const exampleCatalog: Catalog = {
   async listProducts(q: ProductQuery) {
-    return PRODUCTS.filter((p) =>
+    return products().filter((p) =>
       (!q.brandSlug || p.brandSlug === q.brandSlug) &&
       (!q.categorySlug || p.categorySlug === q.categorySlug) &&
       (q.featured === undefined || p.featured === q.featured))
   },
   async getProduct(brandSlug, slug) {
-    return PRODUCTS.find((p) => p.brandSlug === brandSlug && p.slug === slug) ?? null
+    return products().find((p) => p.brandSlug === brandSlug && p.slug === slug) ?? null
   },
   async listCategories(brandSlug) {
     return CATEGORIES[brandSlug] ?? []

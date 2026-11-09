@@ -1,6 +1,4 @@
 import { useEffect, useRef } from 'react'
-import { gsap } from 'gsap'
-import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { BRANDS, CONCEPT, SLOGAN } from '../brand/brands'
 import BrandPortal from '../components/BrandPortal'
 import ProductGrid from '../components/ProductGrid'
@@ -11,8 +9,6 @@ import Ribbon from '../fx/Ribbon'
 import SplitWords from '../fx/SplitWords'
 import { prefersReducedMotion } from '../fx/motion'
 import { useMagnetic } from '../fx/useMagnetic'
-
-gsap.registerPlugin(ScrollTrigger)
 
 const STEPS = [
   ['01', 'Escolha', 'Navegue pelas três marcas e escolha as peças que combinam com você.'],
@@ -26,13 +22,19 @@ export default function Home() {
   const featured = useFeatured()
 
   useEffect(() => {
-    if (prefersReducedMotion() || !hero.current) return
-    const ctx = gsap.context(() => {
-      gsap.to('.hero__content', { yPercent: -18, opacity: 0.1, ease: 'none', scrollTrigger: { trigger: hero.current, start: 'top top', end: 'bottom top', scrub: true } })
-      gsap.to('.hero__ribbon', { yPercent: 14, scale: 1.08, ease: 'none', scrollTrigger: { trigger: hero.current, start: 'top top', end: 'bottom top', scrub: true } })
-      gsap.from('.step', { y: 60, opacity: 0, stagger: 0.15, duration: 1, ease: 'power3.out', scrollTrigger: { trigger: '.steps', start: 'top 80%' } })
+    if (prefersReducedMotion() || !window.matchMedia('(pointer: fine)').matches || !hero.current) return
+    let dead = false
+    let ctx: { revert: () => void } | undefined
+    Promise.all([import('gsap'), import('gsap/ScrollTrigger')]).then(([{ gsap }, { ScrollTrigger }]) => {
+      if (dead || !hero.current) return
+      gsap.registerPlugin(ScrollTrigger)
+      ctx = gsap.context(() => {
+        const st = { trigger: hero.current, start: 'top top', end: 'bottom top', scrub: true }
+        gsap.to('.hero__content', { yPercent: -18, opacity: 0.1, ease: 'none', scrollTrigger: st })
+        gsap.to('.hero__ribbon', { yPercent: 14, ease: 'none', scrollTrigger: st })
+      })
     })
-    return () => ctx.revert()
+    return () => { dead = true; ctx?.revert() }
   }, [])
 
   return (
@@ -78,8 +80,8 @@ export default function Home() {
           <Reveal><p className="eyebrow">Simples e direto</p></Reveal>
           <Reveal delay={80}><h2>Como comprar</h2></Reveal>
           <ol className="steps">
-            {STEPS.map(([n, t, d]) => (
-              <li className="step" key={n}><span className="step__n">{n}</span><h3>{t}</h3><p>{d}</p></li>
+            {STEPS.map(([n, t, d], i) => (
+              <Reveal as="li" className="step" delay={i * 120} key={n}><span className="step__n">{n}</span><h3>{t}</h3><p>{d}</p></Reveal>
             ))}
           </ol>
         </div>

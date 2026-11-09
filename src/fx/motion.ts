@@ -15,11 +15,16 @@ export const isLowPower = (): boolean => {
   return typeof navigator !== 'undefined' && !!navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 4
 }
 
+let webgl: boolean | undefined
 export const hasWebGL = (): boolean => {
+  if (webgl !== undefined) return webgl
   try {
     const c = document.createElement('canvas')
-    return !!(c.getContext('webgl2') || c.getContext('webgl'))
+    const gl = c.getContext('webgl')
+    webgl = !!gl
+    gl?.getExtension('WEBGL_lose_context')?.loseContext()
   } catch {
-    return false
+    webgl = false
   }
+  return webgl
 }

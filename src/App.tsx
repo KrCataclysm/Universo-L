@@ -1,7 +1,5 @@
-import { useEffect, useState } from 'react'
-import { AnimatePresence, motion } from 'framer-motion'
+import { lazy, Suspense, useEffect, useState } from 'react'
 import { useCart } from './cart/cartStore'
-import CartDrawer from './components/CartDrawer'
 import Footer from './components/Footer'
 import Header from './components/Header'
 import { CatalogProvider, useCatalog } from './data/CatalogProvider'
@@ -10,6 +8,8 @@ import Intro from './fx/Intro'
 import PageTransition from './fx/PageTransition'
 import SmoothScroll from './fx/SmoothScroll'
 import AppRoutes from './router'
+
+const CartDrawer = lazy(() => import('./components/CartDrawer'))
 
 function PruneCart() {
   const catalog = useCatalog()
@@ -22,18 +22,24 @@ function PruneCart() {
   return null
 }
 
+function LazyDrawer() {
+  const open = useCart((s) => s.open)
+  const [ever, setEver] = useState(false)
+  useEffect(() => { if (open) setEver(true) }, [open])
+  return ever ? <Suspense fallback={null}><CartDrawer /></Suspense> : null
+}
+
 export default function App() {
-  const [intro, setIntro] = useState(true)
+  const [intro, setIntro] = useState<'on' | 'leaving' | 'off'>('on')
+  const done = () => { setIntro('leaving'); setTimeout(() => setIntro('off'), 750) }
   return (
     <CatalogProvider>
       <SmoothScroll>
-        <AnimatePresence>
-          {intro && <motion.div key="intro" exit={{ opacity: 0 }} transition={{ duration: 0.7 }} style={{ position: 'fixed', inset: 0, zIndex: 10000 }}><Intro onDone={() => setIntro(false)} /></motion.div>}
-        </AnimatePresence>
+        {intro !== 'off' && <div className={`intro-wrap ${intro === 'leaving' ? 'out' : ''}`}><Intro onDone={done} /></div>}
         <Header />
         <PageTransition><AppRoutes /></PageTransition>
         <Footer />
-        <CartDrawer />
+        <LazyDrawer />
         <PruneCart />
         <Cursor />
       </SmoothScroll>
