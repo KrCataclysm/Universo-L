@@ -45,7 +45,7 @@ export default function Header() {
         </nav>
         <div className="hdr__actions">
           <button ref={cartRef} className="hdr__cart" onClick={() => useCart.getState().setOpen(true)} onPointerEnter={() => void import('./CartDrawer')} onFocus={() => void import('./CartDrawer')} aria-label={`Abrir carrinho (${count} itens)`}>
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M6 8h12l-1 12H7L6 8Z" /><path d="M9 8a3 3 0 0 1 6 0" /></svg>
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4H6Z" /><path d="M3 6h18" /><path d="M16 10a4 4 0 0 1-8 0" /></svg>
             {count > 0 && <span className={`hdr__badge ${bump ? 'bump' : ''}`}>{count}</span>}
           </button>
           <button className={`hdr__burger ${menu ? 'open' : ''}`} onClick={() => setMenu((m) => !m)} aria-label="Menu" aria-expanded={menu}><i /><i /></button>
