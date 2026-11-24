@@ -27,8 +27,6 @@ jobs:
         env:
           BASE_PATH: ${{ vars.BASE_PATH || '/Universo-L/' }}
           VITE_SITE_URL: ${{ vars.SITE_URL || 'https://krcataclysm.github.io/Universo-L' }}
-          VITE_SUPABASE_URL: ${{ vars.VITE_SUPABASE_URL }}
-          VITE_SUPABASE_ANON_KEY: ${{ vars.VITE_SUPABASE_ANON_KEY }}
       - uses: actions/upload-pages-artifact@v3
         with:
           path: dist
