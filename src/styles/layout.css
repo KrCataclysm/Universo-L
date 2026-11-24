@@ -73,8 +73,6 @@
 .hdr--dark:not(.is-scrolled) .wm span:first-child, .tone-dark .hdr:not(.is-scrolled) .wm span:first-child { color: var(--paper) !important; }
 .hdr .wm span:first-child { transition: color .4s; }
 
-.intro-wrap { position: fixed; inset: 0; z-index: 10000; transition: opacity .7s var(--ease); }
-.intro-wrap.out { opacity: 0; pointer-events: none; }
 .hero__ribbon, .bhero__bg { will-change: transform; }
 
 .btn:active, .hdr__cart:active, .wafab:active { transform: scale(.96); }
