@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { loadSettings, saveSetting } from './adminApi'
 import { normalizeInstagram, normalizeWhatsApp } from './validators'
 
-const IG = [['instagram_lay_store', 'Instagram — Lay.Store'], ['instagram_ousada_delicada', 'Instagram — Ousada Delicada'], ['instagram_falou_bordei', 'Instagram — Falou, Bordei']] as const
+const IG = [['instagram_lay_store', 'Instagram — Lay.Store'], ['instagram_ousada_delicada', 'Instagram — Ousada Delicada'], ['instagram_falou_bordei', 'Instagram — Falou Bordei']] as const
 
 export default function Settings() {
   const [v, setV] = useState<Record<string, string>>({})

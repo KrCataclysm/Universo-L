@@ -6,6 +6,7 @@ import {
   type AdminProduct, type Brand, type Cat, type FieldDef, type ImageRow, type Status, type VariantRow,
 } from './adminApi'
 import { ImageRejected } from './imageUpload'
+import { asset, publicImageUrl } from '../lib/env'
 
 const centsToInput = (c: number) => (c / 100).toFixed(2).replace('.', ',')
 
@@ -15,7 +16,7 @@ export default function ProductEditor() {
   const [p, setP] = useState<AdminProduct | null | undefined>()
   const [brands, setBrands] = useState<Brand[]>([])
   const [cats, setCats] = useState<Cat[]>([])
-  const [f, setF] = useState({ name: '', description: '', price: '', brandId: '', categoryId: '', status: 'draft' as Status, featured: false, customizable: false })
+  const [f, setF] = useState({ name: '', description: '', price: '', brandId: '', categoryId: '', status: 'draft' as Status, featured: false, soldOut: false, customizable: false })
   const [fields, setFields] = useState<FieldDef[]>([])
   const [variants, setVariants] = useState<VariantRow[]>([])
   const [images, setImages] = useState<ImageRow[]>([])
@@ -29,7 +30,7 @@ export default function ProductEditor() {
     Promise.all([getProduct(id), listBrands(), listCats()]).then(([prod, b, c]) => {
       setBrands(b); setCats(c); setP(prod)
       if (!prod) return
-      setF({ name: prod.name, description: prod.description, price: centsToInput(prod.price_cents), brandId: prod.brand_id, categoryId: prod.category_id ?? '', status: prod.status, featured: prod.featured, customizable: prod.customizable })
+      setF({ name: prod.name, description: prod.description, price: centsToInput(prod.price_cents), brandId: prod.brand_id, categoryId: prod.category_id ?? '', status: prod.status, featured: prod.featured, soldOut: prod.sold_out, customizable: prod.customizable })
       setFields(prod.customization_schema ?? [])
       setVariants([...prod.product_variants].sort((a, z) => a.sort - z.sort))
       setImages([...prod.product_images].sort((a, z) => a.sort - z.sort))
@@ -53,7 +54,7 @@ export default function ProductEditor() {
     setBusy(true)
     try {
       const cleanFields = fields.map((x, n) => ({ ...x, key: x.key || `campo_${n + 1}`, options: x.type === 'select' ? (x.options ?? []).filter(Boolean) : undefined }))
-      const slug = await saveProduct({ id, brandId: f.brandId, categoryId: f.categoryId || null, name: f.name.trim(), description: f.description.trim(), priceCents: price, status: f.status, featured: f.featured, customizable: f.customizable, fields: cleanFields, variants }, p)
+      const slug = await saveProduct({ id, brandId: f.brandId, categoryId: f.categoryId || null, name: f.name.trim(), description: f.description.trim(), priceCents: price, status: f.status, featured: f.featured, soldOut: f.soldOut, customizable: f.customizable, fields: cleanFields, variants }, p)
       setP({ ...p, name: f.name.trim(), slug, brand_id: f.brandId })
       setMsg({ ok: true, text: 'Salvo!' })
     } catch (e) { setMsg({ ok: false, text: (e as Error).message }) } finally { setBusy(false) }
@@ -105,6 +106,7 @@ export default function ProductEditor() {
             <label className="field"><span>Marca</span><select value={f.brandId} onChange={(e) => { set('brandId', e.target.value); set('categoryId', '') }}>{brands.map((b) => <option key={b.id} value={b.id}>{b.name}</option>)}</select></label>
             <label className="field"><span>Categoria</span><select value={f.categoryId} onChange={(e) => set('categoryId', e.target.value)}><option value="">Sem categoria</option>{brandCats.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}</select></label>
           </div>
+          <label className="adm-chk"><input type="checkbox" checked={f.soldOut} onChange={(e) => set('soldOut', e.target.checked)} /> Esgotado (aparece com selo e não pode ser comprado)</label>
           <label className="adm-chk"><input type="checkbox" checked={f.featured} onChange={(e) => set('featured', e.target.checked)} /> Mostrar nos destaques da página inicial</label>
           {Number.isFinite(parsePriceToCents(f.price) ?? NaN) && <small>Vai aparecer como {formatBRL(parsePriceToCents(f.price)!)}</small>}
         </section>
@@ -118,7 +120,7 @@ export default function ProductEditor() {
           <div className="adm-thumbs">
             {images.map((im, i) => (
               <figure key={im.id}>
-                <img src={`${import.meta.env.VITE_SUPABASE_URL}/storage/v1/object/public/product-images/${im.path}`} alt={im.alt} />
+                <img src={im.path.startsWith('/') ? asset(im.path) : publicImageUrl(im.path)} alt={im.alt} />
                 <figcaption>
                   <button onClick={() => move(i, -1)} aria-label="Mover para trás" disabled={i === 0}>←</button>
                   <button onClick={() => move(i, 1)} aria-label="Mover para frente" disabled={i === images.length - 1}>→</button>

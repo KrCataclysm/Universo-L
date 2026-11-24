@@ -3,7 +3,7 @@
 export const esc = (s) =>
   String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;')
 
-export function seoBlock({ title, description, url, image }) {
+export function seoBlock({ title, description, url, image, jsonLd }) {
   const t = esc(title), d = esc(description), u = esc(url)
   const lines = [
     `<title>${t}</title>`,
@@ -23,6 +23,7 @@ export function seoBlock({ title, description, url, image }) {
     const i = esc(image)
     lines.push(`<meta property="og:image" content="${i}" />`, `<meta name="twitter:image" content="${i}" />`)
   }
+  if (jsonLd) lines.push(`<script type="application/ld+json">${JSON.stringify(jsonLd).replace(/</g, '\\u003c')}</script>`)
   return lines.join('\n    ')
 }
 

@@ -46,4 +46,13 @@ describe('mapProduct', () => {
     expect(p.priceCents).toBe(1234)
     expect(p.featured).toBe(true)
   })
+  it('foto com caminho estático (/produtos/...) usa o arquivo do próprio site, não o storage', () => {
+    const p = mapProduct(row({ product_images: [{ path: '/produtos/a.webp', alt: '', sort: 1 }] }), pub)
+    expect(p.images[0].url).toBe('/produtos/a.webp')
+    expect(p.images[0].alt).toBe('Peça de teste')
+  })
+  it('sold_out vira soldOut (padrão: disponível)', () => {
+    expect(mapProduct(row({ sold_out: true }), pub).soldOut).toBe(true)
+    expect(mapProduct(row(), pub).soldOut).toBe(false)
+  })
 })

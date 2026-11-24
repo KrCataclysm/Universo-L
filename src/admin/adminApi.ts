@@ -10,7 +10,7 @@ export interface VariantRow { id?: string; label: string; option_type: 'size' | 
 export interface ImageRow { id: string; path: string; alt: string; sort: number }
 export interface AdminProduct {
   id: string; brand_id: string; category_id: string | null; slug: string; name: string; description: string; price_cents: number
-  status: Status; featured: boolean; customizable: boolean; customization_schema: FieldDef[]; is_example: boolean
+  status: Status; featured: boolean; sold_out: boolean; customizable: boolean; customization_schema: FieldDef[]; is_example: boolean
   product_images: ImageRow[]; product_variants: (VariantRow & { sort: number })[]; brands?: { name: string } | null
 }
 
@@ -35,7 +35,7 @@ export async function createDraft(brandId: string): Promise<string> {
 
 export interface SaveInput {
   id: string; brandId: string; categoryId: string | null; name: string; description: string; priceCents: number
-  status: Status; featured: boolean; customizable: boolean; fields: FieldDef[]; variants: VariantRow[]
+  status: Status; featured: boolean; soldOut: boolean; customizable: boolean; fields: FieldDef[]; variants: VariantRow[]
 }
 
 export async function saveProduct(i: SaveInput, current: { slug: string; name: string; brand_id: string }): Promise<string> {
@@ -46,7 +46,7 @@ export async function saveProduct(i: SaveInput, current: { slug: string; name: s
   }
   ok(await sb().from('products').update({
     brand_id: i.brandId, category_id: i.categoryId, slug, name: i.name, description: i.description, price_cents: i.priceCents,
-    status: i.status, featured: i.featured, customizable: i.customizable, customization_schema: i.customizable ? i.fields : [],
+    status: i.status, featured: i.featured, sold_out: i.soldOut, customizable: i.customizable, customization_schema: i.customizable ? i.fields : [],
   }).eq('id', i.id))
   ok(await sb().from('product_variants').delete().eq('product_id', i.id))
   if (i.variants.length) ok(await sb().from('product_variants').insert(i.variants.map((v, n) => ({ product_id: i.id, label: v.label, option_type: v.option_type, value: v.value, in_stock: v.in_stock, sort: n }))))
@@ -55,7 +55,8 @@ export async function saveProduct(i: SaveInput, current: { slug: string; name: s
 
 export async function deleteProduct(id: string): Promise<void> {
   const imgs = ok(await sb().from('product_images').select('path').eq('product_id', id)) as { path: string }[]
-  if (imgs.length) await sb().storage.from('product-images').remove(imgs.map((x) => x.path))
+  const stored = imgs.filter((x) => !x.path.startsWith('/')) // fotos do próprio site (/produtos/...) não estão no storage
+  if (stored.length) await sb().storage.from('product-images').remove(stored.map((x) => x.path))
   ok(await sb().from('products').delete().eq('id', id))
 }
 
@@ -71,7 +72,7 @@ export async function addImage(productId: string, file: File, alt: string, sort:
 }
 
 export async function removeImage(img: ImageRow): Promise<void> {
-  await sb().storage.from('product-images').remove([img.path])
+  if (!img.path.startsWith('/')) await sb().storage.from('product-images').remove([img.path])
   ok(await sb().from('product_images').delete().eq('id', img.id))
 }
 

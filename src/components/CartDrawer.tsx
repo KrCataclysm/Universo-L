@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { itemKey, useCart } from '../cart/cartStore'
-import { formatBRL } from '../cart/money'
+import { formatBRL, priceLabel } from '../cart/money'
 import { buildWhatsAppUrl } from '../cart/whatsapp'
 import { useAsync } from '../data/CatalogProvider'
 
@@ -43,7 +43,7 @@ export default function CartDrawer() {
                           <button className="citem__rm" onClick={() => remove(k)}>remover</button>
                         </div>
                       </div>
-                      <span>{formatBRL(i.unitPriceCents * i.qty)}</span>
+                      <span>{i.unitPriceCents > 0 ? formatBRL(i.unitPriceCents * i.qty) : priceLabel(0)}</span>
                     </motion.div>
                   )
                 })}
@@ -51,7 +51,8 @@ export default function CartDrawer() {
             </div>
             <footer className="drawer__foot">
               <label className="field"><span>Seu nome (opcional)</span><input value={name} onChange={(e) => setName(e.target.value)} maxLength={60} /></label>
-              <div className="drawer__total"><span>Total</span><strong>{formatBRL(total)}</strong></div>
+              <div className="drawer__total"><span>Total</span><strong>{items.length && items.every((i) => i.unitPriceCents === 0) ? 'A combinar' : formatBRL(total)}</strong></div>
+              {items.some((i) => i.unitPriceCents === 0) && items.some((i) => i.unitPriceCents > 0) && <p className="drawer__hint">+ itens sob consulta, combinados no WhatsApp.</p>}
               {hint && <p className="drawer__hint">{hint}</p>}
               {preview && <details className="drawer__preview"><summary>Ver prévia da mensagem do pedido</summary><pre>{preview}</pre></details>}
               {res.url

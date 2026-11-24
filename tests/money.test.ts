@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { formatBRL, parsePriceToCents } from '../src/cart/money'
+import { formatBRL, parsePriceToCents, priceLabel } from '../src/cart/money'
 
 describe('money', () => {
   it('formata centavos em BRL', () => {
@@ -15,5 +15,9 @@ describe('money', () => {
     expect(parsePriceToCents('abc')).toBeNull()
     expect(parsePriceToCents('-5')).toBeNull()
     expect(parsePriceToCents('')).toBeNull()
+  })
+  it('priceLabel: preço zero vira "Sob consulta"', () => {
+    expect(priceLabel(0)).toBe('Sob consulta')
+    expect(priceLabel(6690).replace(/\u00A0/g, ' ')).toBe('R$ 66,90')
   })
 })
