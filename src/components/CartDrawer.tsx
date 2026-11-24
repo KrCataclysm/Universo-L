@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { itemKey, useCart } from '../cart/cartStore'
 import { formatBRL, priceLabel } from '../cart/money'
@@ -10,6 +10,26 @@ export default function CartDrawer() {
   const { items, open, notice, setOpen, setQty, remove, setNotice } = useCart()
   const total = useCart((s) => s.totalCents())
   const [name, setName] = useState('')
+  const panel = useRef<HTMLElement>(null)
+  useEffect(() => {
+    if (!open) return
+    const previous = document.activeElement as HTMLElement | null
+    const focusables = () => Array.from(panel.current?.querySelectorAll<HTMLElement>('a[href], button:not([disabled]), input, select, textarea') ?? [])
+    const t = setTimeout(() => focusables()[0]?.focus(), 60)
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') { setOpen(false); return }
+      if (e.key !== 'Tab') return
+      const f = focusables()
+      if (!f.length) return
+      const first = f[0], last = f[f.length - 1]
+      if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus() }
+      else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus() }
+      else if (!panel.current?.contains(document.activeElement)) { e.preventDefault(); first.focus() }
+    }
+    document.addEventListener('keydown', onKey)
+    document.body.style.overflow = 'hidden'
+    return () => { clearTimeout(t); document.removeEventListener('keydown', onKey); document.body.style.overflow = ''; previous?.focus() }
+  }, [open, setOpen])
   const { data: settings } = useAsync((c) => c.getSettings(), [])
   const res = buildWhatsAppUrl({ phone: settings?.whatsapp_number, customerName: name, items })
   const preview = res.reason === 'no-phone' && items.length ? decodeURIComponent(buildWhatsAppUrl({ phone: '0', customerName: name, items }).url!.split('?text=')[1]) : null
@@ -19,7 +39,7 @@ export default function CartDrawer() {
       {open && (
         <>
           <motion.div className="drawer__veil" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setOpen(false)} />
-          <motion.aside className="drawer" role="dialog" aria-modal="true" aria-label="Carrinho"
+          <motion.aside ref={panel} data-lenis-prevent className="drawer" role="dialog" aria-modal="true" aria-label="Carrinho"
             initial={{ x: '100%' }} animate={{ x: 0 }} exit={{ x: '100%' }} transition={{ type: 'spring', stiffness: 260, damping: 32 }}>
             <header className="drawer__head">
               <h2>Seu carrinho</h2>

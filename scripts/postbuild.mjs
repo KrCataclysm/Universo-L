@@ -1,6 +1,6 @@
 import { copyFileSync, existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { dirname, join } from 'node:path'
-import { buildSitemap, injectSeo, seoBlock } from './seo.mjs'
+import { buildSitemap, esc, injectRoot, injectSeo, seoBlock } from './seo.mjs'
 
 const envFile = existsSync('.env.production') ? readFileSync('.env.production', 'utf8') : ''
 const fromFile = (k) => envFile.match(new RegExp(`^${k}=(.*)$`, 'm'))?.[1]?.trim()
@@ -38,6 +38,7 @@ try {
     const img = imgs[0]
     const url = `${SITE}/${p.brands.slug}/${p.slug}/`
     pages.push({
+      rootHtml: imgs[0] ? `<main class="page pdp"><div class="container pdp__grid"><div class="gallery"><div class="gallery__main"><img src="${esc(imgs[0])}"${/\/produtos\/[^/]+\.webp$/.test(imgs[0]) ? ` srcset="${[480, 800].map((w) => `${esc(imgs[0].replace(/\.webp$/, `-${w}.webp`))} ${w}w`).concat(`${esc(imgs[0])} 1280w`).join(', ')}"` : ''} sizes="(max-width: 900px) 100vw, 580px" width="1280" height="1600" fetchpriority="high" decoding="async" alt="${esc(p.name)}"></div></div></div></main>` : undefined,
       preload: imgs[0] ? { href: imgs[0], srcset: /\/produtos\/[^/]+\.webp$/.test(imgs[0]) ? [480, 800].map((w) => `${imgs[0].replace(/\.webp$/, `-${w}.webp`)} ${w}w`).concat(`${imgs[0]} 1280w`).join(', ') : undefined, sizes: '(max-width: 900px) 100vw, 580px' } : undefined,
       jsonLd: [{
         '@context': 'https://schema.org', '@type': 'Product', name: p.name, description: p.description || undefined,
@@ -61,7 +62,8 @@ try {
 const defaultImage = SITE ? `${SITE}/og.png` : null
 for (const pg of pages) {
   const url = `${SITE}${pg.path}/` // o Pages serve cada rota como pasta (com barra final)
-  write(join('dist', pg.path, 'index.html'), injectSeo(template, seoBlock({ title: pg.title, description: pg.description, url, image: pg.image ?? defaultImage, jsonLd: pg.jsonLd, preload: pg.preload })))
+  const page = injectSeo(template, seoBlock({ title: pg.title, description: pg.description, url, image: pg.image ?? defaultImage, jsonLd: pg.jsonLd, preload: pg.preload }))
+  write(join('dist', pg.path, 'index.html'), pg.rootHtml ? injectRoot(page, pg.rootHtml) : page)
 }
 
 // 3) robots e sitemap
