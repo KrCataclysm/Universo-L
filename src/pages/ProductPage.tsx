@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { getBrand } from '../brand/brands'
 import { useCart } from '../cart/cartStore'
@@ -13,6 +13,7 @@ import { seedProduct } from '../data/seed'
 import Reveal from '../fx/Reveal'
 import { useDocumentTitle } from '../lib/useDocumentTitle'
 import NotFound from './NotFound'
+import { toast } from '../ui/toast'
 
 export default function ProductPage() {
   const { brand: brandSlug = '', slug = '' } = useParams()
@@ -21,6 +22,7 @@ export default function ProductPage() {
   const state = useAsync((c) => c.getProduct(brandSlug, slug), [brandSlug, slug], seed)
   const settings = useAsync((c) => c.getSettings(), [])
   const more = useAsync((c) => c.listProducts({ brandSlug }), [brandSlug])
+  const addBtn = useRef<HTMLButtonElement>(null)
   const [added, setAdded] = useState(false)
   const [variantId, setVariantId] = useState<string>()
   const [custom, setCustom] = useState<Record<string, string>>({})
@@ -56,13 +58,13 @@ export default function ProductPage() {
     if (p.variants.length && !variant) errs.__variant = 'Escolha uma opção.'
     for (const f of p.customizationFields) if (f.required && !custom[f.key]?.trim()) errs[f.key] = 'Campo obrigatório.'
     setErrors(errs)
-    if (Object.keys(errs).length) return
+    if (Object.keys(errs).length) { toast({ tone: 'warn', title: errs.__variant ? 'Escolha uma opção antes de continuar' : 'Preencha os campos obrigatórios' }); return }
     const labelled = Object.fromEntries(p.customizationFields.filter((f) => custom[f.key]?.trim()).map((f) => [f.label, custom[f.key].trim()]))
     useCart.getState().add({
       productId: p.id, slug: p.slug, brandSlug: p.brandSlug, name: p.name, unitPriceCents: p.priceCents, qty,
       variantLabel: variant ? `${variant.label}: ${variant.value}` : undefined, image: p.images[0]?.url, custom: Object.keys(labelled).length ? labelled : undefined,
     })
-    useCart.getState().setOpen(true)
+    toast({ title: 'Adicionado ao carrinho', text: `${qty > 1 ? `${qty}× ` : ''}${p.name}`, action: { label: 'Ver carrinho', run: () => { addBtn.current?.focus(); useCart.getState().setOpen(true) } } })
     setAdded(true); setTimeout(() => setAdded(false), 1800)
   }
 
@@ -94,7 +96,7 @@ export default function ProductPage() {
           ) : (
           <div className="pdp__buy">
               <div className="qty qty--lg"><button onClick={() => setQty((q) => Math.max(1, q - 1))} aria-label="Diminuir">−</button><span>{qty}</span><button onClick={() => setQty((q) => Math.min(20, q + 1))} aria-label="Aumentar">+</button></div>
-              <button className="btn btn--ink" onClick={add} disabled={p.soldOut}>{p.soldOut ? 'Esgotado' : added ? 'Adicionado ✓' : 'Adicionar ao carrinho'}</button>
+              <button ref={addBtn} className="btn btn--ink" onClick={add} disabled={p.soldOut}>{p.soldOut ? 'Esgotado' : added ? 'Adicionado ✓' : 'Adicionar ao carrinho'}</button>
             </div>
           )}
           <div className="pdp__links">

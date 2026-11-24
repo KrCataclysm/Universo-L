@@ -9,6 +9,8 @@ import { CatalogProvider, useCatalog } from './data/CatalogProvider'
 import PageTransition from './fx/PageTransition'
 import SmoothScroll from './fx/SmoothScroll'
 import AppRoutes from './router'
+import Toaster from './ui/Toaster'
+import { toast } from './ui/toast'
 
 const CartDrawer = lazy(() => import('./components/CartDrawer'))
 
@@ -17,7 +19,7 @@ function PruneCart() {
   useEffect(() => {
     catalog.listProducts({}).then((ps) => {
       const removed = useCart.getState().prune(new Set(ps.map((p) => p.id)))
-      if (removed) useCart.getState().setNotice(`${removed} ${removed === 1 ? 'item saiu' : 'itens saíram'} do catálogo e foi removido do carrinho.`)
+      if (removed) toast({ tone: 'warn', title: removed === 1 ? 'Um item saiu do catálogo' : `${removed} itens saíram do catálogo`, text: 'Já foi removido do seu carrinho.', ms: 6500 })
     }).catch(() => {})
   }, [catalog])
   return null
@@ -39,6 +41,7 @@ function Site() {
         <PageTransition><div id="main" tabIndex={-1} className="main-anchor"><AppRoutes /></div></PageTransition>
         <Footer />
         <WhatsAppFab />
+        <Toaster />
         <LazyDrawer />
         <PruneCart />
       </SmoothScroll>

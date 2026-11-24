@@ -62,7 +62,7 @@ export default function Home() {
       </section>
 
       {!!news.data?.length && (
-        <section className="sec">
+        <section className="sec sec--white">
           <div className="container">
             <Head eyebrow="Acabou de chegar" title="Novidades e lançamentos" />
             <ProductGrid state={news} more={{ to: '/busca', label: 'Ver todas as peças' }} />
@@ -84,21 +84,21 @@ export default function Home() {
           <Head eyebrow="Simples e direto" title="Como comprar" />
           <ol className="steps">
             {STEPS.map((s, i) => (
-              <Reveal as="li" className="step" delay={i * 80} key={s.t}>
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">{s.icon}</svg>
-                <span><b>{i + 1}. {s.t}</b><small>{s.d}</small></span>
+              <Reveal as="li" className="step panel" delay={i * 80} key={s.t}>
+                <span className="step__n" aria-hidden>{String(i + 1).padStart(2, '0')}</span>
+                <span><b>{s.t}</b><small>{s.d}</small></span>
               </Reveal>
             ))}
           </ol>
         </div>
       </section>
 
-      <section className="sec info">
+      <section className="sec info sec--white">
         <div className="container">
           <Head eyebrow="Compra tranquila" title="Pagamento e entrega" />
           <div className="info__grid">
             {INFO.filter((i) => i.key !== 'prazos').map((i) => (
-              <Reveal key={i.key} className="info__card">
+              <Reveal key={i.key} className="info__card panel">
                 <h3>{i.title}</h3>
                 <p>{infoParagraphs(settings.data, i)[0]}</p>
                 <Link to={`/informacoes#${i.key}`}>Ver detalhes</Link>
