@@ -38,3 +38,10 @@ export function buildSitemap(origin, paths) {
 
 /** Coloca HTML inicial dentro de #root (o React substitui ao carregar). */
 export const injectRoot = (html, inner) => html.replace('<div id="root"></div>', () => `<div id="root">${inner}</div>`)
+
+/** Embute os dados do produto no HTML: a página renderiza a foto no 1º commit, sem esperar a rede. */
+export const withSeed = (html, seed) => {
+  if (!seed) return html
+  const json = JSON.stringify(seed).replace(/</g, '\\u003c').replace(/\u2028/g, '\\u2028').replace(/\u2029/g, '\\u2029')
+  return html.replace('</body>', () => `<script id="__seed" type="application/json">${json}</script></body>`)
+}

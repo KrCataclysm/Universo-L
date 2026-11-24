@@ -159,3 +159,19 @@ test('menu do celular fecha com Esc', async ({ page }) => {
   await page.keyboard.press('Escape')
   await expect(page.getByRole('button', { name: 'Menu' })).toHaveAttribute('aria-expanded', 'false')
 })
+
+test('novidades fecha com cartão "Ver todas as peças" que leva à busca', async ({ page }) => {
+  await page.goto('/')
+  const more = page.getByRole('link', { name: /Ver todas as peças/ })
+  await expect(more).toBeVisible()
+  await more.click()
+  await expect(page).toHaveURL(/\/busca$/)
+  await expect(page.getByRole('heading', { name: 'Buscar produtos' })).toBeVisible()
+})
+
+test('desktop: topo com colagem de fotos reais das marcas', async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 })
+  await page.goto('/')
+  await expect(page.locator('.hero__collage img')).toHaveCount(3)
+  await expect(page.locator('.hero__collage img').first()).toBeVisible()
+})

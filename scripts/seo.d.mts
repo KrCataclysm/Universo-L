@@ -3,3 +3,5 @@ export function seoBlock(o: { title: string; description: string; url: string; i
 export function injectSeo(html: string, block: string): string
 export function buildSitemap(origin: string, paths: string[]): string
 export function injectRoot(html: string, inner: string): string
+
+export function withSeed(html: string, seed?: unknown): string
