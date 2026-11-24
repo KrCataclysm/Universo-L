@@ -59,6 +59,8 @@ test('bordado sob consulta: "Solicitar orçamento" abre o WhatsApp com a peça e
 test('home na ordem pedida e sem numeração nos cartões das marcas', async ({ page }) => {
   await page.goto('/')
   await expect(page.getByRole('heading', { name: 'Siga no Instagram' })).toBeAttached()
+  await expect(page.getByRole('heading', { name: 'Novidades e lançamentos' })).toBeAttached()
+  await expect(page.getByRole('heading', { name: 'Produtos em destaque' })).toBeAttached()
   const titles = await page.locator('main h2').evaluateAll((els) => els.map((e) => e.textContent?.trim()))
   expect(titles).toEqual(['Escolha seu universo', 'Novidades e lançamentos', 'Produtos em destaque', 'Como comprar', 'Pagamento e entrega', 'Siga no Instagram'])
   await expect(page.locator('.portal__n')).toHaveCount(0)
