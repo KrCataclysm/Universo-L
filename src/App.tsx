@@ -7,7 +7,6 @@ import Header from './components/Header'
 import { appCatalog } from './data/appCatalog'
 import { CatalogProvider, useCatalog } from './data/CatalogProvider'
 import Cursor from './fx/Cursor'
-import Intro from './fx/Intro'
 import PageTransition from './fx/PageTransition'
 import SmoothScroll from './fx/SmoothScroll'
 import AppRoutes from './router'
@@ -33,12 +32,9 @@ function LazyDrawer() {
 }
 
 function Site() {
-  const [intro, setIntro] = useState<'on' | 'leaving' | 'off'>('on')
-  const done = () => { setIntro('leaving'); setTimeout(() => setIntro('off'), 750) }
   return (
     <CatalogProvider catalog={appCatalog}>
       <SmoothScroll>
-        {intro !== 'off' && <div className={`intro-wrap ${intro === 'leaving' ? 'out' : ''}`}><Intro onDone={done} /></div>}
         <a className="skip" href="#main">Pular para o conteúdo</a>
         <Header />
         <PageTransition><div id="main" tabIndex={-1} className="main-anchor"><AppRoutes /></div></PageTransition>

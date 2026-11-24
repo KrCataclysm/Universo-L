@@ -1,9 +1,5 @@
 import { expect, test } from '@playwright/test'
 
-test.beforeEach(async ({ page }) => {
-  await page.addInitScript(() => sessionStorage.setItem('ul-intro', '1'))
-})
-
 test('home mostra slogan e as 3 marcas e navega para cada uma', async ({ page }) => {
   await page.goto('/')
   await expect(page.getByRole('heading', { level: 1 })).toHaveAccessibleName('Todas as suas marcas em um só lugar.')

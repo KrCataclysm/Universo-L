@@ -10,7 +10,6 @@ const routes = ['/', '/lay-store', '/ousada-delicada', '/falou-bordei', '/falou-
 for (const s of sizes) {
   test(`sem rolagem horizontal em ${s.name}`, async ({ page }) => {
     await page.setViewportSize({ width: s.width, height: s.height })
-    await page.addInitScript(() => sessionStorage.setItem('ul-intro', '1'))
     const errors: string[] = []
     page.on('pageerror', (e) => errors.push(e.message))
     for (const r of routes) {
