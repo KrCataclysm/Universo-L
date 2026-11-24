@@ -8,7 +8,7 @@ export default function BrandPortal({ brand, index }: { brand: Brand; index: num
   const tilt = useTilt(5)
   return (
     <Link to={`/${brand.slug}`} className="portal" style={{ ['--a' as string]: brand.accentFrom, ['--b' as string]: brand.accentTo }} {...tilt}>
-      <span className="portal__photo" style={{ backgroundImage: `url(${asset(`produtos/${brand.slug}-1.webp`)})` }} aria-hidden />
+      <span className="portal__photo" style={{ backgroundImage: `url(${asset(`produtos/${brand.cover}-800.webp`)})` }} aria-hidden />
       <NeonFrames from={brand.accentFrom} to={brand.accentTo} layers={5} animate={false} className="portal__art" />
       <span className="portal__n">0{index + 1}</span>
       <div className="portal__body">

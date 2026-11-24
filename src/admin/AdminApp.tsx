@@ -1,4 +1,4 @@
-import { lazy, Suspense } from 'react'
+import { lazy, Suspense, useEffect } from 'react'
 import { Link, NavLink, Route, Routes } from 'react-router-dom'
 import { usePreview } from '../data/previewStore'
 import { hasSupabase } from '../lib/env'
@@ -55,6 +55,11 @@ function Shell() {
 }
 
 export default function AdminApp() {
+  useEffect(() => {
+    const m = document.createElement('meta'); m.name = 'robots'; m.content = 'noindex, nofollow'
+    document.head.appendChild(m)
+    return () => m.remove()
+  }, [])
   if (!hasSupabase) return <main className="adm-login"><div className="adm-card"><h1>Painel indisponível</h1><p>O banco de dados não está configurado neste ambiente.</p></div></main>
   return <AuthProvider><Shell /></AuthProvider>
 }

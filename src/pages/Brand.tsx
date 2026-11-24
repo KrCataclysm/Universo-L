@@ -21,15 +21,17 @@ export default function BrandPage() {
   return (
     <main className="page brandpage" style={{ ['--a' as string]: brand.accentFrom, ['--b' as string]: brand.accentTo }}>
       <section className="bhero grain">
-        <div className="bhero__bg" aria-hidden><div className="bhero__photo" style={{ backgroundImage: `url(${asset(`produtos/${brand.slug}-1.webp`)})` }} /></div>
+        <div className="bhero__bg" aria-hidden><div className="bhero__photo" style={{ backgroundImage: `url(${asset(`produtos/${brand.cover}-800.webp`)})` }} /></div>
         <NeonFrames from={brand.accentFrom} to={brand.accentTo} layers={5} className="bhero__frames" />
         <div className="container bhero__content">
           <p className="eyebrow">{brand.category}</p>
           <h1><SplitWords text={brand.name} delay={200} /></h1>
+          <p className="bhero__intro">{brand.intro}</p>
         </div>
       </section>
       <section className="catalog">
         <div className="container">
+          <h2 className="sr-only">Produtos de {brand.name}</h2>
           {!!cats.data?.length && (
             <div className="chips" role="group" aria-label="Categorias">
               <button className={!cat ? 'on' : ''} onClick={() => setCat(undefined)}>Tudo</button>

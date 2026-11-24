@@ -3,6 +3,7 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { itemKey, useCart } from '../cart/cartStore'
 import { formatBRL, priceLabel } from '../cart/money'
 import { buildWhatsAppUrl } from '../cart/whatsapp'
+import { imgSize } from '../lib/env'
 import { useAsync } from '../data/CatalogProvider'
 
 export default function CartDrawer() {
@@ -32,7 +33,7 @@ export default function CartDrawer() {
                   const k = itemKey(i)
                   return (
                     <motion.div layout key={k} className={`citem ${i.image ? 'citem--img' : ''}`} initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, x: 40 }}>
-                      {i.image && <img className="citem__img" src={i.image} alt="" />}
+                      {i.image && <img className="citem__img" src={imgSize(i.image, 480)} alt="" />}
                       <div>
                         <strong>{i.name}</strong>
                         {i.variantLabel && <small>{i.variantLabel}</small>}

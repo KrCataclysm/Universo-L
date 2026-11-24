@@ -108,3 +108,5 @@ section h2 { font-size: clamp(36px, 6vw, 84px); font-weight: 300; margin: 10px 0
   .bhero::after { content: ''; position: absolute; inset: 0 0 auto 0; height: 150px; background: linear-gradient(rgba(11,10,13,.92), transparent); z-index: -1; }
   .bhero__content { padding-block: 130px 48px; }
 }
+
+.bhero__intro { max-width: 52ch; margin: 18px 0 0; font-size: clamp(15px, 1.5vw, 18px); opacity: .82; }

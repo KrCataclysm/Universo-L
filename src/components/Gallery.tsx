@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import type { ProductImage } from '../data/catalog'
+import { imgSize, imgSrcSet } from '../lib/env'
 
 export default function Gallery({ images }: { images: ProductImage[] }) {
   const [i, setI] = useState(0)
@@ -9,13 +10,13 @@ export default function Gallery({ images }: { images: ProductImage[] }) {
   return (
     <div className="gallery">
       <div className="gallery__main" onPointerMove={(e) => { if (e.pointerType !== 'mouse') return; const r = e.currentTarget.getBoundingClientRect(); setZoom({ x: ((e.clientX - r.left) / r.width) * 100, y: ((e.clientY - r.top) / r.height) * 100 }) }} onPointerLeave={() => setZoom(null)}>
-        <img src={cur.url} alt={cur.alt} width={1280} height={1600} fetchPriority="high" decoding="async" style={zoom ? { transformOrigin: `${zoom.x}% ${zoom.y}%`, transform: 'scale(1.9)' } : undefined} />
+        <img src={cur.url} srcSet={imgSrcSet(cur.url)} sizes="(max-width: 900px) 100vw, 580px" alt={cur.alt} width={1280} height={1600} fetchPriority="high" decoding="async" style={zoom ? { transformOrigin: `${zoom.x}% ${zoom.y}%`, transform: 'scale(1.9)' } : undefined} />
       </div>
       {images.length > 1 && (
         <div className="gallery__thumbs" role="tablist" aria-label="Fotos do produto">
           {images.map((im, n) => (
             <button key={n} role="tab" aria-selected={n === i} aria-label={`Foto ${n + 1}`} className={n === i ? 'on' : ''} onClick={() => setI(n)}>
-              <img src={im.url} alt="" />
+              <img src={imgSize(im.url, 480)} alt="" />
             </button>
           ))}
         </div>

@@ -90,7 +90,7 @@ export default function Home() {
               {igs.map(({ b, url }, i) => (
                 <Reveal key={b.slug} delay={i * 100}>
                   <a className="insta__card" href={url} target="_blank" rel="noreferrer" style={{ ['--a' as string]: b.accentFrom, ['--b' as string]: b.accentTo }}>
-                    <span className="insta__photo" style={{ backgroundImage: `url(${asset(`produtos/${b.slug}-1.webp`)})` }} aria-hidden />
+                    <span className="insta__photo" style={{ backgroundImage: `url(${asset(`produtos/${b.cover}-800.webp`)})` }} aria-hidden />
                     <span className="eyebrow">{b.name}</span><strong>{igHandle(url)}</strong><span>Seguir →</span>
                   </a>
                 </Reveal>

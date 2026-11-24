@@ -86,7 +86,7 @@ export default function ProductPage() {
           <ul className="pdp__trust">
             <li>Você finaliza o pedido pelo WhatsApp, direto com a loja.</li>
             <li>Pagamento e entrega combinados na conversa.</li>
-            <li>Atendimento pessoal, de mulher pra mulher.</li>
+            <li>Atendimento direto com a loja, sem intermediários.</li>
           </ul>
         </Reveal>
       </div>

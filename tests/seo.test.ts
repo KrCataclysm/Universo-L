@@ -33,4 +33,11 @@ describe('seo', () => {
     expect(b).toContain('\\u003c/script>')
     expect(b.match(/<\/script>/g)!.length).toBe(1)
   })
+  it('preload da imagem principal (LCP) com srcset e prioridade alta', () => {
+    const b = seoBlock({ title: 't', description: 'd', url: 'https://x.test/', image: null, preload: { href: 'https://x.test/a.webp', srcset: 'https://x.test/a-800.webp 800w', sizes: '100vw' } })
+    expect(b).toContain('<link rel="preload" as="image" href="https://x.test/a.webp"')
+    expect(b).toContain('imagesrcset="https://x.test/a-800.webp 800w"')
+    expect(b).toContain('fetchpriority="high"')
+    expect(seoBlock({ title: 't', description: 'd', url: 'https://x.test/', image: null })).not.toContain('rel="preload"')
+  })
 })
