@@ -27,17 +27,6 @@ section h2 { font-size: clamp(24px, 3.4vw, 38px); margin: 4px 0 clamp(14px, 2vw,
 @media (max-width: 760px) { .hero { min-height: 0; } .hero__content { padding-block: 74px 28px; } .hero__frames { width: 90vw; right: -20%; top: 6%; } }
 
 /* escolha seu universo: cartões baixos, sem numeração, fotos valorizadas */
-.portals { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; min-height: 0; }
-.portals__item { flex: none !important; }
-.portal { justify-content: flex-end; min-height: clamp(190px, 22vw, 270px); padding: 18px 20px; border-radius: 20px; border: 1px solid rgba(247,245,242,.1); border-bottom: 3px solid var(--a); background: none; }
-.portal::before { opacity: .2; }
-.portal__photo { opacity: 1; }
-.portal__photo::after { background: linear-gradient(to top, rgba(11,10,13,.8) 6%, rgba(11,10,13,.18) 52%, rgba(11,10,13,0) 82%); }
-.portal:hover .portal__photo { opacity: 1; transform: scale(1.04); }
-.portal__art { opacity: .14; } .portal:hover .portal__art { opacity: .3; }
-.portal__body h3 { font-size: clamp(26px, 3vw, 36px); margin: 4px 0 8px; }
-.portal .eyebrow { color: var(--paper); opacity: .9; }
-@media (max-width: 900px) { .portals { grid-template-columns: 1fr; gap: 10px; } .portal { min-height: 150px; } }
 
 /* vitrine */
 .pgrid { gap: 16px 12px; align-items: stretch; }

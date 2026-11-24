@@ -13,7 +13,7 @@
   --spring: cubic-bezier(.34, 1.4, .64, 1);
   /* escala de espaço (8pt) */
   --s1: 4px; --s2: 8px; --s3: 12px; --s4: 16px; --s5: 24px; --s6: 32px; --s7: 48px; --s8: 72px;
-  --sec-y: clamp(44px, 6.5vw, 84px);
+  --sec-y: clamp(36px, 5vw, 64px);
   color-scheme: light;
 }
 
@@ -36,7 +36,6 @@ img { -webkit-user-drag: none; }
 .sec .eyebrow { display: inline-flex; align-items: center; gap: 10px; }
 .sec .eyebrow::before { content: ''; width: 22px; height: 1px; background: linear-gradient(90deg, var(--glow-c), var(--glow-b)); }
 .sec h2 { font-size: clamp(30px, 3.6vw, 46px); line-height: 1.04; letter-spacing: -.015em; margin-top: 6px; margin-bottom: var(--s5); }
-.sec + .sec:not(.brands):not(.how):not(.social):not(.info)::before { content: ''; display: block; height: 1px; max-width: 1200px; margin: calc(var(--sec-y) * -1) auto var(--sec-y); background: linear-gradient(90deg, transparent, rgba(40,39,43,.12), transparent); }
 
 /* ---------- entrada ao rolar (mais curta e elegante) ---------- */
 .rv { transform: translateY(18px); transition: opacity .75s var(--out), transform .85s var(--out); transition-delay: var(--d, 0ms); }
@@ -74,10 +73,6 @@ img { -webkit-user-drag: none; }
 .btn--ghost:hover { transform: translateY(-1px); }
 
 /* ---------- cartões de marca ---------- */
-.portal { box-shadow: 0 18px 40px -22px rgba(0,0,0,.8); transition: transform .5s var(--out), box-shadow .5s var(--out), border-color .4s; }
-.portal:hover { box-shadow: 0 26px 56px -22px rgba(0,0,0,.9), 0 0 0 1px color-mix(in srgb, var(--a) 55%, transparent); }
-.portal__go i { display: inline-block; transition: transform .35s var(--out); } .portal:hover .portal__go i { transform: translateX(5px); }
-.portal__body h3 { text-shadow: 0 2px 18px rgba(0,0,0,.35); }
 
 /* ---------- vitrine ---------- */
 .pcard__media { border-radius: var(--r-m); transition: box-shadow .45s var(--out); }

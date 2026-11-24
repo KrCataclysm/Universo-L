@@ -5,7 +5,7 @@
 @import './shop.css';
 @import './refresh.css';
 @import './polish.css';
-@import './signature.css';
+@import './editorial.css';
 *, *::before, *::after { box-sizing: border-box; }
 html { -webkit-text-size-adjust: 100%; scroll-behavior: auto; }
 html.lenis, html.lenis body { height: auto; }
