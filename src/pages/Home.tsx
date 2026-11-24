@@ -40,8 +40,14 @@ export default function Home() {
       <section className="hero" aria-label="Universo Lay">
         <div className="hero__glow" aria-hidden />
         <NeonFrames from="#9FB8FF" to="#F2A7C8" layers={3} className="hero__frames" />
+        <span className="hero__mega" aria-hidden>Universo</span>
         <div className="hero__collage" aria-hidden>
-          {BRANDS.map((b) => <img key={b.slug} src={asset(`produtos/${b.cover}-480.webp`)} alt="" width={480} height={600} loading="lazy" decoding="async" />)}
+          {BRANDS.map((b) => (
+            <figure key={b.slug} className="hero__panel" style={{ ['--a' as string]: b.accentFrom, ['--b' as string]: b.accentTo }}>
+              <img src={asset(`produtos/${b.cover}-480.webp`)} alt="" width={480} height={600} loading="lazy" decoding="async" />
+              <figcaption>{b.name}</figcaption>
+            </figure>
+          ))}
         </div>
         <div className="hero__content container">
           <h1><SplitWords text={SLOGAN} delay={300} /></h1>
@@ -54,6 +60,11 @@ export default function Home() {
         <div className="container">
           <Head eyebrow="Três marcas, um só lugar" title="Escolha seu universo" />
           <div className="portals">{BRANDS.map((b, i) => <Reveal key={b.slug} delay={i * 90} className="portals__item"><BrandPortal brand={b} /></Reveal>)}</div>
+        </div>
+        <div className="marq" aria-hidden>
+          <div className="marq__track">
+            {[0, 1].map((k) => <span key={k} className="marq__set">{Array.from({ length: 3 }, () => BRANDS.map((b) => <span key={b.slug + k}>{b.name}<i>✦</i></span>))}</span>)}
+          </div>
         </div>
       </section>
 

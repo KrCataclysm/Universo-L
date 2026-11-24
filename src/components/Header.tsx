@@ -13,7 +13,8 @@ export default function Header() {
   const count = useCart((s) => s.items.reduce((n, i) => n + i.qty, 0))
   const [bump, setBump] = useState(false)
   const cartRef = useMagnetic<HTMLButtonElement>(0.25)
-  const dark = pathname === '/' || BRANDS.some((b) => `/${b.slug}` === pathname)
+  const path = pathname.replace(/\/+$/, '') || '/'
+  const dark = path === '/' || BRANDS.some((b) => `/${b.slug}` === path)
 
   useEffect(() => {
     const on = () => setScrolled(window.scrollY > 40)
