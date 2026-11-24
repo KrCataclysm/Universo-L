@@ -17,14 +17,15 @@ const SLOGAN = 'Todas as suas marcas em um só lugar.'
 copyFileSync('dist/index.html', 'dist/404.html')
 
 const BRANDS = {
-  'lay-store': ['Lay.Store', 'Moda fitness'],
-  'ousada-delicada': ['Ousada Delicada', 'Moda íntima'],
-  'falou-bordei': ['Falou Bordei', 'Bordados e personalizados'],
+  // mantenha igual a src/brand/brands.ts
+  'lay-store': ['Lay.Store', 'Moda fitness', 'Moda fitness para treinar com conforto e estilo: bermudas, shorts, tops e blusões de tecido confortável e caimento perfeito.'],
+  'ousada-delicada': ['Ousada Delicada', 'Moda íntima', 'Moda íntima com personalidade: sutiãs, calcinhas e peças em renda, em cores e modelos pensados para o dia a dia.'],
+  'falou-bordei': ['Falou Bordei', 'Bordados e personalizados', 'Bordados feitos à mão e peças personalizadas: molduras, roupas e lembranças bordadas com carinho, do seu jeito.'],
 }
 const pages = [
   { path: '/sobre', title: 'Sobre — Universo Lay', description: 'Um universo de moda, estilo, delicadeza e peças personalizadas, onde cada mulher encontra algo especial para si ou para presentear.' },
   { path: '/contato', title: 'Contato — Universo Lay', description: 'Fale com o Universo Lay: pedidos, dúvidas e personalizações.' },
-  ...Object.entries(BRANDS).map(([slug, [name, cat]]) => ({ path: `/${slug}`, title: `${name} — ${cat} · Universo Lay`, description: `${name}: ${cat.toLowerCase()}. ${SLOGAN}` })),
+  ...Object.entries(BRANDS).map(([slug, [name, cat, intro]]) => ({ path: `/${slug}`, title: `${name} — ${cat} · Universo Lay`, description: intro })),
 ]
 
 // 2) produtos publicados (para páginas de compartilhamento com Open Graph)
@@ -37,12 +38,16 @@ try {
     const img = imgs[0]
     const url = `${SITE}/${p.brands.slug}/${p.slug}/`
     pages.push({
-      jsonLd: {
+      preload: imgs[0] ? { href: imgs[0], srcset: /\/produtos\/[^/]+\.webp$/.test(imgs[0]) ? [480, 800].map((w) => `${imgs[0].replace(/\.webp$/, `-${w}.webp`)} ${w}w`).concat(`${imgs[0]} 1280w`).join(', ') : undefined, sizes: '(max-width: 900px) 100vw, 580px' } : undefined,
+      jsonLd: [{
         '@context': 'https://schema.org', '@type': 'Product', name: p.name, description: p.description || undefined,
         image: imgs.length ? imgs : undefined, brand: { '@type': 'Brand', name: p.brands.name }, url,
         // preço 0 = sob consulta: não declara oferta (o Google exige preço real)
         offers: p.price_cents > 0 ? { '@type': 'Offer', priceCurrency: 'BRL', price: (p.price_cents / 100).toFixed(2), url, availability: p.sold_out ? 'https://schema.org/OutOfStock' : 'https://schema.org/InStock' } : undefined,
-      },
+      }, {
+        '@context': 'https://schema.org', '@type': 'BreadcrumbList',
+        itemListElement: [['Início', `${SITE}/`], [p.brands.name, `${SITE}/${p.brands.slug}/`], [p.name, url]].map(([name, item], i) => ({ '@type': 'ListItem', position: i + 1, name, item })),
+      }],
       path: `/${p.brands.slug}/${p.slug}`,
       title: `${p.name} — ${p.brands.name} · Universo Lay`,
       description: (p.description || `${p.name} em ${p.brands.name}. ${SLOGAN}`).slice(0, 200),
@@ -56,7 +61,7 @@ try {
 const defaultImage = SITE ? `${SITE}/og.png` : null
 for (const pg of pages) {
   const url = `${SITE}${pg.path}/` // o Pages serve cada rota como pasta (com barra final)
-  write(join('dist', pg.path, 'index.html'), injectSeo(template, seoBlock({ title: pg.title, description: pg.description, url, image: pg.image ?? defaultImage, jsonLd: pg.jsonLd })))
+  write(join('dist', pg.path, 'index.html'), injectSeo(template, seoBlock({ title: pg.title, description: pg.description, url, image: pg.image ?? defaultImage, jsonLd: pg.jsonLd, preload: pg.preload })))
 }
 
 // 3) robots e sitemap

@@ -17,11 +17,12 @@ export default function About() {
         <Reveal delay={80}><h1>Universo Lay</h1></Reveal>
         <Reveal delay={160}><p className="about__lead">{CONCEPT}</p></Reveal>
         <Reveal delay={200}><p className="about__slogan">{SLOGAN}</p></Reveal>
+        <h2 className="sr-only">Nossas marcas</h2>
         <div className="about__brands">
           {BRANDS.map((b, i) => (
             <Reveal key={b.slug} delay={i * 100}>
               <Link to={`/${b.slug}`} className="abrand" style={{ ['--a' as string]: b.accentFrom, ['--b' as string]: b.accentTo }}>
-                <span className="abrand__photo" style={{ backgroundImage: `url(${asset(`produtos/${b.slug}-1.webp`)})` }} aria-hidden />
+                <span className="abrand__photo" style={{ backgroundImage: `url(${asset(`produtos/${b.cover}-800.webp`)})` }} aria-hidden />
                 <span className="eyebrow">{b.category}</span><h3>{b.name}</h3>
                 {igHandle(ig(b.slug)) && <small>{igHandle(ig(b.slug))}</small>}
                 <span>Conhecer →</span>

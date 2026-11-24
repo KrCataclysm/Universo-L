@@ -1,4 +1,4 @@
 export function esc(s: unknown): string
-export function seoBlock(o: { title: string; description: string; url: string; image: string | null; jsonLd?: object }): string
+export function seoBlock(o: { title: string; description: string; url: string; image: string | null; jsonLd?: object | object[]; preload?: { href: string; srcset?: string; sizes?: string } }): string
 export function injectSeo(html: string, block: string): string
 export function buildSitemap(origin: string, paths: string[]): string
