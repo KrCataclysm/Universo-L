@@ -44,3 +44,9 @@ Precisa do Node.js 22+. Para publicar: faça as alterações em uma branch, abra
 - Desligue o cadastro público em *Authentication → Providers → Email*.
 - Não compartilhe a senha do painel; troque se mudar de pessoa.
 - Política de Privacidade (LGPD): o site guarda só o carrinho no navegador, mas convém publicar uma política com razão social/CNPJ e contato da loja (precisa dos dados dela).
+
+## 4. Ativar o domínio universolay.com.br (virada)
+1. DNS no Registro.br já aponta pro GitHub (4 registros A + CNAME `www`).
+2. GitHub → Settings → Pages → **Custom domain** = `universolay.com.br` → Save; depois marque **Enforce HTTPS** (quando liberar).
+3. Em Settings → Secrets and variables → Actions → **Variables**: `BASE_PATH` = `/` e `SITE_URL` = `https://universolay.com.br`.
+4. Actions → *Deploy Pages* → **Run workflow**.
