@@ -14,7 +14,7 @@ export default function Header() {
   const [bump, setBump] = useState(false)
   const cartRef = useMagnetic<HTMLButtonElement>(0.25)
   const path = pathname.replace(/\/+$/, '') || '/'
-  const dark = path === '/' || BRANDS.some((b) => `/${b.slug}` === path)
+  const dark = BRANDS.some((b) => `/${b.slug}` === path)
 
   useEffect(() => {
     const on = () => setScrolled(window.scrollY > 40)

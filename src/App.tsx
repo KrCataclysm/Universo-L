@@ -6,7 +6,6 @@ import WhatsAppFab from './components/WhatsAppFab'
 import Header from './components/Header'
 import { appCatalog } from './data/appCatalog'
 import { CatalogProvider, useCatalog } from './data/CatalogProvider'
-import Cursor from './fx/Cursor'
 import PageTransition from './fx/PageTransition'
 import SmoothScroll from './fx/SmoothScroll'
 import AppRoutes from './router'
@@ -42,7 +41,6 @@ function Site() {
         <WhatsAppFab />
         <LazyDrawer />
         <PruneCart />
-        <Cursor />
       </SmoothScroll>
     </CatalogProvider>
   )

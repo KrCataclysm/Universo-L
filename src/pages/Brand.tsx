@@ -3,7 +3,6 @@ import { useParams } from 'react-router-dom'
 import { getBrand } from '../brand/brands'
 import ProductGrid from '../components/ProductGrid'
 import { useAsync, useProducts } from '../data/CatalogProvider'
-import NeonFrames from '../fx/NeonFrames'
 import { asset } from '../lib/env'
 import SplitWords from '../fx/SplitWords'
 import { useDocumentTitle } from '../lib/useDocumentTitle'
@@ -22,7 +21,6 @@ export default function BrandPage() {
     <main className="page brandpage" style={{ ['--a' as string]: brand.accentFrom, ['--b' as string]: brand.accentTo }}>
       <section className="bhero grain">
         <div className="bhero__bg" aria-hidden><div className="bhero__photo" style={{ backgroundImage: `url(${asset(`produtos/${brand.cover}-800.webp`)})` }} /></div>
-        <NeonFrames from={brand.accentFrom} to={brand.accentTo} layers={5} className="bhero__frames" />
         <div className="container bhero__content">
           <p className="eyebrow">{brand.category}</p>
           <h1><SplitWords text={brand.name} delay={200} /></h1>

@@ -33,7 +33,6 @@ export default function Footer() {
         </nav>
       </div>
       <p className="ftr__legal">© {new Date().getFullYear()} Universo Lay</p>
-      <div className="ftr__mark" aria-hidden>Universo Lay</div>
     </footer>
   )
 }
