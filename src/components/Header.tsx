@@ -40,7 +40,7 @@ export default function Header() {
     <>
       <header className={`hdr ${dark || menu ? 'hdr--dark' : ''} ${scrolled && !menu ? 'is-scrolled' : ''}`} style={menu ? { color: 'var(--paper)' } : undefined}>
         <Link to="/" className="hdr__logo">
-          <Monogram variant={(dark && !scrolled) || menu ? 'light' : 'bare'} size={40} decorative />
+          <Monogram variant={(dark && !scrolled) || menu ? 'light' : 'bare'} size={30} decorative />
           <Wordmark className="wm" />
           <span className="sr-only"> — início</span>
         </Link>
@@ -50,8 +50,11 @@ export default function Header() {
           <NavLink to="/contato">Contato</NavLink>
         </nav>
         <div className="hdr__actions">
+          <Link to="/busca" className="hdr__cart hdr__search" aria-label="Buscar produtos">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" aria-hidden="true"><path d="M11 4a7 7 0 1 0 0 14 7 7 0 0 0 0-14Zm9 16-4-4" /></svg>
+          </Link>
           <button ref={cartRef} className="hdr__cart" onClick={() => useCart.getState().setOpen(true)} onPointerEnter={() => void import('./CartDrawer')} onFocus={() => void import('./CartDrawer')} aria-label={`Abrir carrinho (${count} itens)`}>
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4H6Z" /><path d="M3 6h18" /><path d="M16 10a4 4 0 0 1-8 0" /></svg>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4H6Z" /><path d="M3 6h18" /><path d="M16 10a4 4 0 0 1-8 0" /></svg>
             {count > 0 && <span className={`hdr__badge ${bump ? 'bump' : ''}`}>{count}</span>}
           </button>
           <button className={`hdr__burger ${menu ? 'open' : ''}`} onClick={() => setMenu((m) => !m)} aria-label="Menu" aria-expanded={menu}><i /><i /></button>
@@ -61,8 +64,9 @@ export default function Header() {
         <small>Marcas</small>
         {BRANDS.map((b, i) => <Link key={b.slug} to={`/${b.slug}`} style={{ ['--i' as string]: i }} tabIndex={menu ? 0 : -1}>{b.name}</Link>)}
         <small>Universo</small>
-        <Link to="/sobre" style={{ ['--i' as string]: 3 }} tabIndex={menu ? 0 : -1}>Sobre</Link>
-        <Link to="/contato" style={{ ['--i' as string]: 4 }} tabIndex={menu ? 0 : -1}>Contato</Link>
+        <Link to="/busca" style={{ ['--i' as string]: 3 }} tabIndex={menu ? 0 : -1}>Buscar produtos</Link>
+        <Link to="/sobre" style={{ ['--i' as string]: 4 }} tabIndex={menu ? 0 : -1}>Sobre</Link>
+        <Link to="/contato" style={{ ['--i' as string]: 5 }} tabIndex={menu ? 0 : -1}>Contato</Link>
       </div>
     </>
   )

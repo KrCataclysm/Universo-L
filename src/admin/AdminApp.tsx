@@ -10,6 +10,7 @@ const ProductList = lazy(() => import('./ProductList'))
 const ProductEditor = lazy(() => import('./ProductEditor'))
 const Categories = lazy(() => import('./Categories'))
 const Settings = lazy(() => import('./Settings'))
+const Banners = lazy(() => import('./Banners'))
 
 function Shell() {
   const { loading, session, isAdmin, signOut } = useAuth()
@@ -29,6 +30,7 @@ function Shell() {
         <Link to="/" className="adm-brand">Universo Lay</Link>
         <nav>
           <NavLink to="/admin" end>Produtos</NavLink>
+          <NavLink to="/admin/banners">Banners</NavLink>
           <NavLink to="/admin/categorias">Categorias</NavLink>
           <NavLink to="/admin/configuracoes">Configurações</NavLink>
         </nav>
@@ -45,6 +47,7 @@ function Shell() {
           <Routes>
             <Route index element={<ProductList />} />
             <Route path="produtos/:id" element={<ProductEditor />} />
+            <Route path="banners" element={<Banners />} />
             <Route path="categorias" element={<Categories />} />
             <Route path="configuracoes" element={<Settings />} />
           </Routes>

@@ -10,7 +10,7 @@ export interface VariantRow { id?: string; label: string; option_type: 'size' | 
 export interface ImageRow { id: string; path: string; alt: string; sort: number }
 export interface AdminProduct {
   id: string; brand_id: string; category_id: string | null; slug: string; name: string; description: string; price_cents: number
-  status: Status; featured: boolean; sold_out: boolean; customizable: boolean; customization_schema: FieldDef[]; is_example: boolean
+  status: Status; featured: boolean; sold_out: boolean; labels: string[]; customizable: boolean; customization_schema: FieldDef[]; is_example: boolean
   product_images: ImageRow[]; product_variants: (VariantRow & { sort: number })[]; brands?: { name: string } | null
 }
 
@@ -35,7 +35,7 @@ export async function createDraft(brandId: string): Promise<string> {
 
 export interface SaveInput {
   id: string; brandId: string; categoryId: string | null; name: string; description: string; priceCents: number
-  status: Status; featured: boolean; soldOut: boolean; customizable: boolean; fields: FieldDef[]; variants: VariantRow[]
+  status: Status; featured: boolean; soldOut: boolean; labels: string[]; customizable: boolean; fields: FieldDef[]; variants: VariantRow[]
 }
 
 export async function saveProduct(i: SaveInput, current: { slug: string; name: string; brand_id: string }): Promise<string> {
@@ -46,7 +46,7 @@ export async function saveProduct(i: SaveInput, current: { slug: string; name: s
   }
   ok(await sb().from('products').update({
     brand_id: i.brandId, category_id: i.categoryId, slug, name: i.name, description: i.description, price_cents: i.priceCents,
-    status: i.status, featured: i.featured, sold_out: i.soldOut, customizable: i.customizable, customization_schema: i.customizable ? i.fields : [],
+    status: i.status, featured: i.featured, sold_out: i.soldOut, labels: i.labels, customizable: i.customizable, customization_schema: i.customizable ? i.fields : [],
   }).eq('id', i.id))
   ok(await sb().from('product_variants').delete().eq('product_id', i.id))
   if (i.variants.length) ok(await sb().from('product_variants').insert(i.variants.map((v, n) => ({ product_id: i.id, label: v.label, option_type: v.option_type, value: v.value, in_stock: v.in_stock, sort: n }))))
@@ -98,4 +98,23 @@ export const loadSettings = async (): Promise<Record<string, string>> =>
 export async function saveSetting(key: string, value: string): Promise<void> {
   if (!value) ok(await sb().from('settings').delete().eq('key', key))
   else ok(await sb().from('settings').upsert({ key, value }))
+}
+
+export interface BannerRow { id: string; title: string; subtitle: string | null; cta_label: string | null; link_url: string | null; image_path: string | null; active: boolean; sort: number }
+export const listBannersAdmin = async (): Promise<BannerRow[]> => (ok(await sb().from('banners').select('*').order('sort').order('created_at', { ascending: false })) ?? []) as BannerRow[]
+export async function saveBanner(b: Partial<BannerRow> & { title: string }): Promise<void> {
+  const row = { title: b.title, subtitle: b.subtitle || null, cta_label: b.cta_label || null, link_url: b.link_url || null, image_path: b.image_path ?? null, active: b.active ?? true, sort: b.sort ?? 0 }
+  if (b.id) ok(await sb().from('banners').update(row).eq('id', b.id))
+  else ok(await sb().from('banners').insert(row))
+}
+export const deleteBanner = async (b: BannerRow): Promise<void> => {
+  if (b.image_path && !b.image_path.startsWith('/')) await sb().storage.from('product-images').remove([b.image_path])
+  ok(await sb().from('banners').delete().eq('id', b.id))
+}
+export async function uploadBannerImage(file: File): Promise<string> {
+  const blob = await compressImage(file, { maxSide: 1800 })
+  const path = `banners/${crypto.randomUUID()}.${blob.type === 'image/webp' ? 'webp' : 'jpg'}`
+  const up = await sb().storage.from('product-images').upload(path, blob, { contentType: blob.type })
+  if (up.error) throw new Error(up.error.message)
+  return path
 }

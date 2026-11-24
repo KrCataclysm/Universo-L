@@ -1,8 +1,8 @@
-import type { Catalog, Category, Product, ProductQuery } from './catalog'
+import type { Banner, Catalog, Category, Product, ProductQuery } from './catalog'
 import { mapProduct, type ProductRow } from './mapProduct'
 import { usePreview } from './previewStore'
 
-const COLS = 'id,slug,name,description,price_cents,featured,customizable,sold_out,customization_schema,is_example,status,brands!inner(slug),product_images(path,sort,alt),product_variants(id,label,option_type,value,in_stock,sort)'
+const COLS = 'id,slug,name,description,price_cents,featured,customizable,sold_out,labels,customization_schema,is_example,status,brands!inner(slug),product_images(path,sort,alt),product_variants(id,label,option_type,value,in_stock,sort)'
 
 /** Catálogo público via PostgREST com fetch (poucos bytes; o supabase-js fica só no painel). */
 export function createRestCatalog(url: string, key: string): Catalog {
@@ -36,6 +36,10 @@ export function createRestCatalog(url: string, key: string): Catalog {
   const map = (r: ProductRow) => mapProduct(r, publicUrl)
 
   return {
+    async listBanners(): Promise<Banner[]> {
+      const rows = await get<{ id: string; title: string; subtitle: string | null; cta_label: string | null; link_url: string | null; image_path: string | null }[]>('banners', { select: 'id,title,subtitle,cta_label,link_url,image_path', active: 'eq.true', order: 'sort.asc,created_at.desc' })
+      return rows.map((b) => ({ id: b.id, title: b.title, subtitle: b.subtitle ?? '', ctaLabel: b.cta_label ?? '', linkUrl: b.link_url ?? '', imageUrl: b.image_path ? (b.image_path.startsWith('/') ? `${import.meta.env.BASE_URL.replace(/\/$/, '')}${b.image_path}` : publicUrl(b.image_path)) : null }))
+    },
     async listProducts(q): Promise<Product[]> {
       return (await get<ProductRow[]>('products', productParams(q), usePreview.getState().enabled)).map(map)
     },

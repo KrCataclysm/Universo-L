@@ -55,4 +55,8 @@ describe('mapProduct', () => {
     expect(mapProduct(row({ sold_out: true }), pub).soldOut).toBe(true)
     expect(mapProduct(row(), pub).soldOut).toBe(false)
   })
+  it('labels vindos do banco (padrão: nenhum)', () => {
+    expect(mapProduct(row({ labels: ['Novidade', 'Sob encomenda'] }), pub).labels).toEqual(['Novidade', 'Sob encomenda'])
+    expect(mapProduct(row(), pub).labels).toEqual([])
+  })
 })

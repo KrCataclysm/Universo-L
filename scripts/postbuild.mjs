@@ -18,12 +18,15 @@ copyFileSync('dist/index.html', 'dist/404.html')
 
 const BRANDS = {
   // mantenha igual a src/brand/brands.ts
-  'lay-store': ['Lay.Store', 'Moda fitness', 'Moda fitness para treinar com conforto e estilo: bermudas, shorts, tops e blusões de tecido confortável e caimento perfeito.'],
+  'lay-store': ['Lay.store', 'Moda fitness', 'Moda fitness para treinar com conforto e estilo: bermudas, shorts, tops e blusões de tecido confortável e caimento perfeito.'],
   'ousada-delicada': ['Ousada Delicada', 'Moda íntima', 'Moda íntima com personalidade: sutiãs, calcinhas e peças em renda, em cores e modelos pensados para o dia a dia.'],
   'falou-bordei': ['Falou Bordei', 'Bordados e personalizados', 'Bordados feitos à mão e peças personalizadas: molduras, roupas e lembranças bordadas com carinho, do seu jeito.'],
 }
 const pages = [
   { path: '/sobre', title: 'Sobre — Universo Lay', description: 'Um universo de moda, estilo, delicadeza e peças personalizadas, onde cada mulher encontra algo especial para si ou para presentear.' },
+  { path: '/informacoes', title: 'Pagamento, entrega e trocas — Universo Lay', description: 'Formas de pagamento, entrega, prazos, trocas e devoluções do Universo Lay.' },
+  { path: '/privacidade', title: 'Política de privacidade — Universo Lay', description: 'Como o site do Universo Lay trata os seus dados, conforme a LGPD.' },
+  { path: '/busca', title: 'Buscar produtos — Universo Lay', description: 'Busque produtos das lojas Lay.store, Ousada Delicada e Falou Bordei.' },
   { path: '/contato', title: 'Contato — Universo Lay', description: 'Fale com o Universo Lay: pedidos, dúvidas e personalizações.' },
   ...Object.entries(BRANDS).map(([slug, [name, cat, intro]]) => ({ path: `/${slug}`, title: `${name} — ${cat} · Universo Lay`, description: intro })),
 ]

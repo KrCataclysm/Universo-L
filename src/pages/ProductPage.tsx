@@ -24,6 +24,7 @@ export default function ProductPage() {
   const [errors, setErrors] = useState<Record<string, string>>({})
   const [qty, setQty] = useState(1)
   useEffect(() => { void import('../components/CartDrawer') }, [])
+  const phone = (settings.data?.whatsapp_number ?? '').replace(/\D/g, '')
   const p = state.data
   useDocumentTitle(p ? `${p.name} — ${brand?.name ?? ''}` : undefined)
   const variant = p?.variants.find((v) => v.id === variantId)
@@ -34,6 +35,13 @@ export default function ProductPage() {
   }).url : null, [p, settings.data])
 
   const related = (more.data ?? []).filter((r) => r.slug !== slug).slice(0, 4)
+
+  const quoteUrl = useMemo(() => {
+    if (!p || !phone) return null
+    const extra = p.customizationFields.filter((f) => custom[f.key]?.trim()).map((f) => `${f.label}: ${custom[f.key].trim()}`)
+    const msg = ['Olá! Gostaria de solicitar um orçamento.', `Peça: ${p.name}${brand ? ` (${brand.name})` : ''}`, ...extra, window.location.href].join('\n')
+    return `https://wa.me/${phone}?text=${encodeURIComponent(msg)}`
+  }, [p, phone, custom, brand])
 
   if (!brand) return <NotFound />
   if (state.loading && !p) return <main className="page pdp"><div className="container pdp__skel" aria-busy /></main>
@@ -75,10 +83,16 @@ export default function ProductPage() {
             </div>
           )}
           <CustomizationForm fields={p.customizationFields} values={custom} errors={errors} onChange={(k, v) => setCustom((c) => ({ ...c, [k]: v }))} />
+          {p.priceCents === 0 ? (
+            <div className="pdp__buy">
+              {quoteUrl && !p.soldOut ? <a className="btn btn--ink" href={quoteUrl} target="_blank" rel="noreferrer">Solicitar orçamento</a> : <button className="btn btn--ink" disabled>{p.soldOut ? 'Esgotado' : 'Solicitar orçamento'}</button>}
+            </div>
+          ) : (
           <div className="pdp__buy">
-            <div className="qty qty--lg"><button onClick={() => setQty((q) => Math.max(1, q - 1))} aria-label="Diminuir">−</button><span>{qty}</span><button onClick={() => setQty((q) => Math.min(20, q + 1))} aria-label="Aumentar">+</button></div>
-            <button className="btn btn--ink" onClick={add} disabled={p.soldOut}>{p.soldOut ? 'Esgotado' : 'Adicionar ao carrinho'}</button>
-          </div>
+              <div className="qty qty--lg"><button onClick={() => setQty((q) => Math.max(1, q - 1))} aria-label="Diminuir">−</button><span>{qty}</span><button onClick={() => setQty((q) => Math.min(20, q + 1))} aria-label="Aumentar">+</button></div>
+              <button className="btn btn--ink" onClick={add} disabled={p.soldOut}>{p.soldOut ? 'Esgotado' : 'Adicionar ao carrinho'}</button>
+            </div>
+          )}
           <div className="pdp__links">
             {ask && <a className="btn btn--ghost adm-sm" href={ask} target="_blank" rel="noreferrer">Tirar dúvida no WhatsApp</a>}
             <ShareButton title={p.name} />

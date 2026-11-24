@@ -1,39 +1,38 @@
 import { Link } from 'react-router-dom'
-import { BRANDS, SLOGAN } from '../brand/brands'
+import { SLOGAN } from '../brand/brands'
 import Monogram from '../brand/Monogram'
 import { useAsync } from '../data/CatalogProvider'
-import { formatPhone, igHandle } from '../lib/format'
+import { formatPhone } from '../lib/format'
 
 export default function Footer() {
-  const { data: settings } = useAsync((c) => c.getSettings(), [])
-  const wa = (settings?.whatsapp_number ?? '').replace(/\D/g, '')
-  const insta = [
-    ['Lay.Store', settings?.instagram_lay_store],
-    ['Ousada Delicada', settings?.instagram_ousada_delicada],
-    ['Falou Bordei', settings?.instagram_falou_bordei],
-  ].filter(([, v]) => v)
+  const { data: s } = useAsync((c) => c.getSettings(), [])
+  const wa = (s?.whatsapp_number ?? '').replace(/\D/g, '')
   return (
-    <footer className="ftr grain">
-      <div className="ftr__grid">
-        <div>
-          <Monogram variant="light" size={56} />
-          <p className="ftr__big">{SLOGAN}</p>
-        </div>
-        <div>
-          <h2 className="ftr__h">Marcas</h2>
-          <ul>{BRANDS.map((b) => <li key={b.slug}><Link to={`/${b.slug}`}>{b.name}</Link></li>)}</ul>
-        </div>
-        <div>
-          <h2 className="ftr__h">Universo</h2>
-          <ul>
-            <li><Link to="/sobre">Sobre</Link></li>
-            <li><Link to="/contato">Contato</Link></li>
-            {insta.map(([n, v]) => <li key={n}><a href={String(v)} target="_blank" rel="noreferrer">{igHandle(String(v)) || 'Instagram'} · {n}</a></li>)}
-            {wa && <li><a href={`https://wa.me/${wa}`} target="_blank" rel="noreferrer">WhatsApp {formatPhone(wa)}</a></li>}
-          </ul>
-        </div>
+    <footer className="ftr">
+      <div className="ftr__top">
+        <Monogram variant="light" size={40} />
+        <p className="ftr__slogan">{SLOGAN}</p>
       </div>
-      <div className="ftr__legal"><span>© {new Date().getFullYear()} Universo Lay</span><span>Moda · estilo · delicadeza · peças personalizadas</span></div>
+      <div className="ftr__grid">
+        <nav aria-label="Informações">
+          <h2 className="ftr__h">Informações</h2>
+          <ul>
+            <li><Link to="/informacoes#pagamento">Pagamento</Link></li>
+            <li><Link to="/informacoes#entrega">Entrega e prazos</Link></li>
+            <li><Link to="/informacoes#trocas">Trocas e devoluções</Link></li>
+            <li><Link to="/privacidade">Política de privacidade</Link></li>
+          </ul>
+        </nav>
+        <nav aria-label="Atendimento">
+          <h2 className="ftr__h">Atendimento</h2>
+          <ul>
+            <li><Link to="/sobre">Sobre nós</Link></li>
+            <li><Link to="/contato">Contato</Link></li>
+            {wa && <li><a href={`https://wa.me/${wa}`} target="_blank" rel="noreferrer">WhatsApp<br /><small>{formatPhone(wa)}</small></a></li>}
+          </ul>
+        </nav>
+      </div>
+      <p className="ftr__legal">© {new Date().getFullYear()} Universo Lay</p>
     </footer>
   )
 }

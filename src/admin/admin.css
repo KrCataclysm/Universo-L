@@ -28,3 +28,7 @@
 .adm-cat { display: flex; gap: 10px; align-items: center; }
 .adm-login { min-height: 100svh; display: grid; place-items: center; padding: 20px; background: radial-gradient(100% 80% at 70% 10%, #1a1424, var(--void)); } .adm-login .adm-card { width: min(420px, 100%); justify-items: center; text-align: center; } .adm-login .field { width: 100%; text-align: left; } .adm-login h1 { font-size: 34px; }
 @media (max-width: 900px) { .adm { grid-template-columns: 1fr; } .adm-side { position: static; height: auto; flex-direction: row; flex-wrap: wrap; align-items: center; } .adm-toggle { margin-top: 0; width: 100%; } .adm-grid, .adm-two { grid-template-columns: 1fr; } .adm-row { grid-template-columns: 1fr 1fr; } .adm-row__main { grid-column: 1 / -1; } }
+
+.adm-note { opacity: .7; font-size: 13.5px; margin: 0 0 14px; max-width: 70ch; }
+.adm-labels { border: 1px solid rgba(40,39,43,.12); border-radius: 14px; padding: 10px 14px; display: grid; gap: 6px; margin: 0; } .adm-labels legend { font-size: 12px; opacity: .7; padding: 0 6px; }
+.adm-banner-thumb { height: 52px; border-radius: 8px; }

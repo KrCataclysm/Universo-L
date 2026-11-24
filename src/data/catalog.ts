@@ -16,6 +16,8 @@ export interface Product {
   customizable: boolean
   /** esgotado: aparece com selo e não pode ser adicionado ao carrinho */
   soldOut?: boolean
+  /** selos: Novidade, Pronta entrega, Sob encomenda */
+  labels?: string[]
   customizationFields: CustomField[]
   /** true = item de exemplo (pode ser removido pelo painel) */
   isExample?: boolean
@@ -26,7 +28,10 @@ export interface Product {
 export interface ProductQuery { brandSlug?: string; categorySlug?: string; featured?: boolean }
 export interface Category { slug: string; name: string }
 
+export interface Banner { id: string; title: string; subtitle: string; ctaLabel: string; linkUrl: string; imageUrl: string | null }
+
 export interface Catalog {
+  listBanners(): Promise<Banner[]>
   listProducts(q: ProductQuery): Promise<Product[]>
   getProduct(brandSlug: string, slug: string): Promise<Product | null>
   listCategories(brandSlug: string): Promise<Category[]>

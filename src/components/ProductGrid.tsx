@@ -20,7 +20,7 @@ export default function ProductGrid({ state, accent, emptyText }: { state: Async
   if (!state.data?.length) return <EmptyState from={accent?.[0]} to={accent?.[1]} text={emptyText ?? 'Estamos preparando peças especiais para você.'} />
   return (
     <div className="pgrid">
-      {state.data.map((p, i) => <Reveal key={p.id} delay={(i % 4) * 80}><ProductCard p={p} /></Reveal>)}
+      {state.data.map((p, i) => <Reveal key={p.id} delay={(i % 4) * 80} className="pgrid__item"><ProductCard p={p} /></Reveal>)}
     </div>
   )
 }
