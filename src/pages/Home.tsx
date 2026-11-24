@@ -15,7 +15,7 @@ import { useDocumentTitle } from '../lib/useDocumentTitle'
 
 const STEPS = [
   ['01', 'Escolha', 'Navegue pelas três marcas e escolha as peças que combinam com você.'],
-  ['02', 'Monte o carrinho', 'Selecione tamanho e cor e, nos bordados, informe a personalização.'],
+  ['02', 'Monte o carrinho', 'Escolha a cor ou o tamanho e, nos bordados, conte como quer a sua peça.'],
   ['03', 'Finalize no WhatsApp', 'Seu pedido sai pronto na conversa com a loja para combinar pagamento e entrega.'],
 ]
 

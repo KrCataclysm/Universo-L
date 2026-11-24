@@ -6,3 +6,6 @@ dist
 *.log
 test-results
 playwright-report
+
+# skills da ZionLine (uso local; não vão pro GitHub)
+.claude/skills-zionline/

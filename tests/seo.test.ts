@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { buildSitemap, esc, injectSeo, seoBlock } from '../scripts/seo.mjs'
+import { buildSitemap, esc, injectRoot, injectSeo, seoBlock } from '../scripts/seo.mjs'
 
 describe('seo', () => {
   it('esc neutraliza HTML e aspas', () => {
@@ -39,5 +39,8 @@ describe('seo', () => {
     expect(b).toContain('imagesrcset="https://x.test/a-800.webp 800w"')
     expect(b).toContain('fetchpriority="high"')
     expect(seoBlock({ title: 't', description: 'd', url: 'https://x.test/', image: null })).not.toContain('rel="preload"')
+  })
+  it('injectRoot coloca o HTML inicial dentro de #root (foto principal visível antes do JS)', () => {
+    expect(injectRoot('<body><div id="root"></div></body>', '<img src="a.webp">')).toBe('<body><div id="root"><img src="a.webp"></div></body>')
   })
 })

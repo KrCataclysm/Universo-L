@@ -29,6 +29,12 @@ export default function Header() {
     return () => clearTimeout(t)
   }, [count])
   useEffect(() => { document.body.style.overflow = menu ? 'hidden' : '' }, [menu])
+  useEffect(() => {
+    if (!menu) return
+    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') setMenu(false) }
+    document.addEventListener('keydown', onKey)
+    return () => document.removeEventListener('keydown', onKey)
+  }, [menu])
 
   return (
     <>
