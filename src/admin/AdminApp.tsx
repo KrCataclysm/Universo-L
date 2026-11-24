@@ -59,7 +59,7 @@ function Shell() {
 
 export default function AdminApp() {
   useEffect(() => {
-    const m = document.createElement('meta'); m.name = 'robots'; m.content = 'noindex, nofollow'
+    document.title = 'Painel · Universo Lay'; const m = document.createElement('meta'); m.name = 'robots'; m.content = 'noindex, nofollow'
     document.head.appendChild(m)
     return () => m.remove()
   }, [])

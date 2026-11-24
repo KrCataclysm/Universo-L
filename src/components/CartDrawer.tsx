@@ -4,6 +4,7 @@ import { itemKey, useCart } from '../cart/cartStore'
 import { formatBRL, priceLabel } from '../cart/money'
 import { buildWhatsAppUrl } from '../cart/whatsapp'
 import { imgSize } from '../lib/env'
+import { toast } from '../ui/toast'
 import { useAsync } from '../data/CatalogProvider'
 
 export default function CartDrawer() {
@@ -62,7 +63,7 @@ export default function CartDrawer() {
                           <button onClick={() => setQty(k, i.qty - 1)} aria-label="Diminuir">−</button>
                           <span>{i.qty}</span>
                           <button onClick={() => setQty(k, i.qty + 1)} aria-label="Aumentar">+</button>
-                          <button className="citem__rm" onClick={() => remove(k)}>remover</button>
+                          <button className="citem__rm" onClick={() => { remove(k); toast({ tone: 'info', title: 'Item removido', text: i.name, action: { label: 'Desfazer', run: () => useCart.getState().add(i) } }) }}>remover</button>
                         </div>
                       </div>
                       <span>{i.unitPriceCents > 0 ? formatBRL(i.unitPriceCents * i.qty) : priceLabel(0)}</span>
@@ -78,8 +79,8 @@ export default function CartDrawer() {
               {hint && <p className="drawer__hint">{hint}</p>}
               {preview && <details className="drawer__preview"><summary>Ver prévia da mensagem do pedido</summary><pre>{preview}</pre></details>}
               {res.url
-                ? <a className="btn btn--glow" href={res.url} target="_blank" rel="noreferrer">Finalizar no WhatsApp</a>
-                : <button className="btn btn--glow" disabled>Finalizar no WhatsApp</button>}
+                ? <a className="btn btn--ink btn--block" href={res.url} target="_blank" rel="noreferrer" onClick={() => toast({ tone: 'info', title: 'Abrindo o WhatsApp', text: 'Envie a mensagem para finalizar o pedido.' })}>Finalizar no WhatsApp</a>
+                : <button className="btn btn--ink btn--block" disabled>Finalizar no WhatsApp</button>}
             </footer>
           </motion.aside>
         </>

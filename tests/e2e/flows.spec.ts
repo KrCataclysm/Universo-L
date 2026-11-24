@@ -15,8 +15,12 @@ test('produto com opção de cor: exige escolher e entra no carrinho', async ({ 
   await page.goto('/lay-store/bermuda-ciclista')
   await page.getByRole('button', { name: 'Adicionar ao carrinho' }).click()
   await expect(page.getByText('Escolha uma opção.')).toBeVisible()
+  await expect(page.getByRole('alert').filter({ hasText: 'Escolha uma opção antes de continuar' })).toBeVisible()
   await page.getByRole('radio', { name: 'Preta' }).click()
   await page.getByRole('button', { name: 'Adicionar ao carrinho' }).click()
+  const aviso = page.getByRole('status').filter({ hasText: 'Adicionado ao carrinho' })
+  await expect(aviso).toContainText('Bermuda ciclista')
+  await aviso.getByRole('button', { name: 'Ver carrinho' }).click()
   const drawer = page.getByRole('dialog', { name: 'Carrinho' })
   await expect(drawer).toContainText('Bermuda ciclista')
   await expect(drawer).toContainText('Preta')
@@ -121,11 +125,11 @@ test('marca exibe as fotos reais dos produtos', async ({ page }) => {
   expect(ok).toBe(true)
 })
 
-test('rota inexistente mostra 404 temático', async ({ page }) => {
+test('rota inexistente mostra 404 com atalhos para as marcas', async ({ page }) => {
   await page.goto('/marca-que-nao-existe')
-  await expect(page.getByText('Essa estrela saiu da órbita')).toBeVisible()
+  await expect(page.getByText('Essa peça saiu da vitrine')).toBeVisible()
   await page.goto('/lay-store/produto-que-nao-existe')
-  await expect(page.getByText('Essa estrela saiu da órbita')).toBeVisible()
+  await expect(page.getByText('Essa peça saiu da vitrine')).toBeVisible()
 })
 
 test('painel: visitante cai na tela de login e não vê dados', async ({ page }) => {
@@ -143,6 +147,7 @@ test('carrinho acessível: foco vai pra dentro, Tab não escapa e Esc fecha devo
   await page.getByRole('radio', { name: 'Preta' }).click()
   const add = page.getByRole('button', { name: 'Adicionar ao carrinho' })
   await add.click()
+  await page.getByRole('status').filter({ hasText: 'Adicionado ao carrinho' }).getByRole('button', { name: 'Ver carrinho' }).click()
   const dialog = page.getByRole('dialog', { name: 'Carrinho' })
   await expect(dialog).toBeVisible()
   await expect.poll(() => page.evaluate(() => !!document.activeElement?.closest('[role=dialog]'))).toBe(true)
@@ -176,4 +181,32 @@ test('desktop: topo com colagem de fotos reais das marcas', async ({ page }) => 
   await page.goto('/')
   await expect(page.locator('.hero__collage img')).toHaveCount(3)
   await expect(page.locator('.hero__collage img').first()).toBeVisible()
+})
+
+test('toasts: remover item oferece desfazer e copiar número avisa', async ({ page, context }) => {
+  await context.grantPermissions(['clipboard-read', 'clipboard-write'])
+  await page.goto('/lay-store/bermuda-ciclista')
+  await page.getByRole('radio', { name: 'Preta' }).click()
+  await page.getByRole('button', { name: 'Adicionar ao carrinho' }).click()
+  await page.getByRole('button', { name: 'Abrir carrinho (1 itens)' }).click()
+  const drawer = page.getByRole('dialog', { name: 'Carrinho' })
+  await drawer.getByRole('button', { name: 'remover' }).click()
+  const rem = page.getByRole('status').filter({ hasText: 'Item removido' })
+  await expect(rem).toBeVisible()
+  await expect(drawer).toContainText('Seu carrinho está vazio')
+  await rem.getByRole('button', { name: 'Desfazer' }).click()
+  await expect(drawer).toContainText('Bermuda ciclista')
+  await page.goto('/contato')
+  await page.getByRole('button', { name: 'Copiar número' }).click()
+  await expect(page.getByRole('status').filter({ hasText: 'Número copiado' })).toBeVisible()
+})
+
+test('páginas de texto: índice lateral leva às seções e painéis estão presentes', async ({ page }) => {
+  await page.goto('/informacoes')
+  await expect(page.locator('.doc__body .panel')).toHaveCount(4)
+  await page.getByRole('navigation', { name: 'Nesta página' }).getByRole('link', { name: 'Entrega' }).click()
+  await expect(page).toHaveURL(/#entrega$/)
+  await page.goto('/privacidade')
+  await expect(page.locator('.doc__nav a').first()).toBeVisible()
+  expect(await page.locator('.doc__nav a').count()).toBeGreaterThan(3)
 })

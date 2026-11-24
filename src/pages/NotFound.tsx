@@ -1,22 +1,20 @@
-import { useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import NeonFrames from '../fx/NeonFrames'
+import { BRANDS } from '../brand/brands'
 import { useDocumentTitle } from '../lib/useDocumentTitle'
 
 export default function NotFound() {
   useDocumentTitle('Página não encontrada')
-  useEffect(() => {
-    document.documentElement.classList.add('tone-dark')
-    return () => document.documentElement.classList.remove('tone-dark')
-  }, [])
   return (
-    <main className="page nf404 grain">
-      <NeonFrames layers={6} className="nf404__art" />
-      <div className="nf404__txt">
-        <p className="eyebrow">Erro 404</p>
-        <h1>Essa estrela saiu da órbita</h1>
-        <p>A página que você procura não existe ou foi movida.</p>
-        <Link className="btn btn--glow" to="/">Voltar ao universo</Link>
+    <main className="page nf404">
+      <div className="nf404__txt container">
+        <p className="nf404__code" aria-hidden>404</p>
+        <p className="eyebrow">Página não encontrada</p>
+        <h1>Essa peça saiu da vitrine</h1>
+        <p className="nf404__lead">A página que você procura não existe ou foi movida. Veja as marcas ou volte ao início.</p>
+        <div className="nf404__links">
+          <Link className="btn btn--ink btn--arrow" to="/">Voltar ao início</Link>
+          {BRANDS.map((b) => <Link key={b.slug} className="btn btn--ghost" to={`/${b.slug}`}>{b.name}</Link>)}
+        </div>
       </div>
     </main>
   )
