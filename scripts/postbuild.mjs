@@ -1,6 +1,6 @@
 import { copyFileSync, existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { dirname, join } from 'node:path'
-import { buildSitemap, esc, injectRoot, injectSeo, seoBlock } from './seo.mjs'
+import { buildSitemap, esc, injectRoot, injectSeo, seoBlock, withSeed } from './seo.mjs'
 
 const envFile = existsSync('.env.production') ? readFileSync('.env.production', 'utf8') : ''
 const fromFile = (k) => envFile.match(new RegExp(`^${k}=(.*)$`, 'm'))?.[1]?.trim()
@@ -34,7 +34,7 @@ const pages = [
 // 2) produtos publicados (para páginas de compartilhamento com Open Graph)
 try {
   if (!SB_URL || !SB_KEY) throw new Error('Supabase não configurado')
-  const res = await fetch(`${SB_URL}/rest/v1/products?select=slug,name,description,price_cents,sold_out,brands!inner(slug,name),product_images(path,sort)&status=eq.published&order=sort`, { headers: { apikey: SB_KEY } })
+  const res = await fetch(`${SB_URL}/rest/v1/products?select=id,slug,name,description,price_cents,featured,customizable,sold_out,labels,customization_schema,is_example,status,brands!inner(slug,name),product_images(path,sort,alt),product_variants(id,label,option_type,value,in_stock,sort)&status=eq.published&order=sort`, { headers: { apikey: SB_KEY } })
   if (!res.ok) throw new Error(`HTTP ${res.status}`)
   for (const p of await res.json()) {
     const imgs = [...(p.product_images ?? [])].sort((a, b) => a.sort - b.sort).map((i) => (i.path.startsWith('/') ? `${SITE}${i.path}` : `${SB_URL}/storage/v1/object/public/product-images/${i.path}`))
@@ -52,6 +52,7 @@ try {
         '@context': 'https://schema.org', '@type': 'BreadcrumbList',
         itemListElement: [['Início', `${SITE}/`], [p.brands.name, `${SITE}/${p.brands.slug}/`], [p.name, url]].map(([name, item], i) => ({ '@type': 'ListItem', position: i + 1, name, item })),
       }],
+      seed: p,
       path: `/${p.brands.slug}/${p.slug}`,
       title: `${p.name} — ${p.brands.name} · Universo Lay`,
       description: (p.description || `${p.name} em ${p.brands.name}. ${SLOGAN}`).slice(0, 200),
@@ -66,7 +67,7 @@ const defaultImage = SITE ? `${SITE}/og.png` : null
 for (const pg of pages) {
   const url = `${SITE}${pg.path}/` // o Pages serve cada rota como pasta (com barra final)
   const page = injectSeo(template, seoBlock({ title: pg.title, description: pg.description, url, image: pg.image ?? defaultImage, jsonLd: pg.jsonLd, preload: pg.preload }))
-  write(join('dist', pg.path, 'index.html'), pg.rootHtml ? injectRoot(page, pg.rootHtml) : page)
+  write(join('dist', pg.path, 'index.html'), withSeed(pg.rootHtml ? injectRoot(page, pg.rootHtml) : page, pg.seed))
 }
 
 // 3) robots e sitemap

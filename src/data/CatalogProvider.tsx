@@ -13,14 +13,15 @@ export const useCatalog = () => useContext(Ctx)
 
 export interface Async<T> { data?: T; loading: boolean; error: string | null; reload: () => void }
 
-export function useAsync<T>(fn: (c: Catalog) => Promise<T>, deps: unknown[]): Async<T> {
+export function useAsync<T>(fn: (c: Catalog) => Promise<T>, deps: unknown[], initial?: T | null): Async<T> {
   const catalog = useCatalog()
   const preview = usePreview((s) => s.enabled)
-  const [state, setState] = useState<{ data?: T; loading: boolean; error: string | null }>({ loading: true, error: null })
+  const [state, setState] = useState<{ data?: T; loading: boolean; error: string | null }>(initial ? { data: initial, loading: false, error: null } : { loading: true, error: null })
   const [tick, setTick] = useState(0)
   useEffect(() => {
     let live = true
-    setState((s) => ({ ...s, loading: true, error: null }))
+    // com dado inicial (seed do build) mostra na hora e revalida em segundo plano
+    setState((s) => (initial && s.data === initial ? s : { ...s, loading: true, error: null }))
     fn(catalog).then(
       (data) => live && setState({ data, loading: false, error: null }),
       () => live && setState({ loading: false, error: 'Não foi possível carregar. Tente de novo.' }),

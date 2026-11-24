@@ -8,6 +8,7 @@ import NeonFrames from '../fx/NeonFrames'
 import Reveal from '../fx/Reveal'
 import SplitWords from '../fx/SplitWords'
 import { useMagnetic } from '../fx/useMagnetic'
+import { asset } from '../lib/env'
 import { igHandle } from '../lib/format'
 import { INFO, infoParagraphs } from '../lib/info'
 import { useDocumentTitle } from '../lib/useDocumentTitle'
@@ -39,6 +40,9 @@ export default function Home() {
       <section className="hero" aria-label="Universo Lay">
         <div className="hero__glow" aria-hidden />
         <NeonFrames from="#9FB8FF" to="#F2A7C8" layers={3} className="hero__frames" />
+        <div className="hero__collage" aria-hidden>
+          {BRANDS.map((b) => <img key={b.slug} src={asset(`produtos/${b.cover}-480.webp`)} alt="" width={480} height={600} loading="lazy" decoding="async" />)}
+        </div>
         <div className="hero__content container">
           <h1><SplitWords text={SLOGAN} delay={300} /></h1>
           <p className="hero__lead">{HERO_LEAD}</p>
@@ -57,7 +61,7 @@ export default function Home() {
         <section className="sec">
           <div className="container">
             <Head eyebrow="Acabou de chegar" title="Novidades e lançamentos" />
-            <ProductGrid state={news} />
+            <ProductGrid state={news} more={{ to: '/busca', label: 'Ver todas as peças' }} />
           </div>
         </section>
       )}

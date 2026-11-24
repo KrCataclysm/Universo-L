@@ -112,3 +112,53 @@ section h2 { font-size: clamp(24px, 3.4vw, 38px); margin: 4px 0 clamp(14px, 2vw,
 .prose { max-width: 760px; } .prose h2 { font-size: 26px; margin: 26px 0 8px; font-weight: 500; }
 .prose p, .prose li { opacity: .85; max-width: 68ch; } .prose ul { padding-left: 20px; display: grid; gap: 8px; }
 @media (max-width: 760px) { .pdp { padding: 76px 0 56px; } .pdp__more { margin-top: 40px; } }
+
+/* ---- refinamento visual ---- */
+/* topo (desktop): colagem com fotos reais das marcas */
+.hero__collage { display: none; }
+@media (min-width: 960px) {
+  .hero { min-height: clamp(420px, 60svh, 540px); }
+  .hero__frames { display: none; }
+  .hero__collage { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; position: absolute; z-index: -1; right: clamp(24px, 7vw, 130px); top: 50%; width: min(40vw, 500px); transform: translateY(-46%); pointer-events: none; }
+  .hero__collage img { width: 100%; height: auto; aspect-ratio: 4 / 5; object-fit: cover; border-radius: 18px; box-shadow: 0 18px 40px -18px rgba(0,0,0,.7), 0 0 0 1px rgba(247,245,242,.1); }
+  .hero__collage img:nth-child(1) { transform: translateY(-14%); }
+  .hero__collage img:nth-child(3) { transform: translateY(14%); }
+  .page .hero h1 { max-width: 14ch; }
+}
+
+/* cartão "ver tudo" que completa a linha das novidades */
+.pmore { display: flex; flex-direction: column; justify-content: flex-end; gap: 6px; width: 100%; aspect-ratio: 4 / 5; min-height: 0; padding: 18px; border-radius: 14px; background: linear-gradient(150deg, rgba(159,184,255,.35), rgba(242,167,200,.4)), #ece5ee; color: var(--ink); border: 1px solid rgba(40,39,43,.1); transition: transform .25s var(--ease), box-shadow .25s var(--ease); }
+.pmore__k { font-size: 10.5px; letter-spacing: .16em; text-transform: uppercase; opacity: .7; }
+.pmore__t { font-family: var(--font-display); font-size: clamp(22px, 2.4vw, 28px); line-height: 1.05; }
+.pmore__go { font-size: 11px; letter-spacing: .12em; text-transform: uppercase; font-weight: 600; margin-top: 6px; }
+.pmore__go i { font-style: normal; display: inline-block; transition: transform .25s var(--ease); }
+@media (hover: hover) { .pmore:hover { transform: translateY(-3px); box-shadow: 0 16px 30px -18px rgba(40,39,43,.5); } .pmore:hover .pmore__go i { transform: translateX(4px); } }
+
+@media (max-width: 760px) {
+  .pgrid__item:has(> .pmore) { grid-column: 1 / -1; }
+  .pmore { aspect-ratio: auto; min-height: 88px; flex-direction: row; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 4px 12px; padding: 16px 18px; }
+  .pmore__k { flex-basis: 100%; } .pmore__t { font-size: 22px; } .pmore__go { margin: 0; }
+}
+
+/* fotos de produto: fundo e acabamento uniformes */
+.pcard__media { background: linear-gradient(160deg, #f1ece8, #e5dedb); box-shadow: inset 0 0 0 1px rgba(40,39,43,.06); }
+.pcard__media::after { content: ''; position: absolute; inset: 0; pointer-events: none; background: linear-gradient(to top, rgba(40,39,43,.1), transparent 28%); z-index: 1; }
+.pcard__tags, .pcard__shine { z-index: 2; }
+.pcard__img { object-position: center 38%; filter: saturate(1.04) contrast(1.02); }
+
+/* hierarquia: nome maior, preço claro */
+.pcard__brand { font-size: 10.5px; letter-spacing: .15em; opacity: .6; }
+.pcard__info h3 { font-size: clamp(17px, 1.5vw, 19px); line-height: 1.18; font-weight: 500; min-height: 2.36em; }
+.pcard__price { font-size: 15px; font-weight: 600; letter-spacing: .01em; padding-top: 8px; }
+@media (max-width: 760px) { .pcard__info h3 { font-size: 17px; overflow-wrap: normal; } }
+
+/* microinterações rápidas (≤250 ms, só transform/opacity) */
+.pcard, .pmore, .btn, .pcard__cta { -webkit-tap-highlight-color: transparent; }
+.pcard:active { transform: scale(.985); transition-duration: .12s; }
+.pmore:active { transform: scale(.985); }
+.pcard__cta { transition: background .2s var(--ease), color .2s var(--ease), border-color .2s var(--ease), transform .2s var(--ease); }
+@media (hover: hover) { .pcard:hover .pcard__cta { transform: translateY(-1px); } }
+.pdp__buy .btn { transition: transform .18s var(--ease), background .2s, color .2s, box-shadow .25s; }
+.pdp__buy .btn:active { transform: scale(.97); }
+.variants button { transition: transform .15s var(--ease), background .2s, color .2s, border-color .2s; } .variants button:active { transform: scale(.95); }
+.qty button:active { transform: scale(.9); }

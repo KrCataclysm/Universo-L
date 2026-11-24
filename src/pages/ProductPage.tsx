@@ -9,6 +9,7 @@ import Gallery from '../components/Gallery'
 import ProductCard from '../components/ProductCard'
 import ShareButton from '../components/ShareButton'
 import { useAsync } from '../data/CatalogProvider'
+import { seedProduct } from '../data/seed'
 import Reveal from '../fx/Reveal'
 import { useDocumentTitle } from '../lib/useDocumentTitle'
 import NotFound from './NotFound'
@@ -16,9 +17,11 @@ import NotFound from './NotFound'
 export default function ProductPage() {
   const { brand: brandSlug = '', slug = '' } = useParams()
   const brand = getBrand(brandSlug)
-  const state = useAsync((c) => c.getProduct(brandSlug, slug), [brandSlug, slug])
+  const seed = useMemo(() => seedProduct(brandSlug, slug), [brandSlug, slug])
+  const state = useAsync((c) => c.getProduct(brandSlug, slug), [brandSlug, slug], seed)
   const settings = useAsync((c) => c.getSettings(), [])
   const more = useAsync((c) => c.listProducts({ brandSlug }), [brandSlug])
+  const [added, setAdded] = useState(false)
   const [variantId, setVariantId] = useState<string>()
   const [custom, setCustom] = useState<Record<string, string>>({})
   const [errors, setErrors] = useState<Record<string, string>>({})
@@ -60,13 +63,14 @@ export default function ProductPage() {
       variantLabel: variant ? `${variant.label}: ${variant.value}` : undefined, image: p.images[0]?.url, custom: Object.keys(labelled).length ? labelled : undefined,
     })
     useCart.getState().setOpen(true)
+    setAdded(true); setTimeout(() => setAdded(false), 1800)
   }
 
   return (
     <main className="page pdp" style={{ ['--a' as string]: brand.accentFrom, ['--b' as string]: brand.accentTo }}>
       <div className="container pdp__grid">
-        <Reveal><Gallery images={p.images} /></Reveal>
-        <Reveal delay={120} className="pdp__info">
+        <div><Gallery images={p.images} /></div>
+        <div className="pdp__info">
           <nav className="crumbs" aria-label="Você está em"><Link to="/">Início</Link> / <Link to={`/${brand.slug}`}>{brand.name}</Link></nav>
           {p.isExample && <span className="tag tag--inline">Exemplo</span>}
           <h1>{p.name}</h1>
@@ -90,7 +94,7 @@ export default function ProductPage() {
           ) : (
           <div className="pdp__buy">
               <div className="qty qty--lg"><button onClick={() => setQty((q) => Math.max(1, q - 1))} aria-label="Diminuir">−</button><span>{qty}</span><button onClick={() => setQty((q) => Math.min(20, q + 1))} aria-label="Aumentar">+</button></div>
-              <button className="btn btn--ink" onClick={add} disabled={p.soldOut}>{p.soldOut ? 'Esgotado' : 'Adicionar ao carrinho'}</button>
+              <button className="btn btn--ink" onClick={add} disabled={p.soldOut}>{p.soldOut ? 'Esgotado' : added ? 'Adicionado ✓' : 'Adicionar ao carrinho'}</button>
             </div>
           )}
           <div className="pdp__links">
@@ -102,7 +106,7 @@ export default function ProductPage() {
             <li>Pagamento e entrega combinados na conversa.</li>
             <li>Dúvida sobre tamanho, cor ou entrega? Pergunte antes de comprar.</li>
           </ul>
-        </Reveal>
+        </div>
       </div>
       {!!related.length && (
         <section className="container pdp__more">
