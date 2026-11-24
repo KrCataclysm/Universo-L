@@ -7,7 +7,7 @@ export default function Contact() {
   const { data: s } = useAsync((c) => c.getSettings(), [])
   const digits = (s?.whatsapp_number ?? '').replace(/\D/g, '')
   const wa = digits ? `https://wa.me/${digits}` : null
-  const insta: [string, string | undefined][] = [['Lay.Store', s?.instagram_lay_store], ['Ousada Delicada', s?.instagram_ousada_delicada], ['Falou, Bordei', s?.instagram_falou_bordei]]
+  const insta: [string, string | undefined][] = [['Lay.Store', s?.instagram_lay_store], ['Ousada Delicada', s?.instagram_ousada_delicada], ['Falou Bordei', s?.instagram_falou_bordei]]
   return (
     <main className="page about">
       <div className="container">

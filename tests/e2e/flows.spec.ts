@@ -7,7 +7,7 @@ test.beforeEach(async ({ page }) => {
 test('home mostra slogan e as 3 marcas e navega para cada uma', async ({ page }) => {
   await page.goto('/')
   await expect(page.getByRole('heading', { level: 1 })).toHaveAccessibleName('Todas as suas marcas em um só lugar.')
-  for (const name of ['Lay.Store', 'Ousada Delicada', 'Falou, Bordei']) {
+  for (const name of ['Lay.Store', 'Ousada Delicada', 'Falou Bordei']) {
     await expect(page.locator('.portal', { hasText: name })).toBeVisible()
   }
   await page.locator('.portal', { hasText: 'Ousada Delicada' }).click()
@@ -15,28 +15,31 @@ test('home mostra slogan e as 3 marcas e navega para cada uma', async ({ page })
   await expect(page.getByRole('heading', { level: 1 })).toHaveAccessibleName('Ousada Delicada')
 })
 
-test('produto personalizável: campos obrigatórios bloqueiam e depois adicionam ao carrinho', async ({ page }) => {
-  await page.goto('/falou-bordei/toalha-bordada')
-  await page.getByRole('button', { name: 'Adicionar ao carrinho' }).click()
-  await expect(page.getByText('Campo obrigatório.').first()).toBeVisible()
-  await expect(page.getByRole('dialog', { name: 'Carrinho' })).toHaveCount(0)
-  await page.getByLabel(/Nome ou texto a bordar/).fill('Maria & José')
-  await page.getByLabel(/Cor da linha/).selectOption('Lilás')
-  await page.getByRole('button', { name: 'Adicionar ao carrinho' }).click()
-  const drawer = page.getByRole('dialog', { name: 'Carrinho' })
-  await expect(drawer).toBeVisible()
-  await expect(drawer).toContainText('Maria & José')
-  await expect(drawer.getByRole('button', { name: 'Finalizar no WhatsApp' })).toBeDisabled()
-  await expect(drawer).toContainText('ainda não foi configurado')
-})
-
-test('variação é obrigatória quando existe', async ({ page }) => {
-  await page.goto('/lay-store/legging-cintura-alta')
+test('produto com opção de cor: exige escolher e entra no carrinho', async ({ page }) => {
+  await page.goto('/lay-store/bermuda-ciclista')
   await page.getByRole('button', { name: 'Adicionar ao carrinho' }).click()
   await expect(page.getByText('Escolha uma opção.')).toBeVisible()
-  await page.getByRole('radio', { name: 'M' }).click()
+  await page.getByRole('radio', { name: 'Preta' }).click()
   await page.getByRole('button', { name: 'Adicionar ao carrinho' }).click()
-  await expect(page.getByRole('dialog', { name: 'Carrinho' })).toContainText('Tamanho/opção: M')
+  const drawer = page.getByRole('dialog', { name: 'Carrinho' })
+  await expect(drawer).toContainText('Bermuda ciclista')
+  await expect(drawer).toContainText('Preta')
+  await expect(drawer.getByRole('button', { name: 'Finalizar no WhatsApp' })).toBeDisabled()
+})
+
+test('bordado sob consulta: mostra "Sob consulta" e total a combinar', async ({ page }) => {
+  await page.goto('/falou-bordei/jesus-vidrilho-dourado')
+  await expect(page.getByText('Sob consulta').first()).toBeVisible()
+  await page.getByRole('button', { name: 'Adicionar ao carrinho' }).click()
+  const drawer = page.getByRole('dialog', { name: 'Carrinho' })
+  await expect(drawer).toContainText('A combinar')
+})
+
+test('marca exibe as fotos reais dos produtos', async ({ page }) => {
+  await page.goto('/ousada-delicada')
+  await expect(page.getByRole('heading', { name: 'Sutiã coringa' })).toBeVisible()
+  const ok = await page.locator('.pcard__img').first().evaluate((i: HTMLImageElement) => i.complete && i.naturalWidth > 0)
+  expect(ok).toBe(true)
 })
 
 test('rota inexistente mostra 404 temático', async ({ page }) => {

@@ -4,7 +4,7 @@ import { getBrand } from '../brand/brands'
 import ProductGrid from '../components/ProductGrid'
 import { useAsync, useProducts } from '../data/CatalogProvider'
 import NeonFrames from '../fx/NeonFrames'
-import Ribbon from '../fx/Ribbon'
+import { asset } from '../lib/env'
 import SplitWords from '../fx/SplitWords'
 import { useDocumentTitle } from '../lib/useDocumentTitle'
 import NotFound from './NotFound'
@@ -21,7 +21,7 @@ export default function BrandPage() {
   return (
     <main className="page brandpage" style={{ ['--a' as string]: brand.accentFrom, ['--b' as string]: brand.accentTo }}>
       <section className="bhero grain">
-        <div className="bhero__bg"><Ribbon accent={accent} /></div>
+        <div className="bhero__bg" aria-hidden><div className="bhero__photo" style={{ backgroundImage: `url(${asset(`produtos/${brand.slug}-1.webp`)})` }} /></div>
         <NeonFrames from={brand.accentFrom} to={brand.accentTo} layers={5} className="bhero__frames" />
         <div className="container bhero__content">
           <p className="eyebrow">{brand.category}</p>

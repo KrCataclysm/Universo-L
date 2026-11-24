@@ -2,6 +2,7 @@ import { lazy, Suspense, useEffect, useState } from 'react'
 import { useLocation } from 'react-router-dom'
 import { useCart } from './cart/cartStore'
 import Footer from './components/Footer'
+import WhatsAppFab from './components/WhatsAppFab'
 import Header from './components/Header'
 import { appCatalog } from './data/appCatalog'
 import { CatalogProvider, useCatalog } from './data/CatalogProvider'
@@ -42,6 +43,7 @@ function Site() {
         <Header />
         <PageTransition><div id="main" tabIndex={-1} className="main-anchor"><AppRoutes /></div></PageTransition>
         <Footer />
+        <WhatsAppFab />
         <LazyDrawer />
         <PruneCart />
         <Cursor />

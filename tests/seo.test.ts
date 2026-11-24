@@ -27,4 +27,10 @@ describe('seo', () => {
     expect(x).toContain('<loc>https://x.test/base/lay-store/peca</loc>')
     expect(x.match(/<url>/g)!.length).toBe(3)
   })
+  it('seoBlock inclui JSON-LD escapado quando informado', () => {
+    const b = seoBlock({ title: 't', description: 'd', url: 'https://x.test/', image: null, jsonLd: { '@type': 'Product', name: '</script><b>x' } })
+    expect(b).toContain('<script type="application/ld+json">')
+    expect(b).toContain('\\u003c/script>')
+    expect(b.match(/<\/script>/g)!.length).toBe(1)
+  })
 })

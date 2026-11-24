@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { getBrand } from '../brand/brands'
 import { useCart } from '../cart/cartStore'
-import { formatBRL } from '../cart/money'
+import { priceLabel } from '../cart/money'
 import { buildWhatsAppUrl } from '../cart/whatsapp'
 import CustomizationForm from '../components/CustomizationForm'
 import Gallery from '../components/Gallery'
@@ -57,7 +57,8 @@ export default function ProductPage() {
           <nav className="crumbs" aria-label="Você está em"><Link to="/">Início</Link> / <Link to={`/${brand.slug}`}>{brand.name}</Link></nav>
           {p.isExample && <span className="tag tag--inline">Exemplo</span>}
           <h1>{p.name}</h1>
-          <p className="pdp__price">{formatBRL(p.priceCents)}</p>
+          <p className="pdp__price">{priceLabel(p.priceCents)}</p>
+          {p.priceCents === 0 && <p className="pdp__note">O valor é combinado com a loja, pelo WhatsApp, conforme o seu pedido.</p>}
           <p className="pdp__desc">{p.description}</p>
           {!!p.variants.length && (
             <div className="variants" role="radiogroup" aria-label={p.variants[0].label}>
@@ -71,7 +72,7 @@ export default function ProductPage() {
           <CustomizationForm fields={p.customizationFields} values={custom} errors={errors} onChange={(k, v) => setCustom((c) => ({ ...c, [k]: v }))} />
           <div className="pdp__buy">
             <div className="qty qty--lg"><button onClick={() => setQty((q) => Math.max(1, q - 1))} aria-label="Diminuir">−</button><span>{qty}</span><button onClick={() => setQty((q) => Math.min(20, q + 1))} aria-label="Aumentar">+</button></div>
-            <button className="btn btn--ink" onClick={add}>Adicionar ao carrinho</button>
+            <button className="btn btn--ink" onClick={add} disabled={p.soldOut}>{p.soldOut ? 'Esgotado' : 'Adicionar ao carrinho'}</button>
           </div>
           {ask && <a className="pdp__ask" href={ask} target="_blank" rel="noreferrer">Chamar no WhatsApp sobre esta peça</a>}
         </Reveal>

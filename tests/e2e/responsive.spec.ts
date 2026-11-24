@@ -5,7 +5,7 @@ const sizes = [
   { name: 'tablet', width: 768, height: 1024 },
   { name: 'desktop', width: 1440, height: 900 },
 ]
-const routes = ['/', '/lay-store', '/ousada-delicada', '/falou-bordei', '/falou-bordei/toalha-bordada', '/sobre', '/contato', '/nada']
+const routes = ['/', '/lay-store', '/ousada-delicada', '/falou-bordei', '/falou-bordei/jesus-vidrilho-dourado', '/sobre', '/contato', '/nada']
 
 for (const s of sizes) {
   test(`sem rolagem horizontal em ${s.name}`, async ({ page }) => {

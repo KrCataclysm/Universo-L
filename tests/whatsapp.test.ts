@@ -41,4 +41,16 @@ describe('buildWhatsAppUrl', () => {
     expect(text(r.url!)).toMatch(/resumid/i)
     expect(text(r.url!).replace(/ /g, ' ')).toContain('Total: R$ 1.194,00')
   })
+
+  it('item sob consulta não soma e aparece como "sob consulta"', () => {
+    const t = text(buildWhatsAppUrl({ phone: '5511999999999', items: [item({ unitPriceCents: 6690 }), item({ productId: 'q', name: 'Bordado de teste', unitPriceCents: 0 })] }).url!).replace(/\u00A0/g, ' ')
+    expect(t).toContain('Bordado de teste — sob consulta')
+    expect(t).toContain('Total dos itens com preço: R$ 66,90')
+    expect(t).toMatch(/sob consulta/i)
+  })
+  it('pedido só com itens sob consulta: total a combinar', () => {
+    const t = text(buildWhatsAppUrl({ phone: '5511999999999', items: [item({ unitPriceCents: 0 })] }).url!)
+    expect(t).toContain('Valor: a combinar')
+    expect(t).not.toContain('R$')
+  })
 })

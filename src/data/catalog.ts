@@ -14,6 +14,8 @@ export interface Product {
   variants: Variant[]
   featured: boolean
   customizable: boolean
+  /** esgotado: aparece com selo e não pode ser adicionado ao carrinho */
+  soldOut?: boolean
   customizationFields: CustomField[]
   /** true = item de exemplo (pode ser removido pelo painel) */
   isExample?: boolean

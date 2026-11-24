@@ -43,7 +43,7 @@ describe('exampleCatalog', () => {
     expect((await exampleCatalog.getProduct('falou-bordei', p.slug))?.id).toBe(p.id)
     expect(await exampleCatalog.getProduct('lay-store', p.slug)).toBeNull()
   })
-  it('produtos do Falou, Bordei exigem personalização', async () => {
+  it('produtos do Falou Bordei exigem personalização', async () => {
     const items = await exampleCatalog.listProducts({ brandSlug: 'falou-bordei' })
     expect(items.every((p) => p.customizable && p.customizationFields.some((f) => f.required))).toBe(true)
   })

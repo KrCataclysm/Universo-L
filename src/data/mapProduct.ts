@@ -11,6 +11,7 @@ export interface ProductRow {
   price_cents: number
   featured: boolean
   customizable: boolean
+  sold_out?: boolean
   customization_schema: unknown
   is_example: boolean
   status: string
@@ -34,7 +35,7 @@ const variantType = (t: string): 'size' | 'color' | 'other' => (t === 'size' || 
 
 export function mapProduct(r: ProductRow, publicUrl: (path: string) => string): Product {
   const brandSlug = first(r.brands)?.slug ?? ''
-  const images = [...(r.product_images ?? [])].sort((a, b) => a.sort - b.sort).map((i) => ({ url: publicUrl(i.path), alt: i.alt || r.name }))
+  const images = [...(r.product_images ?? [])].sort((a, b) => a.sort - b.sort).map((i) => ({ url: i.path.startsWith('/') ? `${import.meta.env.BASE_URL.replace(/\/$/, '')}${i.path}` : publicUrl(i.path), alt: i.alt || r.name }))
   return {
     id: r.id,
     brandSlug,
@@ -47,6 +48,7 @@ export function mapProduct(r: ProductRow, publicUrl: (path: string) => string): 
     variants: [...(r.product_variants ?? [])].sort((a, b) => a.sort - b.sort).map((v) => ({ id: v.id, label: v.label, type: variantType(v.option_type), value: v.value, inStock: v.in_stock })),
     featured: r.featured,
     customizable: r.customizable,
+    soldOut: r.sold_out === true,
     customizationFields: Array.isArray(r.customization_schema) ? r.customization_schema.map(toField).filter((f): f is CustomField => !!f) : [],
     isExample: r.is_example,
     status: r.status,

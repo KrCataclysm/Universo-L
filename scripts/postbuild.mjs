@@ -19,7 +19,7 @@ copyFileSync('dist/index.html', 'dist/404.html')
 const BRANDS = {
   'lay-store': ['Lay.Store', 'Moda fitness'],
   'ousada-delicada': ['Ousada Delicada', 'Moda íntima'],
-  'falou-bordei': ['Falou, Bordei', 'Bordados e personalizados'],
+  'falou-bordei': ['Falou Bordei', 'Bordados e personalizados'],
 }
 const pages = [
   { path: '/sobre', title: 'Sobre — Universo Lay', description: 'Um universo de moda, estilo, delicadeza e peças personalizadas, onde cada mulher encontra algo especial para si ou para presentear.' },
@@ -30,15 +30,23 @@ const pages = [
 // 2) produtos publicados (para páginas de compartilhamento com Open Graph)
 try {
   if (!SB_URL || !SB_KEY) throw new Error('Supabase não configurado')
-  const res = await fetch(`${SB_URL}/rest/v1/products?select=slug,name,description,brands!inner(slug,name),product_images(path,sort)&status=eq.published`, { headers: { apikey: SB_KEY } })
+  const res = await fetch(`${SB_URL}/rest/v1/products?select=slug,name,description,price_cents,sold_out,brands!inner(slug,name),product_images(path,sort)&status=eq.published&order=sort`, { headers: { apikey: SB_KEY } })
   if (!res.ok) throw new Error(`HTTP ${res.status}`)
   for (const p of await res.json()) {
-    const img = [...(p.product_images ?? [])].sort((a, b) => a.sort - b.sort)[0]
+    const imgs = [...(p.product_images ?? [])].sort((a, b) => a.sort - b.sort).map((i) => (i.path.startsWith('/') ? `${SITE}${i.path}` : `${SB_URL}/storage/v1/object/public/product-images/${i.path}`))
+    const img = imgs[0]
+    const url = `${SITE}/${p.brands.slug}/${p.slug}/`
     pages.push({
+      jsonLd: {
+        '@context': 'https://schema.org', '@type': 'Product', name: p.name, description: p.description || undefined,
+        image: imgs.length ? imgs : undefined, brand: { '@type': 'Brand', name: p.brands.name }, url,
+        // preço 0 = sob consulta: não declara oferta (o Google exige preço real)
+        offers: p.price_cents > 0 ? { '@type': 'Offer', priceCurrency: 'BRL', price: (p.price_cents / 100).toFixed(2), url, availability: p.sold_out ? 'https://schema.org/OutOfStock' : 'https://schema.org/InStock' } : undefined,
+      },
       path: `/${p.brands.slug}/${p.slug}`,
       title: `${p.name} — ${p.brands.name} · Universo Lay`,
       description: (p.description || `${p.name} em ${p.brands.name}. ${SLOGAN}`).slice(0, 200),
-      image: img ? `${SB_URL}/storage/v1/object/public/product-images/${img.path}` : null,
+      image: img ?? null,
     })
   }
 } catch (e) {
@@ -48,7 +56,7 @@ try {
 const defaultImage = SITE ? `${SITE}/og.png` : null
 for (const pg of pages) {
   const url = `${SITE}${pg.path}/` // o Pages serve cada rota como pasta (com barra final)
-  write(join('dist', pg.path, 'index.html'), injectSeo(template, seoBlock({ title: pg.title, description: pg.description, url, image: pg.image ?? defaultImage })))
+  write(join('dist', pg.path, 'index.html'), injectSeo(template, seoBlock({ title: pg.title, description: pg.description, url, image: pg.image ?? defaultImage, jsonLd: pg.jsonLd })))
 }
 
 // 3) robots e sitemap

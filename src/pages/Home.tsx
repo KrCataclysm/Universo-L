@@ -5,7 +5,6 @@ import ProductGrid from '../components/ProductGrid'
 import { useFeatured } from '../data/CatalogProvider'
 import NeonFrames from '../fx/NeonFrames'
 import Reveal from '../fx/Reveal'
-import Ribbon from '../fx/Ribbon'
 import SplitWords from '../fx/SplitWords'
 import { prefersReducedMotion } from '../fx/motion'
 import { useMagnetic } from '../fx/useMagnetic'
@@ -33,7 +32,7 @@ export default function Home() {
       ctx = gsap.context(() => {
         const st = { trigger: hero.current, start: 'top top', end: 'bottom top', scrub: true }
         gsap.to('.hero__content', { yPercent: -18, opacity: 0.1, ease: 'none', scrollTrigger: st })
-        gsap.to('.hero__ribbon', { yPercent: 14, ease: 'none', scrollTrigger: st })
+        gsap.to('.hero__glow', { yPercent: 14, ease: 'none', scrollTrigger: st })
       })
     })
     return () => { dead = true; ctx?.revert() }
@@ -42,7 +41,7 @@ export default function Home() {
   return (
     <main className="page home">
       <section ref={hero} className="hero grain" aria-label="Universo Lay">
-        <div className="hero__ribbon"><Ribbon /></div>
+        <div className="hero__glow" aria-hidden />
         <NeonFrames from="#9FB8FF" to="#F2A7C8" layers={6} className="hero__frames" />
         <div className="hero__content container">
           <p className="eyebrow">Universo Lay</p>

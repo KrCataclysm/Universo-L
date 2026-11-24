@@ -2,7 +2,7 @@ import type { Catalog, Category, Product, ProductQuery } from './catalog'
 import { mapProduct, type ProductRow } from './mapProduct'
 import { usePreview } from './previewStore'
 
-const COLS = 'id,slug,name,description,price_cents,featured,customizable,customization_schema,is_example,status,brands!inner(slug),product_images(path,sort,alt),product_variants(id,label,option_type,value,in_stock,sort)'
+const COLS = 'id,slug,name,description,price_cents,featured,customizable,sold_out,customization_schema,is_example,status,brands!inner(slug),product_images(path,sort,alt),product_variants(id,label,option_type,value,in_stock,sort)'
 
 /** Catálogo público via PostgREST com fetch (poucos bytes; o supabase-js fica só no painel). */
 export function createRestCatalog(url: string, key: string): Catalog {

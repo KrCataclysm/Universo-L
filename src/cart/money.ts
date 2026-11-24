@@ -11,3 +11,6 @@ export function parsePriceToCents(input: string): number | null {
   if (!/^\d+(\.\d{1,2})?$/.test(s)) return null
   return Math.round(parseFloat(s) * 100)
 }
+
+/** Preço zero = produto sob consulta (ex.: bordado personalizado). */
+export const priceLabel = (cents: number): string => (cents > 0 ? formatBRL(cents) : 'Sob consulta')

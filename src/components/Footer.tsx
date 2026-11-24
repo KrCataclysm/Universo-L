@@ -8,7 +8,7 @@ export default function Footer() {
   const insta = [
     ['Lay.Store', settings?.instagram_lay_store],
     ['Ousada Delicada', settings?.instagram_ousada_delicada],
-    ['Falou, Bordei', settings?.instagram_falou_bordei],
+    ['Falou Bordei', settings?.instagram_falou_bordei],
   ].filter(([, v]) => v)
   return (
     <footer className="ftr grain">
