@@ -1,116 +1,121 @@
-import { useEffect, useRef } from 'react'
-import { BRANDS, CONCEPT, SLOGAN } from '../brand/brands'
+import { Link } from 'react-router-dom'
+import { BRANDS, HERO_LEAD, SLOGAN } from '../brand/brands'
+import BannerSlot from '../components/BannerSlot'
 import BrandPortal from '../components/BrandPortal'
 import ProductGrid from '../components/ProductGrid'
-import { useFeatured } from '../data/CatalogProvider'
+import { useAsync, useProducts } from '../data/CatalogProvider'
 import NeonFrames from '../fx/NeonFrames'
 import Reveal from '../fx/Reveal'
 import SplitWords from '../fx/SplitWords'
-import { prefersReducedMotion } from '../fx/motion'
 import { useMagnetic } from '../fx/useMagnetic'
-import { asset } from '../lib/env'
-import { useAsync } from '../data/CatalogProvider'
 import { igHandle } from '../lib/format'
+import { INFO, infoParagraphs } from '../lib/info'
 import { useDocumentTitle } from '../lib/useDocumentTitle'
 
 const STEPS = [
-  ['01', 'Escolha', 'Navegue pelas três marcas e escolha as peças que combinam com você.'],
-  ['02', 'Monte o carrinho', 'Escolha a cor ou o tamanho e, nos bordados, conte como quer a sua peça.'],
-  ['03', 'Finalize no WhatsApp', 'Seu pedido sai pronto na conversa com a loja para combinar pagamento e entrega.'],
+  { t: 'Escolha suas peças', d: 'Navegue pelas marcas.', icon: <path d="M11 4a7 7 0 1 0 0 14 7 7 0 0 0 0-14Zm9 16-4-4" /> },
+  { t: 'Monte seu carrinho', d: 'Selecione cor ou tamanho.', icon: <><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4H6Z" /><path d="M3 6h18M16 10a4 4 0 0 1-8 0" /></> },
+  { t: 'Finalize pelo WhatsApp', d: 'Combine pagamento e entrega.', icon: <path d="M20 11.5a8 8 0 0 1-11.9 7L4 20l1.6-4A8 8 0 1 1 20 11.5Z" /> },
 ]
+
+const Head = ({ eyebrow, title }: { eyebrow: string; title: string }) => (
+  <>
+    <Reveal><p className="eyebrow">{eyebrow}</p></Reveal>
+    <Reveal delay={60}><h2>{title}</h2></Reveal>
+  </>
+)
 
 export default function Home() {
   useDocumentTitle()
-  const hero = useRef<HTMLElement>(null)
   const cta = useMagnetic<HTMLAnchorElement>()
-  const featured = useFeatured()
+  const all = useProducts({})
   const settings = useAsync((c) => c.getSettings(), [])
+  const news = { ...all, data: all.data?.filter((p) => p.labels?.includes('Novidade')).slice(0, 4) }
+  const featured = { ...all, data: all.data?.filter((p) => p.featured).slice(0, 4) }
   const igs = BRANDS.map((b) => ({ b, url: settings.data?.[`instagram_${b.slug.replace(/-/g, '_')}`] })).filter((x) => igHandle(x.url))
-
-  useEffect(() => {
-    if (prefersReducedMotion() || !window.matchMedia('(pointer: fine)').matches || !hero.current) return
-    let dead = false
-    let ctx: { revert: () => void } | undefined
-    Promise.all([import('gsap'), import('gsap/ScrollTrigger')]).then(([{ gsap }, { ScrollTrigger }]) => {
-      if (dead || !hero.current) return
-      gsap.registerPlugin(ScrollTrigger)
-      ctx = gsap.context(() => {
-        const st = { trigger: hero.current, start: 'top top', end: 'bottom top', scrub: true }
-        gsap.to('.hero__content', { yPercent: -18, opacity: 0.1, ease: 'none', scrollTrigger: st })
-        gsap.to('.hero__glow', { yPercent: 14, ease: 'none', scrollTrigger: st })
-      })
-    })
-    return () => { dead = true; ctx?.revert() }
-  }, [])
 
   return (
     <main className="page home">
-      <section ref={hero} className="hero grain" aria-label="Universo Lay">
+      <section className="hero" aria-label="Universo Lay">
         <div className="hero__glow" aria-hidden />
-        <NeonFrames from="#9FB8FF" to="#F2A7C8" layers={6} className="hero__frames" />
+        <NeonFrames from="#9FB8FF" to="#F2A7C8" layers={3} className="hero__frames" />
         <div className="hero__content container">
-          <p className="eyebrow">Universo Lay</p>
-          <h1><SplitWords text={SLOGAN} delay={400} /></h1>
-          <p className="hero__lead">{CONCEPT}</p>
-          <div className="hero__cta">
-            <a ref={cta} href="#marcas" className="btn btn--glow" onClick={(e) => { e.preventDefault(); document.getElementById('marcas')?.scrollIntoView({ behavior: prefersReducedMotion() ? 'auto' : 'smooth' }) }}>Explorar o universo</a>
-          </div>
+          <h1><SplitWords text={SLOGAN} delay={300} /></h1>
+          <p className="hero__lead">{HERO_LEAD}</p>
+          <a ref={cta} href="#marcas" className="btn btn--glow" onClick={(e) => { e.preventDefault(); document.getElementById('marcas')?.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' }) }}>Conheça nossas marcas</a>
         </div>
-        <span className="hero__scroll" aria-hidden><i />rolar</span>
       </section>
 
-      <div className="marquee" aria-hidden>
-        <div className="marquee__track">
-          {[0, 1].map((k) => <div key={k} style={{ display: 'flex' }}>{Array.from({ length: 4 }, (_, i) => <span key={i}>{SLOGAN}<i>✦</i></span>)}</div>)}
-        </div>
-      </div>
-
-      <section id="marcas" className="brands">
+      <section id="marcas" className="sec brands">
         <div className="container">
-          <Reveal><p className="eyebrow">Três marcas, um só lugar</p></Reveal>
-          <Reveal delay={80}><h2>Escolha seu universo</h2></Reveal>
-          <div className="portals">{BRANDS.map((b, i) => <Reveal key={b.slug} delay={i * 120} className="portals__item"><BrandPortal brand={b} index={i} /></Reveal>)}</div>
+          <Head eyebrow="Três marcas, um só lugar" title="Escolha seu universo" />
+          <div className="portals">{BRANDS.map((b, i) => <Reveal key={b.slug} delay={i * 90} className="portals__item"><BrandPortal brand={b} /></Reveal>)}</div>
         </div>
       </section>
 
-      <section className="featured">
-        <div className="container">
-          <Reveal><p className="eyebrow">Seleção</p></Reveal>
-          <Reveal delay={80}><h2>Destaques</h2></Reveal>
-          <ProductGrid state={featured} emptyText="Os destaques aparecem aqui assim que as peças forem cadastradas." />
-        </div>
-      </section>
-
-      {!!igs.length && (
-        <section className="insta">
+      {!!news.data?.length && (
+        <section className="sec">
           <div className="container">
-            <Reveal><p className="eyebrow">No Instagram</p></Reveal>
-            <Reveal delay={80}><h2>Acompanhe as novidades</h2></Reveal>
-            <div className="insta__grid">
-              {igs.map(({ b, url }, i) => (
-                <Reveal key={b.slug} delay={i * 100}>
-                  <a className="insta__card" href={url} target="_blank" rel="noreferrer" style={{ ['--a' as string]: b.accentFrom, ['--b' as string]: b.accentTo }}>
-                    <span className="insta__photo" style={{ backgroundImage: `url(${asset(`produtos/${b.cover}-800.webp`)})` }} aria-hidden />
-                    <span className="eyebrow">{b.name}</span><strong>{igHandle(url)}</strong><span>Seguir →</span>
-                  </a>
-                </Reveal>
-              ))}
-            </div>
+            <Head eyebrow="Acabou de chegar" title="Novidades e lançamentos" />
+            <ProductGrid state={news} />
           </div>
         </section>
       )}
 
-      <section className="how">
+      <section className="sec featured">
         <div className="container">
-          <Reveal><p className="eyebrow">Simples e direto</p></Reveal>
-          <Reveal delay={80}><h2>Como comprar</h2></Reveal>
+          <Head eyebrow="Seleção" title="Produtos em destaque" />
+          <ProductGrid state={featured} emptyText="Os destaques aparecem aqui assim que as peças forem cadastradas." />
+        </div>
+      </section>
+
+      <BannerSlot />
+
+      <section className="sec how">
+        <div className="container">
+          <Head eyebrow="Simples e direto" title="Como comprar" />
           <ol className="steps">
-            {STEPS.map(([n, t, d], i) => (
-              <Reveal as="li" className="step" delay={i * 120} key={n}><span className="step__n">{n}</span><h3>{t}</h3><p>{d}</p></Reveal>
+            {STEPS.map((s, i) => (
+              <Reveal as="li" className="step" delay={i * 80} key={s.t}>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">{s.icon}</svg>
+                <span><b>{i + 1}. {s.t}</b><small>{s.d}</small></span>
+              </Reveal>
             ))}
           </ol>
         </div>
       </section>
+
+      <section className="sec info">
+        <div className="container">
+          <Head eyebrow="Compra tranquila" title="Pagamento e entrega" />
+          <div className="info__grid">
+            {INFO.filter((i) => i.key !== 'prazos').map((i) => (
+              <Reveal key={i.key} className="info__card">
+                <h3>{i.title}</h3>
+                <p>{infoParagraphs(settings.data, i)[0]}</p>
+                <Link to={`/informacoes#${i.key}`}>Ver detalhes</Link>
+              </Reveal>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {!!igs.length && (
+        <section className="sec social">
+          <div className="container">
+            <Head eyebrow="Redes sociais" title="Siga no Instagram" />
+            <ul className="social__list">
+              {igs.map(({ b, url }) => (
+                <Reveal as="li" key={b.slug} className="social__item">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5" /><circle cx="12" cy="12" r="4" /><circle cx="17.2" cy="6.8" r=".8" fill="currentColor" /></svg>
+                  <span><b>{b.name}</b><small>{igHandle(url)}</small></span>
+                  <a className="btn btn--ghost" href={url} target="_blank" rel="noreferrer" aria-label={`Seguir ${igHandle(url)} no Instagram`}>Seguir</a>
+                </Reveal>
+              ))}
+            </ul>
+          </div>
+        </section>
+      )}
     </main>
   )
 }

@@ -12,6 +12,7 @@ export interface ProductRow {
   featured: boolean
   customizable: boolean
   sold_out?: boolean
+  labels?: string[] | null
   customization_schema: unknown
   is_example: boolean
   status: string
@@ -49,6 +50,7 @@ export function mapProduct(r: ProductRow, publicUrl: (path: string) => string): 
     featured: r.featured,
     customizable: r.customizable,
     soldOut: r.sold_out === true,
+    labels: r.labels ?? [],
     customizationFields: Array.isArray(r.customization_schema) ? r.customization_schema.map(toField).filter((f): f is CustomField => !!f) : [],
     isExample: r.is_example,
     status: r.status,

@@ -50,6 +50,9 @@ const CATEGORIES: Record<string, Category[]> = {
 }
 
 export const exampleCatalog: Catalog = {
+  async listBanners() {
+    return []
+  },
   async listProducts(q: ProductQuery) {
     return products().filter((p) =>
       (!q.brandSlug || p.brandSlug === q.brandSlug) &&

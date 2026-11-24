@@ -3,7 +3,7 @@ import { BRANDS } from '../src/brand/brands'
 
 describe('BRANDS', () => {
   it('tem as 3 marcas na ordem certa', () => {
-    expect(BRANDS.map((b) => b.name)).toEqual(['Lay.Store', 'Ousada Delicada', 'Falou Bordei'])
+    expect(BRANDS.map((b) => b.name)).toEqual(['Lay.store', 'Ousada Delicada', 'Falou Bordei'])
   })
   it('slugs são únicos', () => {
     expect(new Set(BRANDS.map((b) => b.slug)).size).toBe(3)

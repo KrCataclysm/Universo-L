@@ -1,6 +1,6 @@
 # Universo Lay
 
-Site/loja do **Universo Lay** — "Todas as suas marcas em um só lugar." (Lay.Store · Ousada Delicada · Falou Bordei)
+Site/loja do **Universo Lay** — "Todas as suas marcas em um só lugar." (Lay.store · Ousada Delicada · Falou Bordei)
 
 - `npm run dev` — desenvolvimento
 - `npm test` — testes unitários

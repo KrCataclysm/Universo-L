@@ -1,0 +1,114 @@
+/* ===== Refinamento (pedido da cliente): mais limpo, comercial e funcional, principalmente no celular ===== */
+:root { --sec-y: clamp(28px, 4.2vw, 52px); }
+.sec, .featured, .catalog, .how { padding-block: var(--sec-y); }
+section h2 { font-size: clamp(24px, 3.4vw, 38px); margin: 4px 0 clamp(14px, 2vw, 24px); }
+.eyebrow { font-size: 10.5px; letter-spacing: .24em; }
+.featured, .how, .catalog, .ftr { contain-intrinsic-size: auto 420px; }
+
+/* cabeçalho: mais baixo, ícones menores, discreto ao rolar */
+.hdr { padding: 8px var(--gutter); gap: 12px; }
+.hdr.is-scrolled { padding-block: 5px; background: rgba(247,245,242,.94); box-shadow: 0 1px 0 rgba(40,39,43,.06); }
+.hdr__logo { gap: 8px; } .hdr__logo .wm { font-size: 17px; }
+.hdr__nav { font-size: 11px; letter-spacing: .14em; }
+.hdr__actions { gap: 6px; }
+.hdr__cart, .hdr__burger { width: 38px; height: 38px; }
+.hdr__burger i { left: 11px; right: 11px; } .hdr__burger i:first-child { top: 14px; } .hdr__burger i:last-child { top: 21px; }
+.hdr__burger.open i:first-child, .hdr__burger.open i:last-child { top: 17px; }
+.hdr__badge { min-width: 17px; height: 17px; font-size: 10px; top: -5px; right: -5px; }
+.menu { clip-path: circle(0 at calc(100% - 38px) 28px); } .menu.open { clip-path: circle(150% at calc(100% - 38px) 28px); }
+
+/* banner inicial: baixo, direto, elementos geométricos discretos */
+.hero { min-height: clamp(340px, 54svh, 480px); align-items: center; }
+.hero__content { padding-block: 82px 34px; width: 100%; }
+.page .hero h1 { font-size: clamp(32px, 5.2vw, 64px); max-width: 18ch; margin: 0 0 14px; letter-spacing: -.012em; line-height: 1.04; }
+.hero__lead { font-size: clamp(14px, 1.4vw, 17px); max-width: 46ch; margin: 0 0 20px; }
+.hero__frames { opacity: .14; width: min(54vw, 560px); right: -4%; top: 10%; }
+.hero .btn { padding: 13px 24px; font-size: 12px; }
+@media (max-width: 760px) { .hero { min-height: 0; } .hero__content { padding-block: 74px 28px; } .hero__frames { width: 90vw; right: -20%; top: 6%; } }
+
+/* escolha seu universo: cartões baixos, sem numeração, fotos valorizadas */
+.portals { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; min-height: 0; }
+.portals__item { flex: none !important; }
+.portal { justify-content: flex-end; min-height: clamp(190px, 22vw, 270px); padding: 18px 20px; border-radius: 20px; border: 1px solid rgba(247,245,242,.1); border-bottom: 3px solid var(--a); background: none; }
+.portal::before { opacity: .2; }
+.portal__photo { opacity: 1; }
+.portal__photo::after { background: linear-gradient(to top, rgba(11,10,13,.8) 6%, rgba(11,10,13,.18) 52%, rgba(11,10,13,0) 82%); }
+.portal:hover .portal__photo { opacity: 1; transform: scale(1.04); }
+.portal__art { opacity: .14; } .portal:hover .portal__art { opacity: .3; }
+.portal__body h3 { font-size: clamp(26px, 3vw, 36px); margin: 4px 0 8px; }
+.portal .eyebrow { color: var(--paper); opacity: .9; }
+@media (max-width: 900px) { .portals { grid-template-columns: 1fr; gap: 10px; } .portal { min-height: 150px; } }
+
+/* vitrine */
+.pgrid { gap: 16px 12px; align-items: stretch; }
+.pgrid__item { display: flex; } .pgrid__item > .pcard { width: 100%; }
+.pcard { display: flex; flex-direction: column; height: 100%; }
+.pcard__media { aspect-ratio: 4 / 5; border-radius: 14px; }
+.pcard__tags { position: absolute; top: 8px; left: 8px; z-index: 2; display: flex; flex-direction: column; gap: 5px; align-items: flex-start; }
+.pcard__tags .tag { position: static; font-size: 9px; padding: 4px 8px; letter-spacing: .1em; }
+.tag--new { background: linear-gradient(120deg, var(--glow-c), var(--glow-b)); color: var(--void); }
+.pcard__info { flex: 1; display: flex; flex-direction: column; justify-content: flex-start; padding: 10px 2px 0; gap: 2px; }
+.pcard__brand { font-size: 10px; letter-spacing: .16em; text-transform: uppercase; opacity: .55; }
+.pcard__info h3 { font-size: 16px; line-height: 1.15; font-weight: 500; min-height: 2.3em; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.pcard__price { margin-top: auto; padding-top: 6px; font-weight: 600; font-size: 14px; }
+.pcard__cta { margin-top: 10px; min-height: 40px; display: flex; align-items: center; justify-content: center; white-space: nowrap; text-align: center; padding: 0 8px; border-radius: 99px; border: 1px solid rgba(40,39,43,.28); font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; font-weight: 600; transition: background .3s, color .3s, border-color .3s; }
+.pcard:hover .pcard__cta, .pcard:focus-visible .pcard__cta, .pcard__cta--quote { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+
+/* banner de campanha */
+.banner__card { position: relative; display: flex; align-items: center; min-height: clamp(120px, 17vw, 190px); border-radius: 20px; overflow: hidden; isolation: isolate; padding: 22px 26px; color: var(--paper); background: linear-gradient(120deg, #1d1726, #3b2a45); }
+.banner__img { position: absolute; inset: 0; z-index: -2; background-size: cover; background-position: center; }
+.banner__card::before { content: ''; position: absolute; inset: 0; z-index: -1; background: linear-gradient(90deg, rgba(11,10,13,.72), rgba(11,10,13,.08)); }
+.banner__txt { display: grid; gap: 4px; max-width: 40ch; }
+.banner__txt strong { font-family: var(--font-display); font-size: clamp(24px, 3.4vw, 38px); font-weight: 500; line-height: 1.05; }
+.banner__txt em { font-style: normal; font-size: 12px; letter-spacing: .14em; text-transform: uppercase; margin-top: 6px; }
+
+/* como comprar: compacto */
+.steps { grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.step { display: flex; gap: 12px; align-items: center; padding: 14px 16px; border-radius: 14px; }
+.step svg { flex: none; color: var(--lilac-text); }
+.step b { display: block; font-weight: 600; font-size: 14px; } .step small { display: block; opacity: .7; font-size: 12.5px; }
+@media (max-width: 900px) { .steps { grid-template-columns: 1fr; gap: 8px; } .step { padding: 11px 14px; } }
+
+/* pagamento e entrega */
+.info { background: var(--paper); }
+.info__grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.info__card { padding: 16px 18px; border-radius: 14px; border: 1px solid rgba(40,39,43,.1); background: #fff; display: grid; gap: 6px; align-content: start; }
+.info__card h3 { font-size: 20px; font-weight: 500; } .info__card p { margin: 0; font-size: 13.5px; opacity: .75; }
+.info__card a { font-size: 12px; text-decoration: underline; text-underline-offset: 3px; justify-self: start; }
+@media (max-width: 900px) { .info__grid { grid-template-columns: 1fr; gap: 8px; } }
+
+/* redes sociais: compacto */
+.social { background: var(--void); color: var(--paper); }
+.social .eyebrow { color: var(--lilac); }
+.social__list { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.social__item { display: flex; align-items: center; gap: 12px; padding: 12px 14px; border: 1px solid rgba(247,245,242,.14); border-radius: 14px; }
+.social__item > span { flex: 1; min-width: 0; } .social__item b { display: block; font-weight: 600; font-size: 14px; }
+.social__item small { display: block; opacity: .65; font-size: 12.5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.social__item .btn { padding: 8px 14px; font-size: 11px; } .social .btn--ghost:hover { background: var(--paper); color: var(--void); border-color: var(--paper); }
+@media (max-width: 900px) { .social__list { grid-template-columns: 1fr; gap: 8px; } }
+
+/* rodapé: enxuto, 2 colunas */
+.ftr { padding: 26px 0 16px; }
+.ftr__top { display: flex; align-items: center; gap: 12px; padding-inline: var(--gutter); max-width: 1280px; margin: 0 auto 16px; }
+.ftr__slogan { margin: 0; font-family: var(--font-display); font-size: 18px; opacity: .9; }
+.ftr__grid { grid-template-columns: 1fr 1fr; gap: 20px; }
+.ftr li { margin: 6px 0; font-size: 14px; }
+.ftr__legal { max-width: 1280px; margin: 16px auto 0; padding: 12px var(--gutter) 0; border-top: 1px solid rgba(247,245,242,.12); font-size: 12px; opacity: .6; }
+
+/* WhatsApp flutuante discreto */
+.wafab { right: 12px; bottom: 14px; width: 42px; height: 42px; box-shadow: 0 6px 18px -6px rgba(11,10,13,.5), 0 0 0 1px rgba(201,167,232,.55); transition: transform .35s var(--ease), opacity .3s, box-shadow .3s; }
+.wafab:hover { box-shadow: 0 8px 22px -6px rgba(11,10,13,.55), 0 0 0 1px var(--glow-a); }
+.wafab.is-hidden { transform: translateY(80px); opacity: 0; pointer-events: none; }
+
+/* páginas internas */
+.bhero { min-height: clamp(230px, 34svh, 330px); }
+.bhero__content { padding-block: 88px 28px; } .page .bhero h1 { font-size: clamp(40px, 7vw, 84px); }
+.about { padding: 96px 0 56px; }
+.searchpage { padding: 90px 0 56px; } .searchpage h1 { font-size: clamp(28px, 4vw, 44px); font-weight: 400; margin-bottom: 14px; }
+.searchbox { display: flex; align-items: center; gap: 10px; padding: 0 16px; border: 1px solid rgba(40,39,43,.2); border-radius: 99px; background: #fff; margin-bottom: 14px; }
+.searchbox input { flex: 1; border: 0; background: none; font: inherit; padding: 14px 0; outline: none; }
+.searchbox:focus-within { border-color: var(--lilac); box-shadow: 0 0 0 3px rgba(201,167,232,.3); }
+.searchpage__msg { font-size: 13px; opacity: .7; margin: 0 0 14px; }
+.prose { max-width: 760px; } .prose h2 { font-size: 26px; margin: 26px 0 8px; font-weight: 500; }
+.prose p, .prose li { opacity: .85; max-width: 68ch; } .prose ul { padding-left: 20px; display: grid; gap: 8px; }
+@media (max-width: 760px) { .pdp { padding: 76px 0 56px; } .pdp__more { margin-top: 40px; } }
