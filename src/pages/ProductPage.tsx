@@ -6,6 +6,8 @@ import { priceLabel } from '../cart/money'
 import { buildWhatsAppUrl } from '../cart/whatsapp'
 import CustomizationForm from '../components/CustomizationForm'
 import Gallery from '../components/Gallery'
+import ProductCard from '../components/ProductCard'
+import ShareButton from '../components/ShareButton'
 import { useAsync } from '../data/CatalogProvider'
 import Reveal from '../fx/Reveal'
 import { useDocumentTitle } from '../lib/useDocumentTitle'
@@ -16,6 +18,7 @@ export default function ProductPage() {
   const brand = getBrand(brandSlug)
   const state = useAsync((c) => c.getProduct(brandSlug, slug), [brandSlug, slug])
   const settings = useAsync((c) => c.getSettings(), [])
+  const more = useAsync((c) => c.listProducts({ brandSlug }), [brandSlug])
   const [variantId, setVariantId] = useState<string>()
   const [custom, setCustom] = useState<Record<string, string>>({})
   const [errors, setErrors] = useState<Record<string, string>>({})
@@ -29,6 +32,8 @@ export default function ProductPage() {
     phone: settings.data?.whatsapp_number,
     items: [{ productId: p.id, slug: p.slug, brandSlug: p.brandSlug, name: p.name, unitPriceCents: p.priceCents, qty: 1 }],
   }).url : null, [p, settings.data])
+
+  const related = (more.data ?? []).filter((r) => r.slug !== slug).slice(0, 4)
 
   if (!brand) return <NotFound />
   if (state.loading && !p) return <main className="page pdp"><div className="container pdp__skel" aria-busy /></main>
@@ -44,7 +49,7 @@ export default function ProductPage() {
     const labelled = Object.fromEntries(p.customizationFields.filter((f) => custom[f.key]?.trim()).map((f) => [f.label, custom[f.key].trim()]))
     useCart.getState().add({
       productId: p.id, slug: p.slug, brandSlug: p.brandSlug, name: p.name, unitPriceCents: p.priceCents, qty,
-      variantLabel: variant?.value, custom: Object.keys(labelled).length ? labelled : undefined,
+      variantLabel: variant ? `${variant.label}: ${variant.value}` : undefined, image: p.images[0]?.url, custom: Object.keys(labelled).length ? labelled : undefined,
     })
     useCart.getState().setOpen(true)
   }
@@ -74,9 +79,23 @@ export default function ProductPage() {
             <div className="qty qty--lg"><button onClick={() => setQty((q) => Math.max(1, q - 1))} aria-label="Diminuir">−</button><span>{qty}</span><button onClick={() => setQty((q) => Math.min(20, q + 1))} aria-label="Aumentar">+</button></div>
             <button className="btn btn--ink" onClick={add} disabled={p.soldOut}>{p.soldOut ? 'Esgotado' : 'Adicionar ao carrinho'}</button>
           </div>
-          {ask && <a className="pdp__ask" href={ask} target="_blank" rel="noreferrer">Chamar no WhatsApp sobre esta peça</a>}
+          <div className="pdp__links">
+            {ask && <a className="btn btn--ghost adm-sm" href={ask} target="_blank" rel="noreferrer">Tirar dúvida no WhatsApp</a>}
+            <ShareButton title={p.name} />
+          </div>
+          <ul className="pdp__trust">
+            <li>Você finaliza o pedido pelo WhatsApp, direto com a loja.</li>
+            <li>Pagamento e entrega combinados na conversa.</li>
+            <li>Atendimento pessoal, de mulher pra mulher.</li>
+          </ul>
         </Reveal>
       </div>
+      {!!related.length && (
+        <section className="container pdp__more">
+          <Reveal><h2>Mais de {brand.name}</h2></Reveal>
+          <div className="pgrid">{related.map((r) => <ProductCard key={r.id} p={r} />)}</div>
+        </section>
+      )}
     </main>
   )
 }

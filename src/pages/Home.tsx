@@ -8,6 +8,9 @@ import Reveal from '../fx/Reveal'
 import SplitWords from '../fx/SplitWords'
 import { prefersReducedMotion } from '../fx/motion'
 import { useMagnetic } from '../fx/useMagnetic'
+import { asset } from '../lib/env'
+import { useAsync } from '../data/CatalogProvider'
+import { igHandle } from '../lib/format'
 import { useDocumentTitle } from '../lib/useDocumentTitle'
 
 const STEPS = [
@@ -21,6 +24,8 @@ export default function Home() {
   const hero = useRef<HTMLElement>(null)
   const cta = useMagnetic<HTMLAnchorElement>()
   const featured = useFeatured()
+  const settings = useAsync((c) => c.getSettings(), [])
+  const igs = BRANDS.map((b) => ({ b, url: settings.data?.[`instagram_${b.slug.replace(/-/g, '_')}`] })).filter((x) => igHandle(x.url))
 
   useEffect(() => {
     if (prefersReducedMotion() || !window.matchMedia('(pointer: fine)').matches || !hero.current) return
@@ -75,6 +80,25 @@ export default function Home() {
           <ProductGrid state={featured} emptyText="Os destaques aparecem aqui assim que as peças forem cadastradas." />
         </div>
       </section>
+
+      {!!igs.length && (
+        <section className="insta">
+          <div className="container">
+            <Reveal><p className="eyebrow">No Instagram</p></Reveal>
+            <Reveal delay={80}><h2>Acompanhe as novidades</h2></Reveal>
+            <div className="insta__grid">
+              {igs.map(({ b, url }, i) => (
+                <Reveal key={b.slug} delay={i * 100}>
+                  <a className="insta__card" href={url} target="_blank" rel="noreferrer" style={{ ['--a' as string]: b.accentFrom, ['--b' as string]: b.accentTo }}>
+                    <span className="insta__photo" style={{ backgroundImage: `url(${asset(`produtos/${b.slug}-1.webp`)})` }} aria-hidden />
+                    <span className="eyebrow">{b.name}</span><strong>{igHandle(url)}</strong><span>Seguir →</span>
+                  </a>
+                </Reveal>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
 
       <section className="how">
         <div className="container">

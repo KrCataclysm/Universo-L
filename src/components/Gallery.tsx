@@ -9,7 +9,7 @@ export default function Gallery({ images }: { images: ProductImage[] }) {
   return (
     <div className="gallery">
       <div className="gallery__main" onPointerMove={(e) => { if (e.pointerType !== 'mouse') return; const r = e.currentTarget.getBoundingClientRect(); setZoom({ x: ((e.clientX - r.left) / r.width) * 100, y: ((e.clientY - r.top) / r.height) * 100 }) }} onPointerLeave={() => setZoom(null)}>
-        <img src={cur.url} alt={cur.alt} style={zoom ? { transformOrigin: `${zoom.x}% ${zoom.y}%`, transform: 'scale(1.9)' } : undefined} />
+        <img src={cur.url} alt={cur.alt} width={1280} height={1600} fetchPriority="high" decoding="async" style={zoom ? { transformOrigin: `${zoom.x}% ${zoom.y}%`, transform: 'scale(1.9)' } : undefined} />
       </div>
       {images.length > 1 && (
         <div className="gallery__thumbs" role="tablist" aria-label="Fotos do produto">

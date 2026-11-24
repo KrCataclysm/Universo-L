@@ -24,7 +24,28 @@ test('produto com opção de cor: exige escolher e entra no carrinho', async ({ 
   const drawer = page.getByRole('dialog', { name: 'Carrinho' })
   await expect(drawer).toContainText('Bermuda ciclista')
   await expect(drawer).toContainText('Preta')
-  await expect(drawer.getByRole('button', { name: 'Finalizar no WhatsApp' })).toBeDisabled()
+  const fin = drawer.getByRole('link', { name: 'Finalizar no WhatsApp' })
+  await expect(fin).toBeVisible()
+  const href = decodeURIComponent((await fin.getAttribute('href')) ?? '')
+  expect(href).toContain('https://wa.me/558699463019?text=')
+  expect(href).toContain('Bermuda ciclista')
+  expect(href).toContain('Cor: Preta')
+  expect(href).toContain('R$')
+})
+
+test('página do produto: mais da marca, compartilhar e botão flutuante de WhatsApp', async ({ page }) => {
+  await page.goto('/lay-store/bermuda-ciclista')
+  await expect(page.getByRole('heading', { name: 'Mais de Lay.Store' })).toBeVisible()
+  await expect(page.locator('.pdp__more .pcard')).toHaveCount(3)
+  await expect(page.getByRole('button', { name: /Compartilhar/ })).toBeVisible()
+  await expect(page.getByRole('link', { name: 'Falar com a loja no WhatsApp' })).toHaveAttribute('href', /wa\.me\/558699463019/)
+})
+
+test('sem violações de CSP no console', async ({ page }) => {
+  const msgs: string[] = []
+  page.on('console', (m) => { if (/Content Security Policy|Refused to/i.test(m.text())) msgs.push(m.text()) })
+  for (const r of ['/', '/falou-bordei', '/falou-bordei/jesus-vidrilho-dourado', '/sobre', '/contato', '/admin']) { await page.goto(r); await page.waitForTimeout(900) }
+  expect(msgs).toEqual([])
 })
 
 test('bordado sob consulta: mostra "Sob consulta" e total a combinar', async ({ page }) => {
