@@ -75,3 +75,20 @@
 .pdp .btn[disabled] { cursor: not-allowed; }
 .wafab { position: fixed; right: 18px; bottom: 18px; z-index: 700; width: 56px; height: 56px; border-radius: 50%; display: grid; place-items: center; background: var(--ink); color: var(--paper); box-shadow: 0 10px 30px -8px rgba(11,10,13,.55), 0 0 0 2px rgba(201,167,232,.55); transition: transform .35s var(--ease), box-shadow .35s; }
 .wafab:hover { transform: scale(1.08); box-shadow: 0 14px 36px -8px rgba(11,10,13,.6), 0 0 0 3px var(--glow-a); }
+
+/* ---------- melhorias de design ---------- */
+.pdp__links { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+.pdp__links .btn { min-height: 48px; }
+.pdp__trust { list-style: none; margin: 4px 0 0; padding: 16px 18px; display: grid; gap: 8px; border-radius: 18px; background: #efeae6; font-size: 13.5px; }
+.pdp__trust li { display: flex; gap: 10px; align-items: baseline; }
+.pdp__trust li::before { content: '✓'; color: var(--lilac-text); font-weight: 700; }
+.pdp__more { margin-top: clamp(56px, 9vw, 120px); }
+.pdp__more h2 { font-size: clamp(30px, 4.4vw, 56px); font-weight: 300; margin-bottom: 28px; }
+.citem--img { display: grid; grid-template-columns: 64px 1fr auto; align-items: start; }
+.citem__img { width: 64px; aspect-ratio: 4/5; object-fit: cover; border-radius: 10px; }
+.qty button { width: 40px; height: 40px; }
+.qty--lg button { width: 48px; height: 48px; }
+.variants button { min-height: 48px; }
+.gallery__thumbs button { width: 76px; }
+@media (hover: none) { .chips button { min-height: 44px; } .adm-sm { min-height: 44px; } }
+@media (max-width: 760px) { .wafab { right: 14px; bottom: 14px; } .pdp__links { gap: 8px; } }

@@ -2,9 +2,11 @@ import { Link } from 'react-router-dom'
 import { BRANDS, SLOGAN } from '../brand/brands'
 import Monogram from '../brand/Monogram'
 import { useAsync } from '../data/CatalogProvider'
+import { formatPhone, igHandle } from '../lib/format'
 
 export default function Footer() {
   const { data: settings } = useAsync((c) => c.getSettings(), [])
+  const wa = (settings?.whatsapp_number ?? '').replace(/\D/g, '')
   const insta = [
     ['Lay.Store', settings?.instagram_lay_store],
     ['Ousada Delicada', settings?.instagram_ousada_delicada],
@@ -26,7 +28,8 @@ export default function Footer() {
           <ul>
             <li><Link to="/sobre">Sobre</Link></li>
             <li><Link to="/contato">Contato</Link></li>
-            {insta.map(([n, v]) => <li key={n}><a href={String(v)} target="_blank" rel="noreferrer">Instagram · {n}</a></li>)}
+            {insta.map(([n, v]) => <li key={n}><a href={String(v)} target="_blank" rel="noreferrer">{igHandle(String(v)) || 'Instagram'} · {n}</a></li>)}
+            {wa && <li><a href={`https://wa.me/${wa}`} target="_blank" rel="noreferrer">WhatsApp {formatPhone(wa)}</a></li>}
           </ul>
         </div>
       </div>

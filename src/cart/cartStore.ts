@@ -8,6 +8,8 @@ export interface CartItem {
   unitPriceCents: number
   qty: number
   variantLabel?: string
+  /** miniatura mostrada no carrinho */
+  image?: string
   /** personalização: rótulo do campo → valor */
   custom?: Record<string, string>
 }

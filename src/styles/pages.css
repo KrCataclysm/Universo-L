@@ -79,3 +79,32 @@ section h2 { font-size: clamp(36px, 6vw, 84px); font-weight: 300; margin: 10px 0
 
 /* só renderiza o que está perto da tela */
 .featured, .how, .catalog, .ftr { content-visibility: auto; contain-intrinsic-size: auto 720px; }
+
+/* Sobre / Contato / Instagram */
+.abrand { position: relative; overflow: hidden; isolation: isolate; min-height: 300px; }
+.abrand__photo { position: absolute; inset: 0; z-index: -2; background-size: cover; background-position: center; transition: transform 1.2s var(--ease); }
+.abrand::before { content: ''; position: absolute; inset: 0; z-index: -1; background: linear-gradient(to top, rgba(247,245,242,.96) 8%, rgba(247,245,242,.55) 48%, rgba(247,245,242,.1)); }
+.abrand:hover .abrand__photo { transform: scale(1.06); }
+.abrand small { opacity: .7; font-size: 13px; }
+.about__how { margin: 56px 0 0; padding: 0; list-style: none; display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; counter-reset: s; }
+.about__how li { counter-increment: s; padding: 24px; border-radius: 20px; background: #efeae6; }
+.about__how li::before { content: '0' counter(s); display: block; font-family: var(--font-display); font-size: 40px; line-height: 1; background: linear-gradient(120deg, var(--glow-c), var(--glow-b)); -webkit-background-clip: text; background-clip: text; color: transparent; margin-bottom: 10px; font-variant-numeric: lining-nums; }
+@media (max-width: 900px) { .about__how { grid-template-columns: 1fr; } }
+.contact__ig { margin-top: 44px; display: grid; gap: 14px; }
+.contact__links .btn { min-height: 52px; }
+.insta { padding: clamp(56px, 8vw, 110px) 0; background: var(--void); color: var(--paper); }
+.insta h2 { margin-bottom: clamp(24px, 3vw, 44px); }
+.insta__grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+.insta__card { position: relative; isolation: isolate; overflow: hidden; display: grid; gap: 6px; align-content: end; min-height: 280px; padding: 24px; border-radius: 24px; border: 1px solid rgba(247,245,242,.14); transition: border-color .4s, transform .5s var(--ease); }
+.insta__card:hover { border-color: var(--a); transform: translateY(-4px); }
+.insta__photo { position: absolute; inset: 0; z-index: -2; background-size: cover; background-position: center; opacity: .5; transition: transform 1.2s var(--ease), opacity .5s; }
+.insta__card::before { content: ''; position: absolute; inset: 0; z-index: -1; background: linear-gradient(to top, rgba(11,10,13,.94) 10%, rgba(11,10,13,.35) 70%); }
+.insta__card:hover .insta__photo { transform: scale(1.06); opacity: .75; }
+.insta__card .eyebrow { color: var(--a); } .insta__card strong { font-family: var(--font-display); font-size: clamp(28px, 3.2vw, 40px); font-weight: 400; }
+@media (max-width: 900px) { .insta__grid { grid-template-columns: 1fr; } .insta__card { min-height: 200px; } }
+/* topo das marcas no celular: foto discreta e cabeçalho legível */
+@media (max-width: 760px) {
+  .bhero__photo { width: 100%; opacity: .32; -webkit-mask-image: linear-gradient(to bottom, #000 0%, transparent 85%); mask-image: linear-gradient(to bottom, #000 0%, transparent 85%); }
+  .bhero::after { content: ''; position: absolute; inset: 0 0 auto 0; height: 150px; background: linear-gradient(rgba(11,10,13,.92), transparent); z-index: -1; }
+  .bhero__content { padding-block: 130px 48px; }
+}

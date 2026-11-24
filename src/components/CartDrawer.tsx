@@ -31,10 +31,11 @@ export default function CartDrawer() {
                 {items.map((i) => {
                   const k = itemKey(i)
                   return (
-                    <motion.div layout key={k} className="citem" initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, x: 40 }}>
+                    <motion.div layout key={k} className={`citem ${i.image ? 'citem--img' : ''}`} initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, x: 40 }}>
+                      {i.image && <img className="citem__img" src={i.image} alt="" />}
                       <div>
                         <strong>{i.name}</strong>
-                        {i.variantLabel && <small>Tamanho/opção: {i.variantLabel}</small>}
+                        {i.variantLabel && <small>{i.variantLabel}</small>}
                         {i.custom && Object.entries(i.custom).filter(([, v]) => v).map(([lk, v]) => <small key={lk}>{lk}: {v}</small>)}
                         <div className="qty">
                           <button onClick={() => setQty(k, i.qty - 1)} aria-label="Diminuir">−</button>
