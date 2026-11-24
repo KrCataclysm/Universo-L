@@ -147,7 +147,7 @@ section h2 { font-size: clamp(24px, 3.4vw, 38px); margin: 4px 0 clamp(14px, 2vw,
 .pcard__img { object-position: center 38%; filter: saturate(1.04) contrast(1.02); }
 
 /* hierarquia: nome maior, preço claro */
-.pcard__brand { font-size: 10.5px; letter-spacing: .15em; opacity: .6; }
+.pcard__brand { font-size: 10.5px; letter-spacing: .15em; opacity: .74; font-weight: 500; }
 .pcard__info h3 { font-size: clamp(17px, 1.5vw, 19px); line-height: 1.18; font-weight: 500; min-height: 2.36em; }
 .pcard__price { font-size: 15px; font-weight: 600; letter-spacing: .01em; padding-top: 8px; }
 @media (max-width: 760px) { .pcard__info h3 { font-size: 17px; overflow-wrap: normal; } }
