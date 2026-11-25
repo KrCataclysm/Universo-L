@@ -37,6 +37,7 @@ export default function Favorites() {
         {all.loading && !all.data ? <div className="pgrid">{Array.from({ length: 4 }, (_, k) => <div key={k} className="pcard pcard--skel" aria-hidden />)}</div>
           : !items.length ? (
             <div className="empty" role="status">
+              <h2 className="sr-only">Sua lista de favoritos</h2>
               <h3>Nenhum favorito ainda</h3>
               <p>Toque no coração de uma peça para guardá-la aqui.</p>
               <div className="contact__links"><Link className="btn btn--ink btn--arrow" to="/busca">Ver todas as peças</Link></div>
