@@ -3,6 +3,7 @@ import { formatPhone, igHandle } from '../src/lib/format'
 
 describe('formatPhone', () => {
   it('celular de 8 dígitos (12 no total) e de 9 dígitos (13 no total)', () => {
+    expect(formatPhone('5586999463019')).toBe('+55 (86) 99946-3019')
     expect(formatPhone('558699463019')).toBe('+55 (86) 9946-3019')
     expect(formatPhone('5511999999999')).toBe('+55 (11) 99999-9999')
   })

@@ -1,4 +1,4 @@
-/** 558699463019 → "+55 (86) 9946-3019"; formato desconhecido volta só com dígitos. */
+/** 5586999463019 → "+55 (86) 99946-3019"; formato desconhecido volta só com dígitos. */
 export function formatPhone(input: string): string {
   const d = input.replace(/\D/g, '')
   const m = d.match(/^55(\d{2})(\d{4,5})(\d{4})$/)
