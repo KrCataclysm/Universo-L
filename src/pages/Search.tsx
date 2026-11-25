@@ -34,7 +34,7 @@ export default function Search() {
         )}
         {all.data && found.length > 1 && <ShopTools all={found} shown={results.length} value={tools} onChange={setTools} hideCount />}
         {all.data && !results.length && (
-          <div className="empty"><h3>Nada encontrado</h3><p>Tente outra palavra ou veja as marcas:</p>
+          <div className="empty"><h2 className="sr-only">Resultado da busca</h2><h3>Nada encontrado</h3><p>Tente outra palavra ou veja as marcas:</p>
             <div className="contact__links">{BRANDS.map((b) => <Link key={b.slug} className="btn btn--ghost" to={`/${b.slug}`}>{b.name}</Link>)}</div>
           </div>
         )}
