@@ -65,3 +65,14 @@ small { opacity: .88; }
 .btn.btn--ghost, .btn.adm-sm, .social .btn { font-size: 12.5px; }
 .pmore__go { font-size: 12.5px; }
 .pmore__t { font-size: clamp(24px, 2.6vw, 30px); }
+
+/* topo: moldura atrás da foto principal, deslocada de forma intencional */
+@media (min-width: 960px) { .hero__collage::before { left: 16px; top: 16px; width: 47%; } }
+
+/* "Ver todas as peças": cartão que completa a linha, com seta */
+.pmore { position: relative; overflow: hidden; justify-content: flex-end; }
+.pmore::before { content: '↗'; position: absolute; top: 4px; right: 18px; font-family: var(--font-display); font-weight: 300; font-size: clamp(120px, 11vw, 180px); line-height: 1; color: transparent; -webkit-text-stroke: 1px rgba(40,39,43,.3); transition: transform .5s var(--out), -webkit-text-stroke-color .3s; pointer-events: none; }
+@media (hover: hover) { .pmore:hover::before { transform: translate(6px, -6px); -webkit-text-stroke-color: rgba(40,39,43,.65); } }
+.pmore__t { font-size: clamp(26px, 2.6vw, 34px); }
+@media (min-width: 761px) { .pgrid__item--wide { grid-column: span 2; } .pgrid__item--wide .pmore { aspect-ratio: auto; height: 100%; min-height: 0; padding: 26px; } }
+@media (max-width: 760px) { .pmore::before { font-size: 96px; top: -4px; right: 12px; } }

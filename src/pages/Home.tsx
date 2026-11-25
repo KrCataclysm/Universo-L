@@ -65,7 +65,7 @@ export default function Home() {
         <section className="sec sec--white">
           <div className="container">
             <Head eyebrow="Acabou de chegar" title="Novidades e lançamentos" />
-            <ProductGrid state={news} more={{ to: '/busca', label: 'Ver todas as peças' }} />
+            <ProductGrid state={news} more={{ to: '/busca', label: 'Ver todas as peças', wide: (news.data?.length ?? 0) <= 2 }} />
           </div>
         </section>
       )}
