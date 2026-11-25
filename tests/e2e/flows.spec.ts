@@ -289,3 +289,38 @@ test('vistos recentemente aparece na página do produto depois de ver outro', as
   await expect(page.getByRole('heading', { name: 'Vistos recentemente' })).toBeVisible()
   await expect(page.locator('.pdp__more').last().locator('.pcard', { hasText: 'Bermuda ciclista' })).toBeVisible()
 })
+
+test('vitrine em destaque (desktop): troca a peça, muda o tom e adiciona ao carrinho', async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 })
+  await page.goto('/')
+  const show = page.getByRole('group', { name: 'Produtos em destaque' })
+  await expect(show).toBeVisible()
+  const titulo = show.locator('.show__copy h3')
+  const primeiro = await titulo.textContent()
+  await show.getByRole('button', { name: /Próxima peça/ }).first().click()
+  await expect(titulo).not.toHaveText(primeiro ?? '')
+  await show.getByRole('button', { name: 'Bermuda ciclista', exact: true }).click()
+  await expect(titulo).toHaveText('Bermuda ciclista')
+  await show.getByRole('button', { name: 'Adicionar ao carrinho' }).click()
+  await expect(page.getByRole('alert').filter({ hasText: 'Escolha uma opção antes de continuar' })).toBeVisible()
+  await show.getByRole('radio', { name: 'Azul marinho' }).click()
+  await show.getByRole('button', { name: 'Adicionar ao carrinho' }).click()
+  await expect(page.getByRole('status').filter({ hasText: 'Adicionado ao carrinho' })).toBeVisible()
+  await show.locator('.show__tabs button.on').focus()
+  await page.keyboard.press('ArrowRight')
+  await expect(show.locator('.show__ctrl span')).toContainText('03')
+})
+
+test('celular: destaques continuam em grid de 2 colunas (sem vitrine)', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 })
+  await page.goto('/')
+  await expect(page.getByRole('group', { name: 'Produtos em destaque' })).toBeHidden()
+  await expect(page.locator('.feat-grid .pcard').first()).toBeVisible()
+})
+
+test('política de privacidade cita favoritos, transferência internacional e crianças', async ({ page }) => {
+  await page.goto('/privacidade')
+  await expect(page.getByText(/favoritos e peças vistas recentemente/)).toBeVisible()
+  await expect(page.getByRole('heading', { name: 'Transferência para outros países' })).toBeVisible()
+  await expect(page.getByRole('heading', { name: 'Crianças e adolescentes' })).toBeVisible()
+})
