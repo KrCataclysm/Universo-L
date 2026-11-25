@@ -1,0 +1,67 @@
+/* =====================================================================
+   Legibilidade: tamanhos mínimos, pesos e contraste de texto secundário.
+   Última camada: ajusta sem mudar a identidade. Pensada para telas de PC.
+   ===================================================================== */
+:root { --ink-2: rgba(40,39,43,.86); --ink-3: rgba(40,39,43,.78); }
+body { font-size: 16px; line-height: 1.6; }
+@media (min-width: 900px) { body { font-size: 17px; } }
+
+/* rótulos pequenos: maiores, menos espaçados, sem opacidade */
+.eyebrow, .pcard__brand, .uni__cat, .panel__n, .variants__label, .crumbs, .pmore__k, .doc__nav .eyebrow { font-size: 12.5px; letter-spacing: .13em; font-weight: 600; opacity: 1; }
+.pcard__brand { color: var(--ink-3); }
+.crumbs, .crumbs a { opacity: 1; color: var(--ink-3); font-size: 12.5px; }
+.crumbs a:hover { color: var(--lilac-text); }
+.tag { font-size: 10.5px; padding: 5px 9px; letter-spacing: .1em; font-weight: 600; }
+small { opacity: .88; }
+.ftr .ftr__h { font-size: 12.5px; letter-spacing: .16em; }
+.ftr a, .ftr li { font-size: 15px; }
+.ftr small { font-size: 13px; opacity: .85; }
+.ftr__legal { font-size: 13px; opacity: .8; }
+.social small { opacity: .85; font-size: 13.5px; }
+
+/* menu e botões */
+.hdr__nav { font-size: 12.5px; letter-spacing: .1em; font-weight: 500; }
+@media (min-width: 900px) { .hdr__nav { font-size: 13px; } .hdr__nav a { padding: 8px 0; } }
+.btn { font-size: 12.5px; letter-spacing: .13em; }
+.hero .btn { font-size: 13px; }
+@media (min-width: 900px) { .btn { font-size: 13px; padding: 17px 32px; } .social .btn--ghost { padding: 12px 22px; } }
+.pcard__cta { font-size: 12px; letter-spacing: .1em; min-height: 44px; }
+.uni__go { font-size: 12.5px; letter-spacing: .14em; }
+.chips button { font-size: 12.5px; letter-spacing: .1em; padding: 12px 20px; }
+.variants button { font-size: 14px; }
+.toast__body strong { font-size: 14.5px; } .toast__body span { font-size: 13.5px; opacity: .85; } .toast__act { font-size: 11.5px; }
+
+/* títulos: pesos que a serifa sustenta em tamanho de leitura */
+.sec h2, .phead h1, .about .phead h1, .page .hero h1, .bhero h1, .nf404 h1 { font-weight: 400; }
+.pcard__info h3 { font-weight: 500; font-size: clamp(21px, 1.8vw, 25px); line-height: 1.18; }
+.uni h3, .info__card.panel h3, .prose h2, .cig b, .step b { font-weight: 500; }
+.uni h3 { font-size: clamp(30px, 2.9vw, 40px); }
+.phead__h2 { font-weight: 400; }
+.pdp h1 { font-weight: 500; }
+.pcard__price { font-size: 15.5px; }
+.pdp__price { font-size: clamp(26px, 2.4vw, 32px); }
+
+/* texto corrido: contraste alto */
+.hero__lead { color: var(--ink-2); font-size: clamp(16px, 1.35vw, 19px); }
+.phead__lead, .cwa__txt, .nf404__lead { opacity: 1; color: var(--ink-2); }
+.prose p, .prose li { opacity: 1; color: var(--ink-2); font-size: 16.5px; }
+.pdp__desc { opacity: 1; color: var(--ink-2); font-size: 17px; line-height: 1.7; }
+.pdp__trust { opacity: 1; color: var(--ink-2); font-size: 14.5px; }
+.pdp__note { opacity: 1; color: var(--ink-3); font-size: 14px; }
+.step small, .cig small { font-size: 14px; opacity: .88; }
+.info__card p { color: var(--ink-2); font-size: 15.5px; }
+.about__slogan { font-size: 13px; letter-spacing: .12em; }
+.doc__nav a { font-size: 14.5px; opacity: .8; }
+.drawer__hint, .citem small { font-size: 13.5px; opacity: .85; }
+
+/* topo das marcas: texto sobre foto com leitura garantida */
+.bhero__intro { opacity: 1; color: rgba(247,245,242,.94); font-size: clamp(16px, 1.5vw, 19px); text-shadow: 0 1px 14px rgba(0,0,0,.45); }
+.bhero .eyebrow { font-size: 13px; }
+.bhero::after { content: ''; position: absolute; inset: 0; z-index: -1; pointer-events: none; background: linear-gradient(90deg, rgba(11,10,13,.78) 0%, rgba(11,10,13,.5) 42%, rgba(11,10,13,0) 72%); }
+
+/* resíduos de seletores mais específicos */
+.pcard__tags .tag { font-size: 10.5px; padding: 5px 9px; }
+.menu small { font-size: 12.5px; letter-spacing: .16em; opacity: 1; }
+.btn.btn--ghost, .btn.adm-sm, .social .btn { font-size: 12.5px; }
+.pmore__go { font-size: 12.5px; }
+.pmore__t { font-size: clamp(24px, 2.6vw, 30px); }

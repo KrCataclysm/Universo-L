@@ -7,6 +7,7 @@
 @import './polish.css';
 @import './editorial.css';
 @import './ui.css';
+@import './readable.css';
 *, *::before, *::after { box-sizing: border-box; }
 html { -webkit-text-size-adjust: 100%; scroll-behavior: auto; }
 html.lenis, html.lenis body { height: auto; }
