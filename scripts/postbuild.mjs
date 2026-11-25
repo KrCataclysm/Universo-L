@@ -27,6 +27,7 @@ const pages = [
   { path: '/informacoes', title: 'Pagamento, entrega e trocas — Universo Lay', description: 'Formas de pagamento, entrega, prazos, trocas e devoluções do Universo Lay.' },
   { path: '/privacidade', title: 'Política de privacidade — Universo Lay', description: 'Como o site do Universo Lay trata os seus dados, conforme a LGPD.' },
   { path: '/busca', title: 'Buscar produtos — Universo Lay', description: 'Busque produtos das lojas Lay.store, Ousada Delicada e Falou Bordei.' },
+  { path: '/favoritos', title: 'Favoritos — Universo Lay', description: 'Suas peças favoritas do Universo Lay, salvas neste aparelho.' },
   { path: '/contato', title: 'Contato — Universo Lay', description: 'Fale com o Universo Lay: pedidos, dúvidas e personalizações.' },
   ...Object.entries(BRANDS).map(([slug, [name, cat, intro]]) => ({ path: `/${slug}`, title: `${name} — ${cat} · Universo Lay`, description: intro })),
 ]
@@ -73,6 +74,6 @@ for (const pg of pages) {
 // 3) robots e sitemap
 if (SITE) {
   write('dist/robots.txt', `User-agent: *\nAllow: /\nDisallow: /admin\n\nSitemap: ${SITE}/sitemap.xml\n`)
-  write('dist/sitemap.xml', buildSitemap(SITE, ['/', ...pages.map((p) => `${p.path}/`)]))
+  write('dist/sitemap.xml', buildSitemap(SITE, ['/', ...pages.filter((p) => p.path !== '/favoritos').map((p) => `${p.path}/`)]))
 }
 console.log(`postbuild: 404.html + ${pages.length} páginas de compartilhamento (base ${BASE}) + robots/sitemap`)
