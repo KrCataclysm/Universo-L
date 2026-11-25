@@ -9,6 +9,7 @@ const AdminApp = lazy(() => import('./admin/AdminApp'))
 const Search = lazy(() => import('./pages/Search'))
 const Info = lazy(() => import('./pages/Info'))
 const Privacy = lazy(() => import('./pages/Privacy'))
+const Favorites = lazy(() => import('./pages/Favorites'))
 const NotFound = lazy(() => import('./pages/NotFound'))
 const ProductPage = lazy(() => import('./pages/ProductPage'))
 
@@ -19,6 +20,7 @@ export default function AppRoutes() {
         <Route path="/" element={<Home />} />
         <Route path="/sobre" element={<About />} />
         <Route path="/busca" element={<Search />} />
+        <Route path="/favoritos" element={<Favorites />} />
         <Route path="/informacoes" element={<Info />} />
         <Route path="/privacidade" element={<Privacy />} />
         <Route path="/contato" element={<Contact />} />

@@ -1,4 +1,7 @@
+import { useMemo, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
+import ShopTools from '../components/ShopTools'
+import { DEFAULT_TOOLS, applyTools, type Tools } from '../lib/sort'
 import { BRANDS } from '../brand/brands'
 import { Link } from 'react-router-dom'
 import ProductCard from '../components/ProductCard'
@@ -11,7 +14,9 @@ export default function Search() {
   const [params, setParams] = useSearchParams()
   const q = params.get('q') ?? ''
   const all = useProducts({})
-  const results = all.data ? searchProducts(all.data, q) : []
+  const found = useMemo(() => (all.data ? searchProducts(all.data, q) : []), [all.data, q])
+  const [tools, setTools] = useState<Tools>(DEFAULT_TOOLS)
+  const results = useMemo(() => applyTools(found, tools), [found, tools])
   return (
     <main className="page searchpage">
       <div className="container">
@@ -27,6 +32,7 @@ export default function Search() {
             {q.trim() ? `${results.length} ${results.length === 1 ? 'resultado' : 'resultados'} para “${q.trim()}”` : `${results.length} ${results.length === 1 ? 'produto' : 'produtos'}`}
           </p>
         )}
+        {all.data && found.length > 1 && <ShopTools all={found} shown={results.length} value={tools} onChange={setTools} hideCount />}
         {all.data && !results.length && (
           <div className="empty"><h3>Nada encontrado</h3><p>Tente outra palavra ou veja as marcas:</p>
             <div className="contact__links">{BRANDS.map((b) => <Link key={b.slug} className="btn btn--ghost" to={`/${b.slug}`}>{b.name}</Link>)}</div>

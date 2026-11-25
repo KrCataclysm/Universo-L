@@ -4,12 +4,14 @@ import { BRANDS } from '../brand/brands'
 import Monogram from '../brand/Monogram'
 import Wordmark from '../brand/Wordmark'
 import { useCart } from '../cart/cartStore'
+import { useFavs } from '../store/favStore'
 import { useMagnetic } from '../fx/useMagnetic'
 
 export default function Header() {
   const { pathname } = useLocation()
   const [scrolled, setScrolled] = useState(false)
   const [menu, setMenu] = useState(false)
+  const favCount = useFavs((s) => s.ids.length)
   const count = useCart((s) => s.items.reduce((n, i) => n + i.qty, 0))
   const [bump, setBump] = useState(false)
   const cartRef = useMagnetic<HTMLButtonElement>(0.25)
@@ -54,6 +56,10 @@ export default function Header() {
           <Link to="/busca" className="hdr__cart hdr__search" aria-label="Buscar produtos">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" aria-hidden="true"><path d="M11 4a7 7 0 1 0 0 14 7 7 0 0 0 0-14Zm9 16-4-4" /></svg>
           </Link>
+          <Link to="/favoritos" className="hdr__cart hdr__fav" aria-label={`Favoritos (${favCount})`}>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M12 20.5s-7.5-4.6-9.2-9.4C1.7 7.8 3.7 5 6.8 5c1.9 0 3.5 1 5.2 3 1.7-2 3.3-3 5.2-3 3.1 0 5.1 2.8 4 6.1-1.7 4.8-9.2 9.4-9.2 9.4Z" /></svg>
+            {favCount > 0 && <span className="hdr__badge">{favCount}</span>}
+          </Link>
           <button ref={cartRef} className="hdr__cart" onClick={() => useCart.getState().setOpen(true)} onPointerEnter={() => void import('./CartDrawer')} onFocus={() => void import('./CartDrawer')} aria-label={`Abrir carrinho (${count} itens)`}>
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4H6Z" /><path d="M3 6h18" /><path d="M16 10a4 4 0 0 1-8 0" /></svg>
             {count > 0 && <span className={`hdr__badge ${bump ? 'bump' : ''}`}>{count}</span>}
@@ -66,6 +72,7 @@ export default function Header() {
         {BRANDS.map((b, i) => <Link key={b.slug} to={`/${b.slug}`} style={{ ['--i' as string]: i }} tabIndex={menu ? 0 : -1}>{b.name}</Link>)}
         <small>Universo</small>
         <Link to="/busca" style={{ ['--i' as string]: 3 }} tabIndex={menu ? 0 : -1}>Buscar produtos</Link>
+        <Link to="/favoritos" style={{ ['--i' as string]: 4 }} tabIndex={menu ? 0 : -1}>Favoritos</Link>
         <Link to="/sobre" style={{ ['--i' as string]: 4 }} tabIndex={menu ? 0 : -1}>Sobre</Link>
         <Link to="/contato" style={{ ['--i' as string]: 5 }} tabIndex={menu ? 0 : -1}>Contato</Link>
       </div>
