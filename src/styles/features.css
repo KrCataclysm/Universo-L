@@ -142,3 +142,19 @@
   .hdr--dark:not(.is-scrolled) .hdr__nav a:hover { background: rgba(247,245,242,.18); }
   .hdr--dark:not(.is-scrolled) .hdr__nav a.active { background: rgba(247,245,242,.94); color: var(--ink); }
 }
+
+/* =====================================================================
+   Estado selecionado inequívoco: preenchido + ✓ + anel (todos os botões de escolha)
+   ===================================================================== */
+.variants button.on, .show__opts button.on, .stools__bands button.on, .chips button.on { display: inline-flex; align-items: center; justify-content: center; background: var(--ink); color: var(--paper); border-color: var(--ink); box-shadow: 0 0 0 2px var(--paper), 0 0 0 4px var(--ink); }
+.variants button.on::before, .show__opts button.on::before, .stools__bands button.on::before, .chips button.on::before { content: '✓'; margin-right: 8px; font-weight: 700; font-size: .95em; line-height: 1; }
+.show__opts button.on { box-shadow: 0 0 0 2px rgba(255,255,255,.9), 0 0 0 4px var(--ink); }
+.variants button, .show__opts button, .stools__bands button, .chips button { transition: background .25s, color .25s, border-color .25s, box-shadow .3s var(--out), transform .3s var(--spring); }
+.variants button[aria-checked='true']:active, .show__opts button.on:active { transform: none; }
+
+/* peça escolhida na vitrine e miniatura escolhida na galeria */
+.show__tabs button.on { display: inline-flex; align-items: center; gap: 8px; box-shadow: 0 0 0 2px var(--ink), 0 6px 16px -8px rgba(40,39,43,.5); }
+.show__tabs button.on::before { content: ''; flex: none; width: 7px; height: 7px; border-radius: 50%; background: var(--ink); }
+.gallery__thumbs button.on { opacity: 1; box-shadow: 0 0 0 2px var(--paper), 0 0 0 4px var(--ink); border-color: var(--ink); }
+.gallery__thumbs button:not(.on) { opacity: .6; }
+.variants button.on:hover, .show__opts button.on:hover, .show__opts button.on:hover:not(:disabled), .stools__bands button.on:hover, .chips button.on:hover { background: var(--ink); color: var(--paper); border-color: var(--ink); }
