@@ -10,6 +10,8 @@ import PageTransition from './fx/PageTransition'
 import SmoothScroll from './fx/SmoothScroll'
 import AppRoutes from './router'
 import Toaster from './ui/Toaster'
+import BackToTop from './components/BackToTop'
+import { useQuick } from './store/quick'
 import { toast } from './ui/toast'
 
 const CartDrawer = lazy(() => import('./components/CartDrawer'))
@@ -23,6 +25,12 @@ function PruneCart() {
     }).catch(() => {})
   }, [catalog])
   return null
+}
+
+const QuickView = lazy(() => import('./components/QuickView'))
+function LazyQuick() {
+  const ever = useQuick((s) => s.ever)
+  return ever ? <Suspense fallback={null}><QuickView /></Suspense> : null
 }
 
 function LazyDrawer() {
@@ -41,6 +49,8 @@ function Site() {
         <PageTransition><div id="main" tabIndex={-1} className="main-anchor"><AppRoutes /></div></PageTransition>
         <Footer />
         <WhatsAppFab />
+        <LazyQuick />
+        <BackToTop />
         <Toaster />
         <LazyDrawer />
         <PruneCart />

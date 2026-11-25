@@ -1,4 +1,6 @@
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
+import ShopTools from '../components/ShopTools'
+import { DEFAULT_TOOLS, applyTools, type Tools } from '../lib/sort'
 import { useParams } from 'react-router-dom'
 import { getBrand } from '../brand/brands'
 import ProductGrid from '../components/ProductGrid'
@@ -15,6 +17,8 @@ export default function BrandPage() {
   const [cat, setCat] = useState<string | undefined>()
   const cats = useAsync((c) => c.listCategories(slug), [slug])
   const products = useProducts({ brandSlug: slug, categorySlug: cat })
+  const [tools, setTools] = useState<Tools>(DEFAULT_TOOLS)
+  const list = useMemo(() => applyTools(products.data ?? [], tools), [products.data, tools])
   if (!brand) return <NotFound />
   const accent: [string, string] = [brand.accentFrom, brand.accentTo]
   return (
@@ -36,7 +40,8 @@ export default function BrandPage() {
               {cats.data.map((c) => <button key={c.slug} className={cat === c.slug ? 'on' : ''} onClick={() => setCat(c.slug)}>{c.name}</button>)}
             </div>
           )}
-          <ProductGrid state={products} accent={accent} emptyText={`As peças de ${brand.name} chegam em breve.`} />
+          {!!products.data && <ShopTools all={products.data} shown={list.length} value={tools} onChange={setTools} />}
+          <ProductGrid state={{ ...products, data: products.data ? list : undefined }} accent={accent} emptyText={`As peças de ${brand.name} chegam em breve.`} />
         </div>
       </section>
     </main>

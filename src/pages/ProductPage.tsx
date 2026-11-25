@@ -14,6 +14,8 @@ import Reveal from '../fx/Reveal'
 import { useDocumentTitle } from '../lib/useDocumentTitle'
 import NotFound from './NotFound'
 import { toast } from '../ui/toast'
+import { getRecent, pushRecent } from '../store/recent'
+import RecentlyViewed from '../components/RecentlyViewed'
 
 export default function ProductPage() {
   const { brand: brandSlug = '', slug = '' } = useParams()
@@ -31,6 +33,8 @@ export default function ProductPage() {
   useEffect(() => { void import('../components/CartDrawer') }, [])
   const phone = (settings.data?.whatsapp_number ?? '').replace(/\D/g, '')
   const p = state.data
+  const [recentIds, setRecentIds] = useState<string[]>([])
+  useEffect(() => { if (!p) return; setRecentIds(getRecent().filter((x) => x !== p.id)); pushRecent(p.id) }, [p?.id]) // eslint-disable-line react-hooks/exhaustive-deps
   useDocumentTitle(p ? `${p.name} — ${brand?.name ?? ''}` : undefined)
   const variant = p?.variants.find((v) => v.id === variantId)
 
@@ -116,6 +120,7 @@ export default function ProductPage() {
           <div className="pgrid">{related.map((r) => <ProductCard key={r.id} p={r} />)}</div>
         </section>
       )}
+      {!!recentIds.length && <RecentlyViewed ids={recentIds} />}
     </main>
   )
 }
