@@ -27,7 +27,7 @@ test('produto com opção de cor: exige escolher e entra no carrinho', async ({ 
   const fin = drawer.getByRole('link', { name: 'Finalizar no WhatsApp' })
   await expect(fin).toBeVisible()
   const href = decodeURIComponent((await fin.getAttribute('href')) ?? '')
-  expect(href).toContain('https://wa.me/558699463019?text=')
+  expect(href).toContain('https://wa.me/5586999463019?text=')
   expect(href).toContain('Bermuda ciclista')
   expect(href).toContain('Cor: Preta')
   expect(href).toContain('R$')
@@ -38,7 +38,7 @@ test('página do produto: mais da marca, compartilhar e botão flutuante de What
   await expect(page.getByRole('heading', { name: 'Mais de Lay.store' })).toBeVisible()
   await expect(page.locator('.pdp__more .pcard')).toHaveCount(3)
   await expect(page.getByRole('button', { name: /Compartilhar/ })).toBeVisible()
-  await expect(page.getByRole('link', { name: 'Falar com a loja no WhatsApp' })).toHaveAttribute('href', /wa\.me\/558699463019/)
+  await expect(page.getByRole('link', { name: 'Falar com a loja no WhatsApp' })).toHaveAttribute('href', /wa\.me\/5586999463019/)
 })
 
 test('sem violações de CSP no console', async ({ page }) => {
@@ -55,7 +55,7 @@ test('bordado sob consulta: "Solicitar orçamento" abre o WhatsApp com a peça e
   await page.getByLabel(/Observações/).fill('Letras douradas, tamanho P')
   const link = page.locator('.pdp__buy').getByRole('link', { name: 'Solicitar orçamento' })
   const href = decodeURIComponent((await link.getAttribute('href')) ?? '')
-  expect(href).toContain('https://wa.me/558699463019?text=')
+  expect(href).toContain('https://wa.me/5586999463019?text=')
   expect(href).toContain('Jesus em vidrilho dourado')
   expect(href).toContain('Letras douradas, tamanho P')
 })
