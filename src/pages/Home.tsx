@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom'
 import { BRANDS, HERO_LEAD, SLOGAN } from '../brand/brands'
 import BannerSlot from '../components/BannerSlot'
 import BrandPortal from '../components/BrandPortal'
+import FeaturedShowcase from '../components/FeaturedShowcase'
 import ProductGrid from '../components/ProductGrid'
 import { useAsync, useProducts } from '../data/CatalogProvider'
 import Reveal from '../fx/Reveal'
@@ -73,7 +74,8 @@ export default function Home() {
       <section className="sec featured">
         <div className="container">
           <Head eyebrow="Seleção" title="Produtos em destaque" />
-          <ProductGrid state={featured} emptyText="Os destaques aparecem aqui assim que as peças forem cadastradas." />
+          {(featured.data?.length ?? 0) >= 2 && <div className="feat-show"><FeaturedShowcase items={featured.data!} ig={(slug) => settings.data?.[`instagram_${slug.replace(/-/g, '_')}`]} /></div>}
+          <div className={(featured.data?.length ?? 0) >= 2 ? 'feat-grid' : ''}><ProductGrid state={featured} emptyText="Os destaques aparecem aqui assim que as peças forem cadastradas." /></div>
         </div>
       </section>
 
