@@ -17,7 +17,7 @@ export default function Contact() {
         <header className="phead">
           <p className="eyebrow">Contato</p>
           <h1>Vamos conversar</h1>
-          <p className="phead__lead">{wa ? 'Pedidos, dúvidas e personalizações: chame a gente no WhatsApp.' : 'Nossos canais de atendimento serão publicados aqui em breve.'}</p>
+          <p className="phead__lead">{!s ? '\u00A0' : wa ? 'Pedidos, dúvidas e personalizações: chame a gente no WhatsApp.' : 'Nossos canais de atendimento serão publicados aqui em breve.'}</p>
         </header>
         <div className="cgrid">
           {wa && (
