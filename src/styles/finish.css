@@ -10,7 +10,7 @@
   background-size: 28px 1px !important; transition: background-size .45s var(--out);
 }
 .pcard:hover .pcard__cta, .pcard:focus-visible .pcard__cta, .pcard__cta--quote { background-size: 100% 1px !important; color: var(--ink) !important; }
-.pcard__price { margin-top: 6px; }
+.pcard__price { margin-top: auto; padding-top: 8px; }
 .pcard__media { transition: opacity .3s; }
 
 /* Rodapé: 3 colunas equilibradas, mais compacto */
@@ -36,3 +36,27 @@
 /* Vitrine: abas sem cortar o nome da peça */
 .show__tabs button { flex: none; }
 .show__tabs button.on { max-width: none; overflow: visible; text-overflow: clip; }
+
+/* Celular: espaçamento entre blocos mais enxuto */
+@media (max-width: 600px) {
+  :root { --sec-y: 24px; }
+  .catalog, .featured { padding-block: 24px; }
+  .ftr { padding-top: 40px; }
+}
+
+/* Página de produto no celular: botão de compra numa linha só; ações secundárias com a mesma largura */
+@media (max-width: 520px) {
+  .pdp__buy { gap: 10px; flex-wrap: nowrap; }
+  .pdp__buy .btn { min-width: 0; white-space: nowrap; letter-spacing: .08em; padding-inline: 12px; font-size: 12.5px; }
+  .pdp__links { display: grid; grid-template-columns: 1fr; gap: 10px; }
+  .pdp__links > * { width: 100%; justify-content: center; }
+}
+@media (max-width: 400px) {
+  .pdp__buy { flex-wrap: wrap; }
+  .pdp__buy .btn { flex: 1 1 100%; }
+}
+
+/* Busca: cantos retos como o resto do site e foco limpo (sem retângulo interno) */
+.searchbox { border-radius: 0; border-color: var(--line-strong); }
+.searchbox input:focus, .searchbox input:focus-visible { outline: none !important; box-shadow: none !important; background: none; }
+.searchbox:focus-within { border-color: var(--ink); box-shadow: 0 0 0 1px var(--ink); }
