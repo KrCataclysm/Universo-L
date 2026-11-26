@@ -10,7 +10,7 @@
   background-size: 28px 1px !important; transition: background-size .45s var(--out);
 }
 .pcard:hover .pcard__cta, .pcard:focus-visible .pcard__cta, .pcard__cta--quote { background-size: 100% 1px !important; color: var(--ink) !important; }
-.pcard__price { margin-top: 6px; }
+.pcard__price { margin-top: auto; padding-top: 8px; }
 .pcard__media { transition: opacity .3s; }
 
 /* Rodapé: 3 colunas equilibradas, mais compacto */
@@ -36,3 +36,10 @@
 /* Vitrine: abas sem cortar o nome da peça */
 .show__tabs button { flex: none; }
 .show__tabs button.on { max-width: none; overflow: visible; text-overflow: clip; }
+
+/* Celular: espaçamento entre blocos mais enxuto */
+@media (max-width: 600px) {
+  :root { --sec-y: 24px; }
+  .catalog, .featured { padding-block: 24px; }
+  .ftr { padding-top: 40px; }
+}
