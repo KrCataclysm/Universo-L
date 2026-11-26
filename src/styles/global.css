@@ -9,6 +9,7 @@
 @import './ui.css';
 @import './readable.css';
 @import './features.css';
+@import './finish.css';
 *, *::before, *::after { box-sizing: border-box; }
 html { -webkit-text-size-adjust: 100%; scroll-behavior: auto; }
 html.lenis, html.lenis body { height: auto; }

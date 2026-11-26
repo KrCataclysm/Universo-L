@@ -1,0 +1,14 @@
+/* Acabamento visual (clean): cards mais leves, sem botão contornado repetido */
+.pcard__info { gap: 4px; padding: 14px 2px 0; }
+.pcard__info h3 { min-height: 0; }
+.pcard__cta {
+  align-self: flex-start; min-height: 0; margin: 12px 0 0 2px; padding: 0 0 3px; width: auto;
+  border: 0 !important; background: none !important; color: var(--ink) !important;
+  font-size: 12px; letter-spacing: .14em; font-weight: 600;
+  background-image: linear-gradient(currentColor, currentColor) !important;
+  background-repeat: no-repeat !important; background-position: 0 100% !important;
+  background-size: 28px 1px !important; transition: background-size .45s var(--out);
+}
+.pcard:hover .pcard__cta, .pcard:focus-visible .pcard__cta, .pcard__cta--quote { background-size: 100% 1px !important; color: var(--ink) !important; }
+.pcard__price { margin-top: 6px; }
+.pcard__media { transition: opacity .3s; }
