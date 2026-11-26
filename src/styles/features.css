@@ -158,3 +158,60 @@
 .gallery__thumbs button.on { opacity: 1; box-shadow: 0 0 0 2px var(--paper), 0 0 0 4px var(--ink); border-color: var(--ink); }
 .gallery__thumbs button:not(.on) { opacity: .6; }
 .variants button.on:hover, .show__opts button.on:hover, .show__opts button.on:hover:not(:disabled), .stools__bands button.on:hover, .chips button.on:hover { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+
+/* =====================================================================
+   Coleções, trabalhos realizados e disponibilidade (Falou Bordei)
+   ===================================================================== */
+.colls { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+@media (max-width: 900px) { .colls { grid-template-columns: 1fr; } }
+.coll { display: grid; color: inherit; padding: 0; overflow: hidden; height: 100%; }
+.coll img { width: 100%; aspect-ratio: 16 / 10; object-fit: cover; background: var(--sand); }
+.coll__body { display: grid; gap: 6px; padding: clamp(18px, 2.2vw, 26px); align-content: start; }
+.coll__n { font-size: 12.5px; letter-spacing: .13em; text-transform: uppercase; font-weight: 600; color: var(--lilac-text); }
+.coll h2 { font-size: clamp(26px, 2.6vw, 34px); font-weight: 500; letter-spacing: -.01em; }
+.coll p { margin: 0; color: rgba(40,39,43,.86); line-height: 1.55; }
+.coll__go { margin-top: 8px; font-size: 12.5px; letter-spacing: .14em; text-transform: uppercase; font-weight: 600; }
+.coll__go i { font-style: normal; display: inline-block; transition: transform .35s var(--out); } .coll:hover .coll__go i { transform: translateX(5px); }
+
+.chips--avail { margin-bottom: 14px; }
+.chips button small { opacity: .65; margin-left: 4px; font-size: 12px; }
+
+.works { background: #fff; border-top: 1px solid var(--line); }
+.works__lead { margin: 0 0 22px; max-width: 54ch; color: rgba(40,39,43,.86); line-height: 1.6; }
+.works__grid { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
+@media (max-width: 900px) { .works__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; } }
+.works__item { position: relative; display: block; width: 100%; aspect-ratio: 4 / 5; overflow: hidden; background: var(--sand); cursor: zoom-in; }
+.works__item img { width: 100%; height: 100%; object-fit: cover; mix-blend-mode: multiply; transition: transform 1s var(--out); }
+.works__item span { position: absolute; left: 0; right: 0; bottom: 0; padding: 28px 12px 10px; text-align: left; color: #fff; font-size: 13.5px; font-weight: 600; background: linear-gradient(to top, rgba(11,10,13,.7), transparent); opacity: 0; transition: opacity .3s; }
+@media (hover: hover) { .works__item:hover img { transform: scale(1.05); } .works__item:hover span, .works__item:focus-visible span { opacity: 1; } }
+@media (hover: none) { .works__item span { opacity: 1; } }
+
+.pdp__stock { margin: 0; font-size: 13.5px; font-weight: 600; color: #b3364f; }
+
+/* =====================================================================
+   Ajustes de discrição (pedido da loja): ícones menores e mais leves
+   ===================================================================== */
+.fav { width: 30px; height: 30px; top: 8px; right: 8px; border: 0; background: rgba(247,245,242,.72); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); }
+.fav svg { width: 15px; height: 15px; }
+.fav.is-on { border: 0; }
+.show__fav { width: 36px; height: 36px; }
+.show__fav svg { width: 17px; height: 17px; }
+.totop { width: 34px; height: 34px; left: 12px; bottom: 12px; background: rgba(247,245,242,.8); border: 1px solid var(--line); box-shadow: none; -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); }
+
+/* banner "Ver todas as peças" no celular: título à esquerda, "Ver tudo" à direita, sem seta decorativa */
+@media (max-width: 760px) {
+  .pmore { justify-content: space-between; align-items: baseline; text-align: left; }
+  .pmore__k { flex-basis: 100%; }
+  .pmore__t { flex: 1 1 auto; text-align: left; font-size: 22px; }
+  .pmore__go { flex: none; margin: 0; }
+  .pmore::before { display: none; }
+}
+
+/* filtros em uma linha rolável no celular (8 categorias não podem tomar a tela) */
+.chips button.on, .stools__bands button.on { box-shadow: none; }
+@media (max-width: 760px) {
+  .chips { flex-wrap: nowrap; overflow-x: auto; gap: 8px; margin-inline: calc(var(--gutter) * -1); padding: 2px var(--gutter) 6px; margin-bottom: 14px; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+  .chips::-webkit-scrollbar { display: none; }
+  .chips button { flex: none; white-space: nowrap; padding: 10px 14px; font-size: 12.5px; letter-spacing: .08em; }
+  .chips--avail { margin-bottom: 6px; }
+}

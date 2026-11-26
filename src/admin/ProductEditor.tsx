@@ -24,6 +24,8 @@ export default function ProductEditor() {
   const [busy, setBusy] = useState(false)
   const [optInput, setOptInput] = useState('')
   const [optLabel, setOptLabel] = useState('Tamanho')
+  const [comboColors, setComboColors] = useState('')
+  const [comboSizes, setComboSizes] = useState('')
   const file = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
@@ -72,6 +74,14 @@ export default function ProductEditor() {
     const j = i + d; if (j < 0 || j >= images.length) return
     const next = [...images]; [next[i], next[j]] = [next[j], next[i]]
     setImages(next); await reorderImages(next)
+  }
+  const genCombos = () => {
+    const cores = comboColors.split(',').map((v) => v.trim()).filter(Boolean)
+    const tams = comboSizes.split(',').map((v) => v.trim()).filter(Boolean)
+    if (!cores.length || !tams.length) return setMsg({ ok: false, text: 'Informe ao menos uma cor e um tamanho para gerar as combinações.' })
+    const rows: VariantRow[] = cores.flatMap((c) => tams.map((t) => ({ label: 'Cor e tamanho', option_type: 'other' as const, value: `${c} · ${t}`, in_stock: false, stock: 0 })))
+    setVariants((v) => [...v.filter((x) => x.label !== 'Cor e tamanho' || !rows.some((r) => r.value === x.value)), ...rows.filter((r) => !v.some((x) => x.label === r.label && x.value === r.value))])
+    setComboColors(''); setComboSizes(''); setMsg({ ok: true, text: 'Combinações geradas: preencha a quantidade de cada uma e salve.' })
   }
   const addOptions = () => {
     const vals = optInput.split(',').map((v) => v.trim()).filter(Boolean)
@@ -139,20 +149,33 @@ export default function ProductEditor() {
         </section>
 
         <section className="adm-card">
-          <h2>Opções (tamanho, cor…)</h2>
+          <h2>Opções e estoque (tamanho, cor…)</h2>
           <div className="adm-two">
             <label className="field"><span>Tipo</span><input value={optLabel} onChange={(e) => setOptLabel(e.target.value)} placeholder="Tamanho" /></label>
             <label className="field"><span>Valores (separe por vírgula)</span><input value={optInput} onChange={(e) => setOptInput(e.target.value)} onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); addOptions() } }} placeholder="P, M, G" /></label>
           </div>
           <button className="btn btn--ghost adm-sm" onClick={addOptions}>Adicionar</button>
-          <div className="adm-chips">
+          <div className="adm-vars">
             {variants.map((v) => (
-              <span key={`${v.label}-${v.value}`} className={v.in_stock ? '' : 'off'}>
-                <button onClick={() => setVariants((l) => l.map((x) => (x === v ? { ...x, in_stock: !x.in_stock } : x)))} title="Clique para marcar esgotado/disponível">{v.value}{!v.in_stock && ' (esgotado)'}</button>
+              <div key={`${v.label}-${v.value}`} className={`adm-var ${(v.stock == null ? v.in_stock : v.stock > 0) ? '' : 'off'}`}>
+                <span className="adm-var__name"><b>{v.value}</b><small>{v.label}</small></span>
+                <label className="adm-var__qty"><span>Qtd</span>
+                  <input type="number" min={0} step={1} inputMode="numeric" value={v.stock ?? ''} placeholder="sem controle" aria-label={`Quantidade em estoque de ${v.value}`}
+                    onChange={(e) => { const raw = e.target.value; const n = raw === '' ? null : Math.max(0, Math.floor(Number(raw))); setVariants((l) => l.map((x) => (x === v ? { ...x, stock: n, in_stock: n == null ? x.in_stock : n > 0 } : x))) }} />
+                </label>
+                {v.stock == null && <button onClick={() => setVariants((l) => l.map((x) => (x === v ? { ...x, in_stock: !x.in_stock } : x)))} title="Sem quantidade: marque manualmente">{v.in_stock ? 'Disponível' : 'Esgotado'}</button>}
+                {v.stock === 0 && <em>esgotado</em>}
                 <button onClick={() => setVariants((l) => l.filter((x) => x !== v))} aria-label={`Remover ${v.value}`}>✕</button>
-              </span>
+              </div>
             ))}
           </div>
+          <small>Quantidade em branco = não controla o estoque dessa opção (use “Disponível/Esgotado”). Com número, chegando a 0 a opção aparece como esgotada no site e a sacola respeita o limite.</small>
+          <h3 className="adm-sub">Estoque por cor e tamanho juntos</h3>
+          <div className="adm-two">
+            <label className="field"><span>Cores</span><input value={comboColors} onChange={(e) => setComboColors(e.target.value)} placeholder="Preta, Azul marinho" /></label>
+            <label className="field"><span>Tamanhos</span><input value={comboSizes} onChange={(e) => setComboSizes(e.target.value)} placeholder="P, M, G" /></label>
+          </div>
+          <button className="btn btn--ghost adm-sm" onClick={genCombos}>Gerar combinações (cor × tamanho)</button>
         </section>
 
         <section className="adm-card">

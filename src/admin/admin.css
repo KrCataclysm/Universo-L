@@ -32,3 +32,19 @@
 .adm-note { opacity: .7; font-size: 13.5px; margin: 0 0 14px; max-width: 70ch; }
 .adm-labels { border: 1px solid rgba(40,39,43,.12); border-radius: 14px; padding: 10px 14px; display: grid; gap: 6px; margin: 0; } .adm-labels legend { font-size: 12px; opacity: .7; padding: 0 6px; }
 .adm-banner-thumb { height: 52px; border-radius: 8px; }
+
+/* estoque por opção, coleções e trabalhos */
+.adm-vars { display: grid; gap: 8px; }
+.adm-var { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px; padding: 10px 12px; background: #fff; border: 1px solid rgba(40,39,43,.12); }
+.adm-var.off { opacity: .6; }
+.adm-var__name { display: grid; min-width: 140px; flex: 1; } .adm-var__name small { opacity: .65; }
+.adm-var__qty { display: inline-flex; align-items: center; gap: 8px; font-size: 13px; }
+.adm-var__qty input { width: 120px !important; }
+.adm-var em { font-style: normal; color: #b3364f; font-weight: 600; font-size: 13px; }
+.adm-var button { padding: 7px 12px; border: 1px solid rgba(40,39,43,.25); font-size: 13px; }
+.adm-sub { font-size: 14px; letter-spacing: .08em; text-transform: uppercase; margin: 14px 0 0; }
+.adm-pick { border: 1px solid rgba(40,39,43,.12); padding: 12px 16px; display: grid; gap: 6px; }
+.adm-pick legend { padding: 0 8px; font-weight: 600; } .adm-pick h3 { margin: 10px 0 4px; font-size: 13px; letter-spacing: .1em; text-transform: uppercase; opacity: .7; }
+.adm-works { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 12px; }
+.adm-works figure { margin: 0; display: grid; gap: 8px; align-content: start; } .adm-works figure.off { opacity: .5; }
+.adm-works img { width: 100%; aspect-ratio: 4 / 5; object-fit: cover; background: #e9e3e0; }

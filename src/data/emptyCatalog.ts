@@ -5,5 +5,8 @@ export const emptyCatalog: Catalog = {
   listProducts: async () => [],
   getProduct: async () => null,
   listCategories: async () => [],
+  listCollections: async () => [],
+  getCollection: async () => null,
+  listWorks: async () => [],
   getSettings: async () => ({}),
 }

@@ -11,6 +11,8 @@ const ProductEditor = lazy(() => import('./ProductEditor'))
 const Categories = lazy(() => import('./Categories'))
 const Settings = lazy(() => import('./Settings'))
 const Banners = lazy(() => import('./Banners'))
+const Collections = lazy(() => import('./Collections'))
+const Works = lazy(() => import('./Works'))
 
 function Shell() {
   const { loading, session, isAdmin, signOut } = useAuth()
@@ -31,7 +33,9 @@ function Shell() {
         <nav>
           <NavLink to="/admin" end>Produtos</NavLink>
           <NavLink to="/admin/banners">Banners</NavLink>
+          <NavLink to="/admin/colecoes">Coleções</NavLink>
           <NavLink to="/admin/categorias">Categorias</NavLink>
+          <NavLink to="/admin/trabalhos">Trabalhos</NavLink>
           <NavLink to="/admin/configuracoes">Configurações</NavLink>
         </nav>
         <label className="adm-toggle">
@@ -48,7 +52,9 @@ function Shell() {
             <Route index element={<ProductList />} />
             <Route path="produtos/:id" element={<ProductEditor />} />
             <Route path="banners" element={<Banners />} />
+            <Route path="colecoes" element={<Collections />} />
             <Route path="categorias" element={<Categories />} />
+            <Route path="trabalhos" element={<Works />} />
             <Route path="configuracoes" element={<Settings />} />
           </Routes>
         </Suspense>

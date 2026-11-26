@@ -33,10 +33,13 @@ export default function ProductPage() {
   useEffect(() => { void import('../components/CartDrawer') }, [])
   const phone = (settings.data?.whatsapp_number ?? '').replace(/\D/g, '')
   const p = state.data
+  // dados embutidos no HTML valem só para a 1ª pintura: até a conferência com o banco chegar, não deixa adicionar (preço/estoque podem ter mudado)
+  const stale = !!seed && state.data === seed
   const [recentIds, setRecentIds] = useState<string[]>([])
   useEffect(() => { if (!p) return; setRecentIds(getRecent().filter((x) => x !== p.id)); pushRecent(p.id) }, [p?.id]) // eslint-disable-line react-hooks/exhaustive-deps
   useDocumentTitle(p ? `${p.name} — ${brand?.name ?? ''}` : undefined)
   const variant = p?.variants.find((v) => v.id === variantId)
+  const maxQty = Math.min(20, variant?.stock ?? 20)
 
   const ask = useMemo(() => p ? buildWhatsAppUrl({
     phone: settings.data?.whatsapp_number,
@@ -65,7 +68,7 @@ export default function ProductPage() {
     if (Object.keys(errs).length) { toast({ tone: 'warn', title: errs.__variant ? 'Escolha uma opção antes de continuar' : 'Preencha os campos obrigatórios' }); return }
     const labelled = Object.fromEntries(p.customizationFields.filter((f) => custom[f.key]?.trim()).map((f) => [f.label, custom[f.key].trim()]))
     useCart.getState().add({
-      productId: p.id, slug: p.slug, brandSlug: p.brandSlug, name: p.name, unitPriceCents: p.priceCents, qty,
+      productId: p.id, slug: p.slug, brandSlug: p.brandSlug, name: p.name, unitPriceCents: p.priceCents, qty: Math.min(qty, maxQty), max: variant?.stock ?? undefined,
       variantLabel: variant ? `${variant.label}: ${variant.value}` : undefined, image: p.images[0]?.url, custom: Object.keys(labelled).length ? labelled : undefined,
     })
     toast({ title: 'Adicionado ao carrinho', text: `${qty > 1 ? `${qty}× ` : ''}${p.name}`, action: { label: 'Ver carrinho', run: () => { addBtn.current?.focus(); useCart.getState().setOpen(true) } } })
@@ -87,7 +90,7 @@ export default function ProductPage() {
             <div className="variants" role="radiogroup" aria-label={p.variants[0].label}>
               <span className="variants__label">{p.variants[0].label}</span>
               <div>{p.variants.map((v) => (
-                <button key={v.id} role="radio" aria-checked={v.id === variantId} disabled={!v.inStock} className={v.id === variantId ? 'on' : ''} onClick={() => { setVariantId(v.id); setErrors((e) => ({ ...e, __variant: '' })) }}>{v.value}</button>
+                <button key={v.id} role="radio" aria-checked={v.id === variantId} disabled={!v.inStock} className={v.id === variantId ? 'on' : ''} onClick={() => { setVariantId(v.id); setQty((q) => Math.min(q, v.stock ?? 20)); setErrors((e) => ({ ...e, __variant: '' })) }}>{v.value}</button>
               ))}</div>
               {errors.__variant && <em role="alert">{errors.__variant}</em>}
             </div>
@@ -99,8 +102,9 @@ export default function ProductPage() {
             </div>
           ) : (
           <div className="pdp__buy">
-              <div className="qty qty--lg"><button onClick={() => setQty((q) => Math.max(1, q - 1))} aria-label="Diminuir">−</button><span>{qty}</span><button onClick={() => setQty((q) => Math.min(20, q + 1))} aria-label="Aumentar">+</button></div>
-              <button ref={addBtn} className="btn btn--ink" onClick={add} disabled={p.soldOut}>{p.soldOut ? 'Esgotado' : added ? 'Adicionado ✓' : 'Adicionar ao carrinho'}</button>
+              <div className="qty qty--lg"><button onClick={() => setQty((q) => Math.max(1, q - 1))} aria-label="Diminuir">−</button><span>{qty}</span><button onClick={() => setQty((q) => Math.min(maxQty, q + 1))} aria-label="Aumentar" disabled={qty >= maxQty}>+</button></div>
+              {variant?.stock != null && variant.stock > 0 && variant.stock <= 3 && <p className="pdp__stock" role="status">{variant.stock === 1 ? 'Resta 1 unidade' : `Restam ${variant.stock} unidades`}</p>}
+              <button ref={addBtn} className="btn btn--ink" onClick={add} disabled={p.soldOut || stale} aria-busy={stale}>{p.soldOut ? 'Esgotado' : added ? 'Adicionado ✓' : 'Adicionar ao carrinho'}</button>
             </div>
           )}
           <div className="pdp__links">

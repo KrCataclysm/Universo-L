@@ -25,7 +25,7 @@ export default function FeaturedShowcase({ items, ig }: { items: Product[]; ig: 
 
   const add = () => {
     if (p.variants.length && !variant) { toast({ tone: 'warn', title: 'Escolha uma opção antes de continuar' }); return }
-    useCart.getState().add({ productId: p.id, slug: p.slug, brandSlug: p.brandSlug, name: p.name, unitPriceCents: p.priceCents, qty: 1, variantLabel: variant ? `${variant.label}: ${variant.value}` : undefined, image: p.images[0]?.url })
+    useCart.getState().add({ productId: p.id, slug: p.slug, brandSlug: p.brandSlug, name: p.name, unitPriceCents: p.priceCents, qty: 1, max: variant?.stock ?? undefined, variantLabel: variant ? `${variant.label}: ${variant.value}` : undefined, image: p.images[0]?.url })
     toast({ title: 'Adicionado ao carrinho', text: p.name, action: { label: 'Ver carrinho', run: () => useCart.getState().setOpen(true) } })
   }
   const onKey = (e: React.KeyboardEvent) => { if (e.key === 'ArrowRight') { e.preventDefault(); go(i + 1) } if (e.key === 'ArrowLeft') { e.preventDefault(); go(i - 1) } }

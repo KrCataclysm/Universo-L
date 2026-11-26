@@ -6,7 +6,7 @@ export type Status = 'draft' | 'published' | 'hidden'
 export interface Brand { id: string; slug: string; name: string }
 export interface Cat { id: string; brand_id: string; slug: string; name: string; sort: number }
 export interface FieldDef { key: string; label: string; type: 'text' | 'select'; options?: string[]; required: boolean }
-export interface VariantRow { id?: string; label: string; option_type: 'size' | 'color' | 'other'; value: string; in_stock: boolean }
+export interface VariantRow { id?: string; label: string; option_type: 'size' | 'color' | 'other'; value: string; in_stock: boolean; /** unidades; null/ausente = sem controle de quantidade */ stock?: number | null }
 export interface ImageRow { id: string; path: string; alt: string; sort: number }
 export interface AdminProduct {
   id: string; brand_id: string; category_id: string | null; slug: string; name: string; description: string; price_cents: number
@@ -21,10 +21,10 @@ export const listBrands = async (): Promise<Brand[]> => (ok(await sb().from('bra
 export const listCats = async (): Promise<Cat[]> => (ok(await sb().from('categories').select('id,brand_id,slug,name,sort').order('sort')) ?? [])
 
 export const listProducts = async (): Promise<AdminProduct[]> =>
-  ok(await sb().from('products').select('*, brands(name), product_images(id,path,alt,sort), product_variants(id,label,option_type,value,in_stock,sort)').order('created_at', { ascending: false })) as unknown as AdminProduct[]
+  ok(await sb().from('products').select('*, brands(name), product_images(id,path,alt,sort), product_variants(id,label,option_type,value,in_stock,stock,sort)').order('created_at', { ascending: false })) as unknown as AdminProduct[]
 
 export const getProduct = async (id: string): Promise<AdminProduct | null> =>
-  ok(await sb().from('products').select('*, product_images(id,path,alt,sort), product_variants(id,label,option_type,value,in_stock,sort)').eq('id', id).maybeSingle()) as unknown as AdminProduct | null
+  ok(await sb().from('products').select('*, product_images(id,path,alt,sort), product_variants(id,label,option_type,value,in_stock,stock,sort)').eq('id', id).maybeSingle()) as unknown as AdminProduct | null
 
 /** Cria um rascunho vazio e devolve o id (o editor trabalha sempre sobre um produto existente). */
 export async function createDraft(brandId: string): Promise<string> {
@@ -49,7 +49,7 @@ export async function saveProduct(i: SaveInput, current: { slug: string; name: s
     status: i.status, featured: i.featured, sold_out: i.soldOut, labels: i.labels, customizable: i.customizable, customization_schema: i.customizable ? i.fields : [],
   }).eq('id', i.id))
   ok(await sb().from('product_variants').delete().eq('product_id', i.id))
-  if (i.variants.length) ok(await sb().from('product_variants').insert(i.variants.map((v, n) => ({ product_id: i.id, label: v.label, option_type: v.option_type, value: v.value, in_stock: v.in_stock, sort: n }))))
+  if (i.variants.length) ok(await sb().from('product_variants').insert(i.variants.map((v, n) => ({ product_id: i.id, label: v.label, option_type: v.option_type, value: v.value, in_stock: v.stock == null ? v.in_stock : v.stock > 0, stock: v.stock ?? null, sort: n }))))
   return slug
 }
 
@@ -117,4 +117,43 @@ export async function uploadBannerImage(file: File): Promise<string> {
   const up = await sb().storage.from('product-images').upload(path, blob, { contentType: blob.type })
   if (up.error) throw new Error(up.error.message)
   return path
+}
+
+// ---------- coleções ----------
+export interface CollectionRow { id: string; slug: string; name: string; description: string; active: boolean; sort: number; product_ids: string[] }
+export async function listCollectionsAdmin(): Promise<CollectionRow[]> {
+  const rows = ok(await sb().from('collections').select('id,slug,name,description,active,sort,collection_products(product_id,sort)').order('sort').order('created_at', { ascending: false })) as unknown as (Omit<CollectionRow, 'product_ids'> & { collection_products: { product_id: string; sort: number }[] })[]
+  return (rows ?? []).map((c) => ({ id: c.id, slug: c.slug, name: c.name, description: c.description, active: c.active, sort: c.sort, product_ids: [...c.collection_products].sort((a, b) => a.sort - b.sort).map((x) => x.product_id) }))
+}
+export async function saveCollection(c: { id?: string; name: string; description: string; active: boolean; productIds: string[] }): Promise<void> {
+  let id = c.id
+  if (id) {
+    ok(await sb().from('collections').update({ name: c.name, description: c.description, active: c.active }).eq('id', id))
+  } else {
+    const taken = new Set((ok(await sb().from('collections').select('slug')) as { slug: string }[]).map((r) => r.slug))
+    const row = ok(await sb().from('collections').insert({ slug: uniqueSlug(slugify(c.name), taken), name: c.name, description: c.description, active: c.active }).select('id').single()) as { id: string }
+    id = row.id
+  }
+  ok(await sb().from('collection_products').delete().eq('collection_id', id))
+  if (c.productIds.length) ok(await sb().from('collection_products').insert(c.productIds.map((product_id, sort) => ({ collection_id: id, product_id, sort }))))
+}
+export const deleteCollection = async (id: string): Promise<void> => { ok(await sb().from('collections').delete().eq('id', id)) }
+
+// ---------- trabalhos realizados ----------
+export interface WorkRow { id: string; brand_id: string; title: string; description: string; image_path: string; active: boolean; sort: number }
+export async function listWorksAdmin(): Promise<WorkRow[]> {
+  return (ok(await sb().from('works').select('id,brand_id,title,description,image_path,active,sort').order('sort').order('created_at', { ascending: false })) ?? []) as WorkRow[]
+}
+export async function addWork(brandId: string, file: File, title: string, sort: number): Promise<void> {
+  const blob = await compressImage(file, { maxSide: 1600 })
+  const path = `works/${crypto.randomUUID()}.${blob.type === 'image/webp' ? 'webp' : 'jpg'}`
+  const up = await sb().storage.from('product-images').upload(path, blob, { contentType: blob.type })
+  if (up.error) throw new Error(up.error.message)
+  try { ok(await sb().from('works').insert({ brand_id: brandId, title, description: '', image_path: path, active: true, sort })) }
+  catch (e) { await sb().storage.from('product-images').remove([path]); throw e }
+}
+export const updateWork = async (id: string, patch: Partial<Pick<WorkRow, 'title' | 'description' | 'active' | 'sort'>>): Promise<void> => { ok(await sb().from('works').update(patch).eq('id', id)) }
+export async function deleteWork(w: WorkRow): Promise<void> {
+  ok(await sb().from('works').delete().eq('id', w.id))
+  if (!w.image_path.startsWith('/')) await sb().storage.from('product-images').remove([w.image_path])
 }

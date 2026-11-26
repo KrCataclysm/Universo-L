@@ -19,7 +19,7 @@ export interface ProductRow {
   brands: One<{ slug: string }>
   categories: One<{ slug: string }>
   product_images: { path: string; alt: string; sort: number }[] | null
-  product_variants: { id: string; label: string; option_type: string; value: string; in_stock: boolean; sort: number }[] | null
+  product_variants: { id: string; label: string; option_type: string; value: string; in_stock: boolean; stock?: number | null; sort: number }[] | null
 }
 
 const first = <T,>(v: One<T>): T | null => (Array.isArray(v) ? (v[0] ?? null) : v)
@@ -37,6 +37,7 @@ const variantType = (t: string): 'size' | 'color' | 'other' => (t === 'size' || 
 export function mapProduct(r: ProductRow, publicUrl: (path: string) => string): Product {
   const brandSlug = first(r.brands)?.slug ?? ''
   const images = [...(r.product_images ?? [])].sort((a, b) => a.sort - b.sort).map((i) => ({ url: i.path.startsWith('/') ? `${import.meta.env.BASE_URL.replace(/\/$/, '')}${i.path}` : publicUrl(i.path), alt: i.alt || r.name }))
+  const variants = [...(r.product_variants ?? [])].sort((a, b) => a.sort - b.sort).map((v) => ({ id: v.id, label: v.label, type: variantType(v.option_type), value: v.value, inStock: v.in_stock && v.stock !== 0, stock: v.stock ?? null }))
   return {
     id: r.id,
     brandSlug,
@@ -46,10 +47,11 @@ export function mapProduct(r: ProductRow, publicUrl: (path: string) => string): 
     description: r.description,
     priceCents: r.price_cents,
     images: images.length || !r.is_example ? images : [1, 2, 3].map((n) => ({ url: art(brandSlug, `${r.name} ${n}`), alt: `${r.name}, foto ${n}` })),
-    variants: [...(r.product_variants ?? [])].sort((a, b) => a.sort - b.sort).map((v) => ({ id: v.id, label: v.label, type: variantType(v.option_type), value: v.value, inStock: v.in_stock })),
+    variants,
     featured: r.featured,
     customizable: r.customizable,
-    soldOut: r.sold_out === true,
+    // esgotado quando a loja marca, ou quando todas as opções acabaram
+    soldOut: r.sold_out === true || (variants.length > 0 && variants.every((v) => !v.inStock)),
     labels: r.labels ?? [],
     customizationFields: Array.isArray(r.customization_schema) ? r.customization_schema.map(toField).filter((f): f is CustomField => !!f) : [],
     isExample: r.is_example,
