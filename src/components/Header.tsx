@@ -21,7 +21,10 @@ export default function Header() {
   const dark = BRANDS.some((b) => `/${b.slug}` === path)
 
   useEffect(() => {
-    const on = () => setScrolled(window.scrollY > 40)
+    const on = () => {
+      setScrolled(window.scrollY > 40)
+      document.documentElement.style.setProperty('--hdr-top', `${Math.max(0, 34 - window.scrollY)}px`)
+    }
     on()
     window.addEventListener('scroll', on, { passive: true })
     return () => window.removeEventListener('scroll', on)
