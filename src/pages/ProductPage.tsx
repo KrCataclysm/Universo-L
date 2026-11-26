@@ -33,6 +33,8 @@ export default function ProductPage() {
   useEffect(() => { void import('../components/CartDrawer') }, [])
   const phone = (settings.data?.whatsapp_number ?? '').replace(/\D/g, '')
   const p = state.data
+  // dados embutidos no HTML valem só para a 1ª pintura: até a conferência com o banco chegar, não deixa adicionar (preço/estoque podem ter mudado)
+  const stale = !!seed && state.data === seed
   const [recentIds, setRecentIds] = useState<string[]>([])
   useEffect(() => { if (!p) return; setRecentIds(getRecent().filter((x) => x !== p.id)); pushRecent(p.id) }, [p?.id]) // eslint-disable-line react-hooks/exhaustive-deps
   useDocumentTitle(p ? `${p.name} — ${brand?.name ?? ''}` : undefined)
@@ -102,7 +104,7 @@ export default function ProductPage() {
           <div className="pdp__buy">
               <div className="qty qty--lg"><button onClick={() => setQty((q) => Math.max(1, q - 1))} aria-label="Diminuir">−</button><span>{qty}</span><button onClick={() => setQty((q) => Math.min(maxQty, q + 1))} aria-label="Aumentar" disabled={qty >= maxQty}>+</button></div>
               {variant?.stock != null && variant.stock > 0 && variant.stock <= 3 && <p className="pdp__stock" role="status">{variant.stock === 1 ? 'Resta 1 unidade' : `Restam ${variant.stock} unidades`}</p>}
-              <button ref={addBtn} className="btn btn--ink" onClick={add} disabled={p.soldOut}>{p.soldOut ? 'Esgotado' : added ? 'Adicionado ✓' : 'Adicionar ao carrinho'}</button>
+              <button ref={addBtn} className="btn btn--ink" onClick={add} disabled={p.soldOut || stale} aria-busy={stale}>{p.soldOut ? 'Esgotado' : added ? 'Adicionado ✓' : 'Adicionar ao carrinho'}</button>
             </div>
           )}
           <div className="pdp__links">
