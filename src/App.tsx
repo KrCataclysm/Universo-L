@@ -45,6 +45,7 @@ function Site() {
     <CatalogProvider catalog={appCatalog}>
       <SmoothScroll>
         <a className="skip" href="#main">Pular para o conteúdo</a>
+        <div className="topbar" role="note">Escolha suas peças e finalize o pedido pelo WhatsApp</div>
         <Header />
         <PageTransition><div id="main" tabIndex={-1} className="main-anchor"><AppRoutes /></div></PageTransition>
         <Footer />
