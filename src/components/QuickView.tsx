@@ -26,7 +26,7 @@ export default function QuickView() {
   const add = () => {
     if (!p) return
     if (p.variants.length && !variant) { setErr('Escolha uma opção.'); toast({ tone: 'warn', title: 'Escolha uma opção antes de continuar' }); return }
-    useCart.getState().add({ productId: p.id, slug: p.slug, brandSlug: p.brandSlug, name: p.name, unitPriceCents: p.priceCents, qty, variantLabel: variant ? `${variant.label}: ${variant.value}` : undefined, image: p.images[0]?.url })
+    useCart.getState().add({ productId: p.id, slug: p.slug, brandSlug: p.brandSlug, name: p.name, unitPriceCents: p.priceCents, qty: Math.min(qty, variant?.stock ?? 20), max: variant?.stock ?? undefined, variantLabel: variant ? `${variant.label}: ${variant.value}` : undefined, image: p.images[0]?.url })
     toast({ title: 'Adicionado ao carrinho', text: `${qty > 1 ? `${qty}× ` : ''}${p.name}`, action: { label: 'Ver carrinho', run: () => useCart.getState().setOpen(true) } })
     close()
   }
@@ -51,7 +51,7 @@ export default function QuickView() {
             )}
             <div className="qv__buy">
               {simple && !p.soldOut && (<>
-                <div className="qty qty--lg"><button onClick={() => setQty((q) => Math.max(1, q - 1))} aria-label="Diminuir">−</button><span>{qty}</span><button onClick={() => setQty((q) => Math.min(20, q + 1))} aria-label="Aumentar">+</button></div>
+                <div className="qty qty--lg"><button onClick={() => setQty((q) => Math.max(1, q - 1))} aria-label="Diminuir">−</button><span>{qty}</span><button onClick={() => setQty((q) => Math.min(variant?.stock ?? 20, q + 1))} aria-label="Aumentar">+</button></div>
                 <button className="btn btn--ink" onClick={add}>Adicionar ao carrinho</button>
               </>)}
               {p.soldOut && <button className="btn btn--ink" disabled>Esgotado</button>}

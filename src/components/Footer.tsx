@@ -6,6 +6,7 @@ import { formatPhone } from '../lib/format'
 
 export default function Footer() {
   const { data: s } = useAsync((c) => c.getSettings(), [])
+  const { data: cols } = useAsync((c) => c.listCollections(), [])
   const wa = (s?.whatsapp_number ?? '').replace(/\D/g, '')
   return (
     <footer className="ftr">
@@ -26,6 +27,7 @@ export default function Footer() {
         <nav aria-label="Atendimento">
           <h2 className="ftr__h">Atendimento</h2>
           <ul>
+            {!!cols?.length && <li><Link to="/colecoes">Coleções</Link></li>}
             <li><Link to="/sobre">Sobre nós</Link></li>
             <li><Link to="/contato">Contato</Link></li>
             {wa && <li><a href={`https://wa.me/${wa}`} target="_blank" rel="noreferrer">WhatsApp<br /><small>{formatPhone(wa)}</small></a></li>}

@@ -27,10 +27,19 @@ const pages = [
   { path: '/informacoes', title: 'Pagamento, entrega e trocas — Universo Lay', description: 'Formas de pagamento, entrega, prazos, trocas e devoluções do Universo Lay.' },
   { path: '/privacidade', title: 'Política de privacidade — Universo Lay', description: 'Como o site do Universo Lay trata os seus dados, conforme a LGPD.' },
   { path: '/busca', title: 'Buscar produtos — Universo Lay', description: 'Busque produtos das lojas Lay.store, Ousada Delicada e Falou Bordei.' },
+  { path: '/colecoes', title: 'Coleções — Universo Lay', description: 'Seleções de peças das lojas Lay.store, Ousada Delicada e Falou Bordei.' },
   { path: '/favoritos', title: 'Favoritos — Universo Lay', description: 'Suas peças favoritas do Universo Lay, salvas neste aparelho.' },
   { path: '/contato', title: 'Contato — Universo Lay', description: 'Fale com o Universo Lay: pedidos, dúvidas e personalizações.' },
   ...Object.entries(BRANDS).map(([slug, [name, cat, intro]]) => ({ path: `/${slug}`, title: `${name} — ${cat} · Universo Lay`, description: intro })),
 ]
+
+// 1b) coleções ativas (páginas estáticas para abrir o link direto com status 200)
+try {
+  if (SB_URL && SB_KEY) {
+    const r = await fetch(`${SB_URL}/rest/v1/collections?select=slug,name,description&active=eq.true`, { headers: { apikey: SB_KEY } })
+    if (r.ok) for (const c of await r.json()) pages.push({ path: `/colecao/${c.slug}`, title: `${c.name} — Coleção · Universo Lay`, description: (c.description || `Coleção ${c.name} do Universo Lay.`).slice(0, 200) })
+  }
+} catch (e) { console.warn('Aviso: sem coleções nas páginas estáticas:', e.message) }
 
 // 2) produtos publicados (para páginas de compartilhamento com Open Graph)
 try {

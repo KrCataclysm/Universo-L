@@ -4,6 +4,7 @@ import { BRANDS } from '../brand/brands'
 import Monogram from '../brand/Monogram'
 import Wordmark from '../brand/Wordmark'
 import { useCart } from '../cart/cartStore'
+import { useAsync } from '../data/CatalogProvider'
 import { useFavs } from '../store/favStore'
 import { useMagnetic } from '../fx/useMagnetic'
 
@@ -11,6 +12,7 @@ export default function Header() {
   const { pathname } = useLocation()
   const [scrolled, setScrolled] = useState(false)
   const [menu, setMenu] = useState(false)
+  const { data: cols } = useAsync((c) => c.listCollections(), [])
   const favCount = useFavs((s) => s.ids.length)
   const count = useCart((s) => s.items.reduce((n, i) => n + i.qty, 0))
   const [bump, setBump] = useState(false)
@@ -72,6 +74,7 @@ export default function Header() {
         {BRANDS.map((b, i) => <Link key={b.slug} to={`/${b.slug}`} style={{ ['--i' as string]: i }} tabIndex={menu ? 0 : -1}>{b.name}</Link>)}
         <small>Universo</small>
         <Link to="/busca" style={{ ['--i' as string]: 3 }} tabIndex={menu ? 0 : -1}>Buscar produtos</Link>
+        {!!cols?.length && <Link to="/colecoes" style={{ ['--i' as string]: 4 }} tabIndex={menu ? 0 : -1}>Coleções</Link>}
         <Link to="/favoritos" style={{ ['--i' as string]: 4 }} tabIndex={menu ? 0 : -1}>Favoritos</Link>
         <Link to="/sobre" style={{ ['--i' as string]: 4 }} tabIndex={menu ? 0 : -1}>Sobre</Link>
         <Link to="/contato" style={{ ['--i' as string]: 5 }} tabIndex={menu ? 0 : -1}>Contato</Link>

@@ -62,7 +62,7 @@ export default function CartDrawer() {
                         <div className="qty">
                           <button onClick={() => setQty(k, i.qty - 1)} aria-label="Diminuir">−</button>
                           <span>{i.qty}</span>
-                          <button onClick={() => setQty(k, i.qty + 1)} aria-label="Aumentar">+</button>
+                          <button onClick={() => setQty(k, i.qty + 1)} aria-label="Aumentar" disabled={!!i.max && i.qty >= i.max} title={i.max && i.qty >= i.max ? `Só temos ${i.max} em estoque` : undefined}>+</button>
                           <button className="citem__rm" onClick={() => { remove(k); toast({ tone: 'info', title: 'Item removido', text: i.name, action: { label: 'Desfazer', run: () => useCart.getState().add(i) } }) }}>remover</button>
                         </div>
                       </div>

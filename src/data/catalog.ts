@@ -1,5 +1,5 @@
 export interface ProductImage { url: string; alt: string }
-export interface Variant { id: string; label: string; type: 'size' | 'color' | 'other'; value: string; inStock: boolean }
+export interface Variant { id: string; label: string; type: 'size' | 'color' | 'other'; value: string; inStock: boolean; /** unidades; null = a loja não controla a quantidade */ stock?: number | null }
 export interface CustomField { key: string; label: string; type: 'text' | 'select'; options?: string[]; required: boolean }
 
 export interface Product {
@@ -28,6 +28,9 @@ export interface Product {
 export interface ProductQuery { brandSlug?: string; categorySlug?: string; featured?: boolean }
 export interface Category { slug: string; name: string }
 
+export interface Collection { slug: string; name: string; description: string; imageUrl: string | null; count: number }
+export interface Work { id: string; brandSlug: string; title: string; description: string; imageUrl: string }
+
 export interface Banner { id: string; title: string; subtitle: string; ctaLabel: string; linkUrl: string; imageUrl: string | null }
 
 export interface Catalog {
@@ -35,5 +38,8 @@ export interface Catalog {
   listProducts(q: ProductQuery): Promise<Product[]>
   getProduct(brandSlug: string, slug: string): Promise<Product | null>
   listCategories(brandSlug: string): Promise<Category[]>
+  listCollections(): Promise<Collection[]>
+  getCollection(slug: string): Promise<{ collection: Collection; products: Product[] } | null>
+  listWorks(brandSlug: string): Promise<Work[]>
   getSettings(): Promise<Record<string, string>>
 }

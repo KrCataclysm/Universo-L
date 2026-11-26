@@ -10,6 +10,8 @@ export interface CartItem {
   variantLabel?: string
   /** miniatura mostrada no carrinho */
   image?: string
+  /** unidades em estoque da opção escolhida (limita a quantidade); ausente = sem limite */
+  max?: number
   /** personalização: rótulo do campo → valor */
   custom?: Record<string, string>
 }
@@ -63,9 +65,10 @@ export const useCart = create<CartState>((set, get) => {
       const key = itemKey(item)
       const items = get().items
       const hit = items.find((i) => itemKey(i) === key)
-      commit(hit ? items.map((i) => (i === hit ? { ...i, qty: i.qty + item.qty } : i)) : [...items, item])
+      const cap = (n: number, max?: number) => (max ? Math.min(n, max) : n)
+      commit(hit ? items.map((i) => (i === hit ? { ...i, max: item.max ?? i.max, qty: cap(i.qty + item.qty, item.max ?? i.max) } : i)) : [...items, { ...item, qty: cap(item.qty, item.max) }])
     },
-    setQty: (key, qty) => commit(qty <= 0 ? get().items.filter((i) => itemKey(i) !== key) : get().items.map((i) => (itemKey(i) === key ? { ...i, qty } : i))),
+    setQty: (key, qty) => commit(qty <= 0 ? get().items.filter((i) => itemKey(i) !== key) : get().items.map((i) => (itemKey(i) === key ? { ...i, qty: i.max ? Math.min(qty, i.max) : qty } : i))),
     remove: (key) => commit(get().items.filter((i) => itemKey(i) !== key)),
     clear: () => commit([]),
     totalCents: () => get().items.reduce((s, i) => s + i.unitPriceCents * i.qty, 0),

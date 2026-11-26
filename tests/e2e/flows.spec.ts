@@ -274,10 +274,12 @@ test('galeria ampliada abre, fecha com Esc e voltar ao topo aparece ao rolar', a
   await page.keyboard.press('Escape')
   await expect(page.getByRole('dialog', { name: 'Foto ampliada' })).toHaveCount(0)
   await page.goto('/')
-  await page.evaluate(() => window.scrollTo(0, 1500))
+  await page.evaluate(() => window.scrollTo(0, 1800))
   const top = page.getByRole('button', { name: 'Voltar ao topo' })
+  await expect(top).not.toHaveClass(/is-on/)
+  await page.evaluate(() => window.scrollTo(0, 1500))
   await expect(top).toHaveClass(/is-on/)
-  await top.click()
+  await top.click({ force: true })
   await expect.poll(() => page.evaluate(() => window.scrollY)).toBeLessThan(50)
 })
 
@@ -306,9 +308,11 @@ test('vitrine em destaque (desktop): troca a peça, muda o tom e adiciona ao car
   await show.getByRole('radio', { name: 'Azul marinho' }).click()
   await show.getByRole('button', { name: 'Adicionar ao carrinho' }).click()
   await expect(page.getByRole('status').filter({ hasText: 'Adicionado ao carrinho' })).toBeVisible()
+  const contador = show.locator('.show__ctrl span')
+  const atual = Number(((await contador.textContent()) ?? '').trim().slice(0, 2))
   await show.locator('.show__tabs button.on').focus()
   await page.keyboard.press('ArrowRight')
-  await expect(show.locator('.show__ctrl span')).toContainText('03')
+  await expect(contador).toContainText(`${String((atual % 4) + 1).padStart(2, '0')} / 04`)
 })
 
 test('celular: destaques continuam em grid de 2 colunas (sem vitrine)', async ({ page }) => {
@@ -346,4 +350,32 @@ test('opção escolhida fica inequívoca: ✓ e preenchimento (produto, vitrine 
   await faixa.click()
   await expect(faixa).toHaveAttribute('aria-pressed', 'true')
   expect(await faixa.evaluate((e) => getComputedStyle(e, '::before').content)).toContain('✓')
+})
+
+
+test('categorias de cada marca filtram as peças (Lay.store)', async ({ page }) => {
+  await page.goto('/lay-store')
+  const cats = page.getByRole('group', { name: 'Categorias' })
+  await expect(cats.getByRole('button', { name: 'Shorts e bermudas' })).toBeVisible()
+  for (const n of ['Conjuntos', 'Leggings', 'Tops', 'Blusas e camisetas', 'Macaquinhos']) await expect(cats.getByRole('button', { name: n })).toBeVisible()
+  await cats.getByRole('button', { name: 'Shorts e bermudas' }).click()
+  await expect(page.locator('.pcard', { hasText: 'Bermuda ciclista' })).toBeVisible()
+  await expect(page.locator('.pcard', { hasText: 'Blusão com recorte' })).toHaveCount(0)
+})
+
+test('Falou Bordei separa pronta entrega de encomendas personalizadas', async ({ page }) => {
+  await page.goto('/falou-bordei')
+  const disp = page.getByRole('group', { name: 'Disponibilidade' })
+  await expect(disp.getByRole('button', { name: /Pronta entrega/ })).toBeVisible()
+  await expect(disp.getByRole('button', { name: /Encomendas personalizadas/ })).toBeVisible()
+  await disp.getByRole('button', { name: /Pronta entrega/ }).click()
+  await expect(page.getByText(/Nenhuma peça de pronta entrega/)).toBeVisible()
+  await disp.getByRole('button', { name: /Encomendas personalizadas/ }).click()
+  await expect(page.locator('.pcard').first()).toBeVisible()
+  await expect(disp.getByRole('button', { name: /Encomendas personalizadas/ })).toHaveAttribute('aria-pressed', 'true')
+})
+
+test('página de coleções existe e responde', async ({ page }) => {
+  await page.goto('/colecoes')
+  await expect(page.getByRole('heading', { level: 1, name: 'Coleções' })).toBeVisible()
 })

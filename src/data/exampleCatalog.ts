@@ -65,6 +65,9 @@ export const exampleCatalog: Catalog = {
   async listCategories(brandSlug) {
     return CATEGORIES[brandSlug] ?? []
   },
+  async listCollections() { return [] },
+  async getCollection() { return null },
+  async listWorks() { return [] },
   async getSettings() {
     return {}
   },
