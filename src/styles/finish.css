@@ -32,3 +32,7 @@
 .topbar { height: 34px; display: flex; align-items: center; justify-content: center; padding: 0 var(--gutter); background: var(--void); color: rgba(247,245,242,.86); font-size: 12px; letter-spacing: .12em; text-transform: uppercase; font-weight: 600; text-align: center; white-space: nowrap; overflow: hidden; }
 .hdr { top: var(--hdr-top) !important; }
 @media (max-width: 420px) { .topbar { letter-spacing: .06em; font-size: 11px; } }
+
+/* Vitrine: abas sem cortar o nome da peça */
+.show__tabs button { flex: none; }
+.show__tabs button.on { max-width: none; overflow: visible; text-overflow: clip; }
