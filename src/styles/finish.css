@@ -12,3 +12,17 @@
 .pcard:hover .pcard__cta, .pcard:focus-visible .pcard__cta, .pcard__cta--quote { background-size: 100% 1px !important; color: var(--ink) !important; }
 .pcard__price { margin-top: 6px; }
 .pcard__media { transition: opacity .3s; }
+
+/* Rodapé: 3 colunas equilibradas, mais compacto */
+.ftr { padding-top: clamp(44px, 6vw, 80px); }
+.ftr__grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 32px; }
+.ftr__top { padding-bottom: 8px; }
+.ftr li { margin: 6px 0; }
+.ftr__legal { margin-top: 40px; }
+@media (max-width: 760px) { .ftr__grid { grid-template-columns: 1fr 1fr; gap: 28px 20px; } .ftr__grid nav:last-child { grid-column: 1 / -1; } }
+
+/* Hero das marcas: mais baixo, produtos aparecem antes (sem perder a identidade escura) */
+.bhero { min-height: clamp(300px, 44svh, 420px); }
+.bhero__content { padding-block: 120px 44px; }
+.bhero h1 { font-size: clamp(48px, 8vw, 104px); }
+@media (max-width: 520px) { .pcard__cta { font-size: 11px; letter-spacing: .08em; max-width: 100%; } }

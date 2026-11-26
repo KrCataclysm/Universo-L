@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { SLOGAN } from '../brand/brands'
+import { BRANDS, SLOGAN } from '../brand/brands'
 import Monogram from '../brand/Monogram'
 import { useAsync } from '../data/CatalogProvider'
 import { formatPhone } from '../lib/format'
@@ -15,6 +15,12 @@ export default function Footer() {
         <p className="ftr__slogan">{SLOGAN}</p>
       </div>
       <div className="ftr__grid">
+        <nav aria-label="Marcas">
+          <h2 className="ftr__h">Marcas</h2>
+          <ul>
+            {BRANDS.map((b) => <li key={b.slug}><Link to={`/${b.slug}`}>{b.name}</Link></li>)}
+          </ul>
+        </nav>
         <nav aria-label="Informações">
           <h2 className="ftr__h">Informações</h2>
           <ul>
