@@ -72,3 +72,6 @@ Local (`npm run dev`), testes (preview + Playwright) e produção usam o **mesmo
 - GitHub Pages não define cabeçalhos HTTP: a política de segurança é por `<meta>`.
 - LCP das páginas internas fica em 2,8–3,1 s (JavaScript do React).
 - Tudo no mesmo projeto Supabase (sem staging).
+
+## Atualização automática do site
+O build gera `version.json` (`{ "id": <commit> }`) e embute o mesmo id no código (`__BUILD_ID__`, em `vite.config.ts`). `src/lib/updateCheck.ts` consulta `version.json` (sem cache) ao voltar para a aba, ao focar a janela e a cada 5 min. Id diferente → recarrega sozinho; com modal/gaveta aberta ou no `/admin` só avisa (toast "Atualizar") para não perder o que está sendo feito. Quem estava com uma versão anterior a esta precisa recarregar uma vez (Ctrl+F5); dali em diante é automático.

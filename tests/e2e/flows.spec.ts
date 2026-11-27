@@ -402,3 +402,24 @@ test('login do painel: botão Mostrar/Ocultar deixa ver a senha digitada', async
   await page.getByRole('button', { name: 'Ocultar' }).click()
   await expect(campo).toHaveAttribute('type', 'password')
 })
+
+test('atualização automática: versão nova publicada recarrega a página sozinha', async ({ page }) => {
+  await page.goto('/sobre')
+  await expect(page.getByRole('heading', { level: 1 })).toBeVisible()
+  await page.route('**/version.json*', (r) => r.fulfill({ json: { id: 'versao-nova-teste' } }))
+  const recarregou = page.waitForEvent('load')
+  await page.evaluate(() => document.dispatchEvent(new Event('visibilitychange')))
+  await recarregou
+})
+
+test('atualização automática: mesma versão não recarrega', async ({ page }) => {
+  await page.goto('/sobre')
+  const real = await page.evaluate(async () => (await (await fetch('/version.json', { cache: 'no-store' })).json()).id as string)
+  expect(real.length).toBeGreaterThan(3)
+  await page.route('**/version.json*', (r) => r.fulfill({ json: { id: real } }))
+  let loads = 0
+  page.on('load', () => { loads += 1 })
+  await page.evaluate(() => document.dispatchEvent(new Event('visibilitychange')))
+  await page.waitForTimeout(800)
+  expect(loads).toBe(0)
+})
