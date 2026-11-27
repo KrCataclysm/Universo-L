@@ -52,6 +52,6 @@ Se a alteração mudar dados, chamadas ou arquitetura, atualizar o arquivo certo
 
 ## 8. Contexto que já custou caro
 - Número de WhatsApp com 9 dígitos após o DDD: `5586999463019`.
-- A base do site é `/Universo-L/` enquanto não houver domínio próprio (`BASE_PATH`); com domínio, usar `/` e `public/CNAME`.
+- O site roda no domínio próprio `universolay.com.br` (`www` redireciona para ele): base `/`, `public/CNAME` e `SITE_URL` já são o padrão do workflow. Só use `BASE_PATH=/Universo-L/` se voltar ao endereço do GitHub Pages.
 - Valores iniciais de `settings` estão nas migrações 0007, 0008 e 0012.
 - Página sem versão estática no build abre com status 404 no GitHub Pages: criar a entrada em `scripts/postbuild.mjs`.
