@@ -423,3 +423,18 @@ test('atualização automática: mesma versão não recarrega', async ({ page })
   await page.waitForTimeout(800)
   expect(loads).toBe(0)
 })
+
+test('atualização automática: arquivo antigo que sumiu (vite:preloadError) recarrega uma vez', async ({ page }) => {
+  await page.goto('/sobre')
+  await expect(page.getByRole('heading', { level: 1 })).toBeVisible()
+  const recarregou = page.waitForEvent('load')
+  await page.evaluate(() => window.dispatchEvent(new Event('vite:preloadError')))
+  await recarregou
+})
+
+test('atualização automática: confere a versão logo depois de abrir', async ({ page }) => {
+  let pediu = false
+  await page.route('**/version.json*', (r) => { pediu = true; return r.fulfill({ json: { id: 'igual-ao-atual' } }) })
+  await page.goto('/sobre')
+  await expect.poll(() => pediu, { timeout: 8000 }).toBe(true)
+})
