@@ -48,3 +48,10 @@
 .adm-works { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 12px; }
 .adm-works figure { margin: 0; display: grid; gap: 8px; align-content: start; } .adm-works figure.off { opacity: .5; }
 .adm-works img { width: 100%; aspect-ratio: 4 / 5; object-fit: cover; background: #e9e3e0; }
+
+/* Campo de senha com botão Mostrar/Ocultar */
+.pwd { position: relative; display: block; }
+.pwd input { width: 100%; padding-right: 92px !important; }
+.pwd__toggle { position: absolute; right: 6px; top: 50%; transform: translateY(-50%); min-height: 36px; padding: 0 12px; font-size: 13px; font-weight: 600; border-radius: 8px; background: rgba(40,39,43,.07); }
+.pwd__toggle:hover { background: rgba(40,39,43,.14); }
+.field > label { opacity: .75; }

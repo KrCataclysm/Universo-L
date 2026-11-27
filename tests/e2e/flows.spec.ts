@@ -390,3 +390,15 @@ test('carrinho aberto não fica coberto pelo aviso "Adicionado ao carrinho"', as
   await expect(drawer).toContainText('Bermuda ciclista')
   await expect(page.getByRole('status').filter({ hasText: 'Adicionado ao carrinho' })).toHaveCount(0)
 })
+
+test('login do painel: botão Mostrar/Ocultar deixa ver a senha digitada', async ({ page }) => {
+  await page.goto('/admin')
+  const campo = page.getByLabel('Senha', { exact: true })
+  await campo.fill('MinhaSenha123')
+  await expect(campo).toHaveAttribute('type', 'password')
+  await page.getByRole('button', { name: 'Mostrar' }).click()
+  await expect(campo).toHaveAttribute('type', 'text')
+  await expect(campo).toHaveValue('MinhaSenha123')
+  await page.getByRole('button', { name: 'Ocultar' }).click()
+  await expect(campo).toHaveAttribute('type', 'password')
+})
