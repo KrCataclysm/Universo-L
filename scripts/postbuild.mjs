@@ -80,6 +80,9 @@ for (const pg of pages) {
   write(join('dist', pg.path, 'index.html'), withSeed(pg.rootHtml ? injectRoot(page, pg.rootHtml) : page, pg.seed))
 }
 
+// painel: sem versão estática o Pages respondia 404 (a página abria, mas com status de erro)
+write('dist/admin/index.html', template.replace('</head>', '<meta name="robots" content="noindex,nofollow" /></head>'))
+
 // 3) robots e sitemap
 if (SITE) {
   write('dist/robots.txt', `User-agent: *\nAllow: /\nDisallow: /admin\n\nSitemap: ${SITE}/sitemap.xml\n`)
