@@ -4,7 +4,7 @@ import { itemKey, useCart } from '../cart/cartStore'
 import { formatBRL, priceLabel } from '../cart/money'
 import { buildWhatsAppUrl } from '../cart/whatsapp'
 import { imgSize } from '../lib/env'
-import { toast } from '../ui/toast'
+import { toast, useToasts } from '../ui/toast'
 import { useAsync } from '../data/CatalogProvider'
 
 export default function CartDrawer() {
@@ -12,6 +12,12 @@ export default function CartDrawer() {
   const total = useCart((s) => s.totalCents())
   const [name, setName] = useState('')
   const panel = useRef<HTMLElement>(null)
+  // com o carrinho aberto, o aviso "Adicionado… Ver carrinho" é redundante e cobriria o primeiro item
+  useEffect(() => {
+    if (!open) return
+    const t = useToasts.getState()
+    t.items.filter((x) => x.action?.label === 'Ver carrinho').forEach((x) => t.dismiss(x.id))
+  }, [open])
   useEffect(() => {
     if (!open) return
     const previous = document.activeElement as HTMLElement | null
