@@ -5,6 +5,16 @@ export function isNewVersion(current: string, remote: unknown): boolean {
   return typeof remote === 'string' && remote.length > 0 && remote !== current
 }
 
+/** Evita laço de recarregamentos: só deixa recarregar 1 vez a cada 60 s por aba. */
+export function shouldReloadOnce(store: Pick<Storage, 'getItem' | 'setItem'>, now = Date.now()): boolean {
+  try {
+    const last = Number(store.getItem('ul-reloaded-at') ?? 0)
+    if (now - last < 60_000) return false
+    store.setItem('ul-reloaded-at', String(now))
+    return true
+  } catch { return false }
+}
+
 const MIN_GAP_MS = 30_000
 const EVERY_MS = 5 * 60_000
 
@@ -31,9 +41,15 @@ export function startUpdateCheck(): void {
         if (!warned) { warned = true; toast({ title: 'Há uma versão nova do site', text: 'Salve o que está fazendo e atualize.', ms: 12000, action: { label: 'Atualizar', run: () => location.reload() } }) }
         return
       }
-      location.reload()
+      if (shouldReloadOnce(sessionStorage)) location.reload()
     } catch { /* sem rede: tenta de novo depois */ }
   }
+  // arquivo antigo que não existe mais (publicação nova com a página velha em cache): recarrega uma vez
+  window.addEventListener('vite:preloadError', (e) => {
+    if (shouldReloadOnce(sessionStorage)) { e.preventDefault(); location.reload() }
+  })
+  // primeira conferência logo depois de abrir, sem esperar a pessoa sair e voltar
+  window.setTimeout(() => { void check() }, 2500)
   document.addEventListener('visibilitychange', () => { void check() })
   window.addEventListener('focus', () => { void check() })
   window.setInterval(() => { void check() }, EVERY_MS)
