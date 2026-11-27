@@ -11,6 +11,6 @@ Design: `docs/superpowers/specs/` · Plano: `docs/superpowers/plans/`
 ## Deploy (GitHub Pages)
 
 O site publica sozinho a cada alteração na `main` (e a cada hora, pra atualizar as páginas de compartilhamento).
-Hoje: https://krcataclysm.github.io/Universo-L/ · Domínio próprio (universolay.com.br): ver o passo-a-passo em `docs/COMO-USAR-E-EDITAR.md`.
+Site: https://universolay.com.br (www redireciona). Painel: https://universolay.com.br/admin
 
 Guia completo de uso e edição: [`docs/COMO-USAR-E-EDITAR.md`](docs/COMO-USAR-E-EDITAR.md).
