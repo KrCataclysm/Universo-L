@@ -51,3 +51,14 @@ describe('imagem', () => {
     expect(() => validateImageFile({ type: 'image/jpeg', size: 1024 * 1024 })).not.toThrow()
   })
 })
+
+describe('validateNewPassword', () => {
+  it('exige 8+ caracteres, letras e números, e senhas iguais', async () => {
+    const { validateNewPassword } = await import('../src/admin/validators')
+    expect(validateNewPassword('abc12', 'abc12')).toMatch(/8 caracteres/)
+    expect(validateNewPassword('somenteletras', 'somenteletras')).toMatch(/letras e números/)
+    expect(validateNewPassword('12345678', '12345678')).toMatch(/letras e números/)
+    expect(validateNewPassword('minhasenha1', 'minhasenha2')).toMatch(/não são iguais/)
+    expect(validateNewPassword('minhasenha1', 'minhasenha1')).toBeNull()
+  })
+})

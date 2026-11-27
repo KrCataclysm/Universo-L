@@ -13,6 +13,7 @@ const Settings = lazy(() => import('./Settings'))
 const Banners = lazy(() => import('./Banners'))
 const Collections = lazy(() => import('./Collections'))
 const Works = lazy(() => import('./Works'))
+const Password = lazy(() => import('./Password'))
 
 function Shell() {
   const { loading, session, isAdmin, signOut } = useAuth()
@@ -44,6 +45,7 @@ function Shell() {
         </label>
         <a className="adm-link" href="https://github.com/KrCataclysm/Universo-L/actions/workflows/pages.yml" target="_blank" rel="noreferrer">↻ Publicar alterações (compartilhamento)</a>
         <Link to="/" className="adm-link">← Ver o site</Link>
+        <Link to="/admin/senha" className="adm-link">Trocar minha senha</Link>
         <button className="adm-link" onClick={signOut}>Sair</button>
       </aside>
       <section className="adm-main">
@@ -56,6 +58,7 @@ function Shell() {
             <Route path="categorias" element={<Categories />} />
             <Route path="trabalhos" element={<Works />} />
             <Route path="configuracoes" element={<Settings />} />
+            <Route path="senha" element={<Password />} />
           </Routes>
         </Suspense>
       </section>
