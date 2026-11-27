@@ -60,3 +60,6 @@
 .searchbox { border-radius: 0; border-color: var(--line-strong); }
 .searchbox input:focus, .searchbox input:focus-visible { outline: none !important; box-shadow: none !important; background: none; }
 .searchbox:focus-within { border-color: var(--ink); box-shadow: 0 0 0 1px var(--ink); }
+
+/* Estado vazio: cantos retos e traço leve, como o resto do site */
+.empty { border-radius: 0; border-color: var(--line-strong); }
