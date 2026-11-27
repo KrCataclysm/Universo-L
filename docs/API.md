@@ -5,7 +5,7 @@ O projeto **não tem servidor próprio**. Toda a comunicação é direta com ser
 ## 1. Base
 - Supabase (PostgREST): `https://rsbyflojdjecgofyxack.supabase.co/rest/v1/…` (cabeçalho `apikey` com a chave pública).
 - Supabase Storage (leitura pública): `…/storage/v1/object/public/product-images/<caminho>`.
-- Site: `https://universolay.com.br` (o `www.universolay.com.br` redireciona para ele).
+- Site: `https://krcataclysm.github.io/Universo-L/` (futuro: domínio próprio).
 
 ## 2. Quem pode chamar
 - **Público:** só leitura, o que o RLS permite (ver DATABASE.md §5).
