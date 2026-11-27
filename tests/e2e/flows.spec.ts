@@ -379,3 +379,14 @@ test('página de coleções existe e responde', async ({ page }) => {
   await page.goto('/colecoes')
   await expect(page.getByRole('heading', { level: 1, name: 'Coleções' })).toBeVisible()
 })
+
+test('carrinho aberto não fica coberto pelo aviso "Adicionado ao carrinho"', async ({ page }) => {
+  await page.goto('/lay-store/bermuda-ciclista')
+  await page.getByRole('radio', { name: 'Preta' }).click()
+  await page.getByRole('button', { name: 'Adicionar ao carrinho' }).click()
+  await expect(page.getByRole('status').filter({ hasText: 'Adicionado ao carrinho' })).toBeVisible()
+  await page.getByRole('button', { name: /carrinho|sacola/i }).first().click()
+  const drawer = page.getByRole('dialog', { name: 'Carrinho' })
+  await expect(drawer).toContainText('Bermuda ciclista')
+  await expect(page.getByRole('status').filter({ hasText: 'Adicionado ao carrinho' })).toHaveCount(0)
+})
