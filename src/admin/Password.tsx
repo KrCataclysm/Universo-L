@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { getSupabase } from '../lib/supabase'
+import PasswordField from './PasswordField'
 import { validateNewPassword } from './validators'
 
 export default function Password() {
@@ -23,8 +24,8 @@ export default function Password() {
       <header className="adm-head"><h1>Trocar minha senha</h1></header>
       <form className="adm-card" onSubmit={save}>
         <p className="adm-note">Escolha uma senha só sua, com pelo menos 8 caracteres, letras e números. Não compartilhe com ninguém.</p>
-        <label className="field"><span>Nova senha</span><input type="password" autoComplete="new-password" value={pw} onChange={(e) => setPw(e.target.value)} /></label>
-        <label className="field"><span>Repita a nova senha</span><input type="password" autoComplete="new-password" value={confirm} onChange={(e) => setConfirm(e.target.value)} /></label>
+        <PasswordField label="Nova senha" autoComplete="new-password" value={pw} onChange={setPw} />
+        <PasswordField label="Repita a nova senha" autoComplete="new-password" value={confirm} onChange={setConfirm} />
         {msg && <p className={msg.ok ? 'adm-ok' : 'adm-err'} role={msg.ok ? 'status' : 'alert'}>{msg.text}</p>}
         <button className="btn btn--ink" disabled={busy}>{busy ? 'Salvando…' : 'Trocar senha'}</button>
       </form>
